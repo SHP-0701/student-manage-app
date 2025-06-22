@@ -1,3 +1,3 @@
 export default function DashboardContent() {
-    return <div>콘텐츠에용</div>
+    return <div>대시보드 콘텐츠</div>
 }
