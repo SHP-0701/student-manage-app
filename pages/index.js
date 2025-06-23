@@ -30,8 +30,11 @@ export default function Home() {
       setErrMessage(data.message);
       setLoginFailed(true);
     } else {
+      sessionStorage.setItem('username', data.name);
+
       // 로그인 성공 시 /dashboard 이동
       router.push('/dashboard');
+      
     }
   }
 

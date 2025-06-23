@@ -7,10 +7,6 @@ export default async function handler(req, res) {
 
     try {
         const {id, password} = req.body;
-        console.log('[/api/login.js] input password: ', password);
-        bcrypt.hash(password, 10).then(hash => {
-            console.log('[/api/login.js] hashed password: ', hash);
-        });
 
         // id 해당 사용자 정보 찾기
         const [rows] = await dbpool.execute(
@@ -24,12 +20,11 @@ export default async function handler(req, res) {
 
         // 2. 비밀번호 일치 여부 확인
         const result = await bcrypt.compare(password, admin.password);
-        console.log('[/api/login.js] 비밀번호 비교 결과: ', result);
 
         if(!result) return res.status(401).json({message: '아이디 또는 비밀번호가 일치하지 않습니다.'});
 
         // 3. 로그인 성공
-        return res.status(200).json({message: '환영합니다. ' + admin.name} + ' 님');
+        return res.status(200).json({message: '로그인 성공', name: admin.name});
 
     } catch(e) {
         console.error('[/api/login.js] 로그인 오류: ', e);

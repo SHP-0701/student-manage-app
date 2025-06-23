@@ -1,0 +1,62 @@
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background-color: #1e1e1e;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.topSection {
+    text-align: center;
+}
+
+.userIcon {
+    font-size: 4rem;
+    color: #4dabf7;
+    margin: 1rem 0;
+}
+
+.welcome {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+.nav li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.nav li:hover {
+    background-color: #2b2b2b;
+}
+
+.bottomSection {
+    text-align: center;
+}
+
+.logout {
+    background: #ff4d4f;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
