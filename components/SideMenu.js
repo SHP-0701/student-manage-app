@@ -7,6 +7,7 @@ export default function SideMenu({username}) {
             <div className={styles.topSection}>
                 <FaUser className={styles.userIcon} />
                 <p className={styles.welcome}>{username} 님 환영합니다.</p>
+                <button className={styles.logout}><FaSignOutAlt />로그아웃</button>
             </div>
 
             <nav className={styles.nav}>
@@ -16,10 +17,6 @@ export default function SideMenu({username}) {
                     <li><FaChartBar />통계</li>
                 </ul>
             </nav>
-
-            <div className={styles.bottomSection}>
-                <button className={styles.logout}><FaSignOutAlt />로그아웃</button>
-            </div>
         </aside>
     )
 }
