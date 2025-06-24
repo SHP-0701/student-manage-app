@@ -2,20 +2,19 @@ import styles from '@/styles/Dashboard.module.css';
 import SideMenu from '@/components/SideMenu';
 import DashboardContent from '@/components/DashboardContent';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 
 export default function Dashboard() {
-    const [userName, setUserName] = useState('');
-    
-    useEffect(() => {
-        const name = sessionStorage.getItem('username');
-        if(name) setUserName(name);
-    }, []);
+  const [userName, setUserName] = useState('');
 
-    return (
-        <div className={styles.dashboardContainer}>
-            <SideMenu username={userName} />
-            <DashboardContent />
-        </div>
-    )
+  useEffect(() => {
+    const name = sessionStorage.getItem('username');
+    if (name) setUserName(name);
+  }, []);
+
+  return (
+    <div className={styles.dashboardContainer}>
+      <SideMenu username={userName} />
+      <DashboardContent />
+    </div>
+  );
 }
