@@ -1,7 +1,9 @@
 import styles from '@/styles/SideMenu.module.css';
+import { Router } from 'next/router';
 import { FaUser, FaUserGraduate, FaClipboardList, FaChartBar, FaSignOutAlt } from 'react-icons/fa';
 
 export default function SideMenu({username}) {
+    
     return (
         <aside className={styles.sidebar}>
             <div className={styles.topSection}>
