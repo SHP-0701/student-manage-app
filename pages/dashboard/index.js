@@ -1,28 +1,20 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import Layout from '@/components/Layout';
 
-import SideMenu from "@/components/SideMenu";
-import DashboardContent from "@/components/DashboardContent";
-import styles from '@/styles/Dashboard.module.css';
+export default function DashboardPage() {
+  const router = useRouter();
 
-export default function Dashboard() {
-    const [userName, setUserName] = useState('');
-    const router = useRouter();
+  // username이 없으면 비로그인 -> 메인 로그인 페이지로 보냄
+  useEffect(() => {
+    const name = sessionStorage.getItem('username');
+    if (!name) router.push('/');
+  }, []);
 
-    useEffect(() => {
-        const name = sessionStorage.getItem('username');
-
-        if(!name) {
-            router.push('/');
-        } else {
-            setUserName(name);
-        }
-    }, []);
-
-    return (
-        <div className={styles.dashboardContainer}>
-            <SideMenu username={userName} />
-            <DashboardContent />
-        </div>
-    )
-} 
+  return (
+    <Layout>
+      <h1>대시보드</h1>
+      <p>여기는 로그인 후 보는 관리자 대시보드입니다</p>
+    </Layout>
+  );
+}
