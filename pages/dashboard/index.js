@@ -1,6 +1,11 @@
+/**
+ * 로그인 후 처음 진입하는 메인 대시보드(/pages/dashboard/index.js)
+ */
+
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
+import DashboardHome from './DashboardHome';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -13,8 +18,7 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      <h1>대시보드</h1>
-      <p>여기는 로그인 후 보는 관리자 대시보드입니다</p>
+      <DashboardHome />
     </Layout>
   );
 }

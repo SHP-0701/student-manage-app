@@ -15,7 +15,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <div className={styles.layout}>
+    <div className={styles.layoutWrapper}>
       <SideMenu username={userName} />
       <main className={styles.content}>{children}</main>
     </div>

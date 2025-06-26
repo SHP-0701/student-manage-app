@@ -1,6 +1,83 @@
-.dashboardContainer {
-    display: flex;
-    height: 100vh;
-    background-color: #111;
-    color: #fff;
+.dashboardHome {
+  padding: 2rem;
+  background-color: #121212;
+  color: #f0f0f0;
+  min-height: 100vh;
+}
+
+.welcomeBox {
+  margin-bottom: 2rem;
+  background-color: #1e1e1e;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.welcomeBox h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+.summaryCards {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  border: 1px solid #333;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.card p {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #00bcd4;
+}
+
+.quickActions {
+  background-color: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.quickActions h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.quickActions button {
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.quickActions button:hover {
+  background-color: #555;
 }
