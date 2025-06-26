@@ -6,35 +6,41 @@
 }
 
 .welcomeBox {
-  margin-bottom: 2rem;
   background-color: #1e1e1e;
-  padding: 1.5rem 2rem;
+  padding: 2rem 3rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   text-align: center;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+  margin-bottom: 2rem;
 }
 
 .welcomeBox h2 {
-  margin: 0;
-  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
   color: #fff;
+}
+
+.welcomeBox p {
+  color: #aaa;
+  font-size: 1.1rem;
 }
 
 .summaryCards {
   display: flex;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .card {
   flex: 1;
   background-color: #1e1e1e;
-  padding: 1.5rem;
   border-radius: 12px;
+  padding: 1.5rem 1rem;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  border: 1px solid #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease;
+  border: 1px solid #2a2a2a;
+  min-height: 150px;
 }
 
 .card:hover {
@@ -42,42 +48,45 @@
 }
 
 .card h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
   color: #ccc;
 }
 
 .card p {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: bold;
   color: #00bcd4;
 }
 
 .quickActions {
   background-color: #1e1e1e;
-  padding: 1.5rem;
+  padding: 1.5rem 2rem;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .quickActions h3 {
   margin-bottom: 1rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #ccc;
 }
 
 .quickActions button {
-  margin-right: 1rem;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 1.2rem;
+  margin: 0.3rem;
+  padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 6px;
-  background-color: #333;
-  color: #f0f0f0;
+  background-color: #2a2a2a;
+  color: #eee;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .quickActions button:hover {
-  background-color: #555;
+  background-color: #333333;
+  color: #f0f0f0;
 }
