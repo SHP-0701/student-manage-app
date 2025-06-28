@@ -6,6 +6,7 @@ import {
   FaClipboardList,
   FaChartBar,
   FaSignOutAlt,
+  FaHome,
 } from 'react-icons/fa';
 
 export default function SideMenu({ username }) {
@@ -24,6 +25,10 @@ export default function SideMenu({ username }) {
 
       <nav className={styles.nav}>
         <ul>
+          <li onClick={() => router.push('/dashboard')}>
+            <FaHome />
+            대시보드
+          </li>
           <li onClick={() => router.push('/dashboard/student')}>
             <FaUserGraduate />
             학생 정보
