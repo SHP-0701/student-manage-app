@@ -1,0 +1,106 @@
+.container {
+  padding: 2rem;
+  color: #f0f0f0;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+}
+
+.filterSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+}
+
+.filters select {
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+.searchBtn {
+  padding: 0.5rem 1rem;
+  background-color: #2a2a2a;
+  color: #eee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.searchBtn:hover {
+  background-color: #444;
+}
+
+.registerBtn {
+  padding: 0.5rem 1rem;
+  background-color: #00bcd4;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.registerBtn:hover {
+  background-color: #00a4ba;
+}
+
+.tableSection table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1b1b1b;
+}
+
+.tableSection th,
+.tableSection td {
+  padding: 0.75rem;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.tableSection th {
+  background-color: #2a2a2a;
+  color: #ddd;
+}
+
+.tableSection td {
+  color: #eee;
+}
+
+.editBtn,
+.deleteBtn {
+  margin: 0 0.25rem;
+  padding: 0.3rem 0.7rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.editBtn {
+  background-color: #444;
+  color: #fff;
+}
+
+.editBtn:hover {
+  background-color: #555;
+}
+
+.deleteBtn {
+  background-color: #a52a2a;
+  color: #fff;
+}
+
+.deleteBtn:hover {
+  background-color: #c0392b;
+}
