@@ -63,14 +63,30 @@
 
 .tableSection th,
 .tableSection td {
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border: 1px solid #333;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tableSection th {
   background-color: #2a2a2a;
   color: #ddd;
+}
+
+.tableSection tbody tr:nth-child(even) {
+  background-color: #181818;
+}
+
+.tableSection tbody tr:hover {
+  background-color: #222;
+}
+
+.tableSection th:nth-child(1),
+.tableSection td:nth-child(1) {
+  text-align: center;
 }
 
 .tableSection td {
