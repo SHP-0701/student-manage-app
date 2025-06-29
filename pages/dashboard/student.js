@@ -53,6 +53,8 @@ export default function StudentPage() {
           <table>
             <thead>
               <tr>
+                <th>학년도</th>
+                <th>학기</th>
                 <th>이름</th>
                 <th>학번</th>
                 <th>학과</th>
@@ -62,6 +64,8 @@ export default function StudentPage() {
             </thead>
             <tbody>
               <tr>
+                <td>2025</td>
+                <td>1학기</td>
                 <td>파이리</td>
                 <td>202512345</td>
                 <td>컴퓨터인공지능공학부</td>
