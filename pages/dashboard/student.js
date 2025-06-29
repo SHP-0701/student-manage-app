@@ -15,6 +15,9 @@ export default function StudentPage() {
   // 모달 창 오픈(등록/수정) state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // 모달 등록/수정/삭제 분기
+  const [mode, setMode] = useState('');
+
   return (
     <Layout>
       <div className={styles.container}>
@@ -39,7 +42,10 @@ export default function StudentPage() {
             </select>
             <button className={styles.searchBtn}>조회</button>
           </div>
-          <button className={styles.registerBtn} onClick={() => setIsModalOpen(true)}>학생 등록</button>
+          <button className={styles.registerBtn} onClick={() => {
+            setMode('insert');
+            setIsModalOpen(true);
+          }}>학생 등록</button>
         </div>
 
         {/* 학생 테이블 */}
@@ -73,7 +79,7 @@ export default function StudentPage() {
         {/* 모달 렌더링 */}
         {
           isModalOpen && (
-            <StudentFormModal mode='insert' onClose={() => setIsModalOpen(false)} />
+            <StudentFormModal mode={mode} onClose={() => setIsModalOpen(false)} />
           )
         }
       </div>
