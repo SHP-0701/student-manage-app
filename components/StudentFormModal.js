@@ -36,6 +36,11 @@ export default function StudentFormModal({ mode = 'insert', onClose }) {
           </label>
 
           <label>
+            이름
+            <input type='text' placeholder='이름 입력' />
+          </label>
+
+          <label>
             근로구분
             <select>
               <option value=''>선택</option>
