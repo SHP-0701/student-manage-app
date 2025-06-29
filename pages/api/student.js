@@ -6,17 +6,18 @@
 
 import dbpool from "@/lib/db";
 export default async function handler(req, res) {
+    // 등록(POST)
     if(req.method === 'POST') {
         try {
-            const {year, term, stdName, stdNum, workType} = req.body;
+            const {year, term, stdName, stdNum, stdDept, workType} = req.body;
 
             // 간단한 유효성 검사
             if(!year || !stdNum || !stdName) {
                 return res.status(400).json({message: '필수 항목 누락됨.'});
             }
 
-            const sql = 'INSERT INTO student_info (year, term, stdName, stdNum, workType) VALUES (?, ?, ?, ?, ?)';
-            const values = [year, term, stdName, stdNum, workType];
+            const sql = 'INSERT INTO student_info (year, term, stdName, stdNum, stdDept, workType) VALUES (?, ?, ?, ?, ?, ?)';
+            const values = [year, term, stdName, stdNum, stdDept, workType];
             const [result] = await dbpool.execute(sql, values);
 
             return res.status(200).json({message: '학생 정보 등록 성공'});
@@ -24,7 +25,19 @@ export default async function handler(req, res) {
             console.error('[/api/student.js] POST 에러 ', err);
             return res.status(500).json({message: '서버 오류 발생'});
         }
-    } else {
+    } 
+    // 목록 가져오기(GET)
+    else if(req.method === 'GET') {
+        try {
+            const [rows] = await dbpool.execute('SELECT * FROM student_info ORDER BY created_at DESC');
+            return res.status(200).json({students: rows});
+        } catch(error) {
+            console.error('[/api/student.js] GET 에러 ', error);
+            return res.status(500).json({message: '학생 목록 조회 실패'});
+        }
+    }
+    
+    else {
         return res.status(405).json({message: '허용되지 않은 메서드'});
     }
 }

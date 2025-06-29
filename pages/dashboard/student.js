@@ -8,7 +8,7 @@
 import Layout from '@/components/Layout';
 import StudentFormModal from '@/components/StudentFormModal';
 import styles from '@/styles/Student.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function StudentPage() {
 
@@ -17,6 +17,20 @@ export default function StudentPage() {
 
   // 모달 등록/수정/삭제 분기
   const [mode, setMode] = useState('');
+
+  // 학생 목록 state
+  const [students, setStudents] = useState([]);
+
+  // 학생 목록 가져오는(fetch) 함수
+  const fetchStudents = async () => {
+      const res = await fetch('/api/student');
+      const data = await res.json();
+      setStudents(data.students);
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   return (
     <Layout>
@@ -63,19 +77,29 @@ export default function StudentPage() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>2025</td>
-                <td>1학기</td>
-                <td>파이리</td>
-                <td>202512345</td>
-                <td>컴퓨터인공지능공학부</td>
-                <td>국가근로장학생</td>
-                <td>
-                  <button className={styles.editBtn}>수정</button>
-                  <button className={styles.deleteBtn}>삭제</button>
-                </td>
-              </tr>
-              {/* TO-DO list: 이후 map()으로 학생 리스트 렌더링 */}
+              {/* map()으로 학생 리스트 렌더링 */}
+              {
+                students && students.length > 0 ? (
+                  students.map((std) => (
+                    <tr key={std.id}>
+                      <td>{std.year}</td>
+                      <td>{std.term}</td>
+                      <td>{std.stdName}</td>
+                      <td>{std.stdNum}</td>
+                      <td>{std.stdDept}</td>
+                      <td>{std.workType}</td>
+                      <td>
+                        <button className={styles.editBtn}>수정</button>
+                        <button className={styles.deleteBtn}>삭제</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colspan='7'>등록된 학생 정보가 없습니다.</td>
+                  </tr>
+                )
+              }
             </tbody>
           </table>
         </div>
@@ -83,7 +107,7 @@ export default function StudentPage() {
         {/* 모달 렌더링 */}
         {
           isModalOpen && (
-            <StudentFormModal mode={mode} onClose={() => setIsModalOpen(false)} />
+            <StudentFormModal mode={mode} onClose={() => setIsModalOpen(false)} refreshList={fetchStudents} />
           )
         }
       </div>

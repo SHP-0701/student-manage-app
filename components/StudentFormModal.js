@@ -5,13 +5,14 @@
 import styles from '@/styles/StudentFormModal.module.css';
 import { useState } from 'react';
 
-export default function StudentFormModal({ mode = 'insert', onClose }) {
+export default function StudentFormModal({ mode = 'insert', onClose, refreshList }) {
   // 폼 상태 관리
   const [form, setForm] = useState({
     year: '',
     term: '',
     stdName: '', /* 이름 */
     stdNum: '', /* 학번 */
+    stdDept: '', /* 학과 */
     workType: '', /* 근로구분(국가장학, 대학행정인턴, 교육지원 */
   });
 
@@ -41,6 +42,7 @@ export default function StudentFormModal({ mode = 'insert', onClose }) {
       } else {
         alert(data.message);
         onClose();
+        refreshList();
       }
     } catch(err) {
       console.error(err);
@@ -81,6 +83,11 @@ export default function StudentFormModal({ mode = 'insert', onClose }) {
           <label>
             이름
             <input type='text' name='stdName' value={form.stdName} onChange={handleChange} placeholder='이름 입력' />
+          </label>
+
+          <label>
+            학과
+            <input type='text' name='stdDept' value={form.stdDept} onChange={handleChange} placeholder='학과 입력' />
           </label>
 
           <label>
