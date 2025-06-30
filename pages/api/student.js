@@ -59,6 +59,20 @@ export default async function handler(req, res) {
     }
   }
 
+  // 학생 정보 삭제(DELETE)
+  else if (req.method === 'DELETE') {
+    try {
+      const { id } = req.body;
+      if (!id) return res.status(400).json({ message: '학생 ID가 없습니다.' });
+
+      await dbpool.execute('DELETE FROM student_info WHERE id = ?', [id]);
+      return res.status(200).json({ message: '학생 정보 삭제 완료' });
+    } catch (error) {
+      console.error('[/api/student.js] DELETE 에러 ', error);
+      return res.status(500).json({ message: '삭제 오류 발생' });
+    }
+  }
+
   // 허용 안 된 메서드
   else {
     return res.status(405).json({ message: '허용되지 않은 메서드' });

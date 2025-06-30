@@ -7,12 +7,16 @@
 
 import Layout from '@/components/Layout';
 import StudentFormModal from '@/components/StudentFormModal';
+import StudentDeleteConfirmModal from '@/components/StudentDeleteConfirmModal';
 import styles from '@/styles/Student.module.css';
 import { useEffect, useState } from 'react';
 
 export default function StudentPage() {
   // 모달 창 오픈(등록/수정) state
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 삭제 모달 창 오픈
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 모달 등록/수정/삭제 분기
   const [mode, setMode] = useState('');
@@ -22,6 +26,9 @@ export default function StudentPage() {
 
   // 선택된 학생 정보
   const [currentStudent, setCurrentStudent] = useState(null);
+
+  // 삭제할 학생 정보
+  const [studentToDelete, setStudentToDelete] = useState(null);
 
   // 학생 목록 가져오는(fetch) 함수
   const fetchStudents = async () => {
@@ -35,6 +42,31 @@ export default function StudentPage() {
     setMode('modify');
     setCurrentStudent(student);
     setIsModalOpen(true);
+  };
+
+  // '삭제' 버튼 클릭 핸들러
+  const handleDelete = (student) => {
+    setStudentToDelete(student);
+    setDeleteModalOpen(true);
+  };
+
+  // 삭제 동작 API
+  const confirmDelete = async (id) => {
+    const res = await fetch('/api/student', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message);
+      setDeleteModalOpen(false);
+      fetchStudents();
+    } else {
+      alert(data.message);
+    }
   };
 
   useEffect(() => {
@@ -108,7 +140,12 @@ export default function StudentPage() {
                       >
                         수정
                       </button>
-                      <button className={styles.deleteBtn}>삭제</button>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleDelete(std)}
+                      >
+                        삭제
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -128,6 +165,14 @@ export default function StudentPage() {
             initialData={currentStudent}
             onClose={() => setIsModalOpen(false)}
             refreshList={fetchStudents}
+          />
+        )}
+
+        {deleteModalOpen && (
+          <StudentDeleteConfirmModal
+            student={studentToDelete}
+            onClose={() => setDeleteModalOpen(false)}
+            onDelete={confirmDelete}
           />
         )}
       </div>
