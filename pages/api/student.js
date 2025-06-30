@@ -1,6 +1,7 @@
 /**
  * 학생 정보 등록/수정/삭제 등등 처리
- * method: 등록(POST), 수정(PUT)
+ * [REST API]
+ * method: 등록(POST), 수정(PUT), 조회(GET), 삭제(DELETE)
  * props: 등록(insert), 수정(modify)
  */
 
