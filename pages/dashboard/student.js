@@ -11,7 +11,6 @@ import styles from '@/styles/Student.module.css';
 import { useEffect, useState } from 'react';
 
 export default function StudentPage() {
-
   // 모달 창 오픈(등록/수정) state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,11 +20,21 @@ export default function StudentPage() {
   // 학생 목록 state
   const [students, setStudents] = useState([]);
 
+  // 선택된 학생 정보
+  const [currentStudent, setCurrentStudent] = useState(null);
+
   // 학생 목록 가져오는(fetch) 함수
   const fetchStudents = async () => {
-      const res = await fetch('/api/student');
-      const data = await res.json();
-      setStudents(data.students);
+    const res = await fetch('/api/student');
+    const data = await res.json();
+    setStudents(data.students);
+  };
+
+  // '수정' 버튼 클릭 핸들러
+  const handleEdit = (student) => {
+    setMode('modify');
+    setCurrentStudent(student);
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -56,10 +65,15 @@ export default function StudentPage() {
             </select>
             <button className={styles.searchBtn}>조회</button>
           </div>
-          <button className={styles.registerBtn} onClick={() => {
-            setMode('insert');
-            setIsModalOpen(true);
-          }}>학생 등록</button>
+          <button
+            className={styles.registerBtn}
+            onClick={() => {
+              setMode('insert');
+              setIsModalOpen(true);
+            }}
+          >
+            학생 등록
+          </button>
         </div>
 
         {/* 학생 테이블 */}
@@ -78,38 +92,44 @@ export default function StudentPage() {
             </thead>
             <tbody>
               {/* map()으로 학생 리스트 렌더링 */}
-              {
-                students && students.length > 0 ? (
-                  students.map((std) => (
-                    <tr key={std.id}>
-                      <td>{std.year}</td>
-                      <td>{std.term}</td>
-                      <td>{std.stdName}</td>
-                      <td>{std.stdNum}</td>
-                      <td>{std.stdDept}</td>
-                      <td>{std.workType}</td>
-                      <td>
-                        <button className={styles.editBtn}>수정</button>
-                        <button className={styles.deleteBtn}>삭제</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colspan='7'>등록된 학생 정보가 없습니다.</td>
+              {students && students.length > 0 ? (
+                students.map((std) => (
+                  <tr key={std.id}>
+                    <td>{std.year}</td>
+                    <td>{std.term}</td>
+                    <td>{std.stdName}</td>
+                    <td>{std.stdNum}</td>
+                    <td>{std.stdDept}</td>
+                    <td>{std.workType}</td>
+                    <td>
+                      <button
+                        className={styles.editBtn}
+                        onClick={() => handleEdit(std)}
+                      >
+                        수정
+                      </button>
+                      <button className={styles.deleteBtn}>삭제</button>
+                    </td>
                   </tr>
-                )
-              }
+                ))
+              ) : (
+                <tr>
+                  <td colspan='7'>등록된 학생 정보가 없습니다.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
         {/* 모달 렌더링 */}
-        {
-          isModalOpen && (
-            <StudentFormModal mode={mode} onClose={() => setIsModalOpen(false)} refreshList={fetchStudents} />
-          )
-        }
+        {isModalOpen && (
+          <StudentFormModal
+            mode={mode}
+            initialData={currentStudent}
+            onClose={() => setIsModalOpen(false)}
+            refreshList={fetchStudents}
+          />
+        )}
       </div>
     </Layout>
   );

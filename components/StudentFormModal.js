@@ -3,52 +3,71 @@
  */
 
 import styles from '@/styles/StudentFormModal.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function StudentFormModal({ mode = 'insert', onClose, refreshList }) {
+export default function StudentFormModal({
+  mode,
+  initialData = null,
+  onClose,
+  refreshList,
+}) {
   // 폼 상태 관리
   const [form, setForm] = useState({
     year: '',
     term: '',
-    stdName: '', /* 이름 */
-    stdNum: '', /* 학번 */
-    stdDept: '', /* 학과 */
-    workType: '', /* 근로구분(국가장학, 대학행정인턴, 교육지원 */
+    stdName: '' /* 이름 */,
+    stdNum: '' /* 학번 */,
+    stdDept: '' /* 학과 */,
+    workType: '' /* 근로구분(국가장학, 대학행정인턴, 교육지원 */,
   });
 
   // 입력(input) 핸들러
   const handleChange = (e) => {
-    const {name, value} = e.target;
-    setForm((prev) => ({...prev, [name]: value}));
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   // 제출(submit) 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('[/components/StudentFormModal.js] 폼 데이터 확인 : ', form);
-
     try {
       const res = await fetch('/api/student', {
         method: mode === 'insert' ? 'POST' : 'PUT',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(form),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          id: initialData?.id,
+        }),
       });
 
       const data = await res.json();
 
-      if(!res.ok) {
+      if (!res.ok) {
         alert(data.message);
       } else {
         alert(data.message);
         onClose();
         refreshList();
       }
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       alert('등록 실패');
     }
-  }
+  };
+
+  useEffect(() => {
+    if (mode === 'modify' && initialData) {
+      setForm({
+        year: initialData.year || '',
+        term: initialData.term || '',
+        stdName: initialData.stdName || '',
+        stdNum: initialData.stdNum || '',
+        stdDept: initialData.stdDept || '',
+        workType: initialData.workType || '',
+      });
+    }
+  }, [mode, initialData]);
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -77,22 +96,44 @@ export default function StudentFormModal({ mode = 'insert', onClose, refreshList
 
           <label>
             학번
-            <input type='text' name='stdNum' value={form.stdNum} onChange={handleChange} placeholder='학번 입력' />
+            <input
+              type='text'
+              name='stdNum'
+              value={form.stdNum}
+              onChange={handleChange}
+              placeholder='학번 입력'
+            />
           </label>
 
           <label>
             이름
-            <input type='text' name='stdName' value={form.stdName} onChange={handleChange} placeholder='이름 입력' />
+            <input
+              type='text'
+              name='stdName'
+              value={form.stdName}
+              onChange={handleChange}
+              placeholder='이름 입력'
+            />
           </label>
 
           <label>
             학과
-            <input type='text' name='stdDept' value={form.stdDept} onChange={handleChange} placeholder='학과 입력' />
+            <input
+              type='text'
+              name='stdDept'
+              value={form.stdDept}
+              onChange={handleChange}
+              placeholder='학과 입력'
+            />
           </label>
 
           <label>
             근로구분
-            <select name='workType' value={form.workType} onChange={handleChange}>
+            <select
+              name='workType'
+              value={form.workType}
+              onChange={handleChange}
+            >
               <option value=''>선택</option>
               <option value='국가근로'>국가근로장학생</option>
               <option value='대학행정인턴'>대학행정인턴장학생</option>
