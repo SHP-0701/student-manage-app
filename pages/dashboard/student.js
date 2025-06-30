@@ -5,11 +5,11 @@
  * ㅇ 근로 내역 테이블과 연계하여 해당 학생이 이번년도 월별 근로 얼마나 했는지 조회 가능
  */
 
-import Layout from '@/components/Layout';
-import StudentFormModal from '@/components/StudentFormModal';
-import StudentDeleteConfirmModal from '@/components/StudentDeleteConfirmModal';
-import styles from '@/styles/Student.module.css';
-import { useEffect, useState } from 'react';
+import Layout from "@/components/Layout";
+import StudentFormModal from "@/components/StudentFormModal";
+import StudentDeleteConfirmModal from "@/components/StudentDeleteConfirmModal";
+import styles from "@/styles/Student.module.css";
+import { useEffect, useState } from "react";
 
 export default function StudentPage() {
   // 모달 창 오픈(등록/수정) state
@@ -19,7 +19,7 @@ export default function StudentPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 모달 등록/수정/삭제 분기
-  const [mode, setMode] = useState('');
+  const [mode, setMode] = useState("");
 
   // 학생 목록 state
   const [students, setStudents] = useState([]);
@@ -30,16 +30,27 @@ export default function StudentPage() {
   // 삭제할 학생 정보
   const [studentToDelete, setStudentToDelete] = useState(null);
 
+  // 페이징에 사용할 상태(현재 페이지 & 전체 페이지 수)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   // 학생 목록 가져오는(fetch) 함수
-  const fetchStudents = async () => {
-    const res = await fetch('/api/student');
-    const data = await res.json();
-    setStudents(data.students);
+  const fetchStudents = async (page = 1) => {
+    try {
+      const limit = 5; // 한 페이지에 보여줄 개수
+      const res = await fetch(`/api/student?page=${page}&limit=${limit}`);
+      const data = await res.json();
+
+      setStudents(data.students);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      console.error("[/dashboard/student.js] 학생 정보 가져오기 오류 : ", err);
+    }
   };
 
   // '수정' 버튼 클릭 핸들러
   const handleEdit = (student) => {
-    setMode('modify');
+    setMode("modify");
     setCurrentStudent(student);
     setIsModalOpen(true);
   };
@@ -52,9 +63,9 @@ export default function StudentPage() {
 
   // 삭제 동작 API
   const confirmDelete = async (id) => {
-    const res = await fetch('/api/student', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+    const res = await fetch("/api/student", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
 
@@ -70,8 +81,8 @@ export default function StudentPage() {
   };
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
+    fetchStudents(currentPage);
+  }, [currentPage]);
 
   return (
     <Layout>
@@ -100,7 +111,7 @@ export default function StudentPage() {
           <button
             className={styles.registerBtn}
             onClick={() => {
-              setMode('insert');
+              setMode("insert");
               setIsModalOpen(true);
             }}
           >
@@ -151,11 +162,24 @@ export default function StudentPage() {
                 ))
               ) : (
                 <tr>
-                  <td colspan='7'>등록된 학생 정보가 없습니다.</td>
+                  <td colspan="7">등록된 학생 정보가 없습니다.</td>
                 </tr>
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* 페이지네이션 */}
+        <div className={styles.pagination}>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? styles.activePage : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
 
         {/* 모달 렌더링 */}
