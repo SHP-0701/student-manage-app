@@ -37,9 +37,39 @@ export default async function handler(req, res) {
       const limit = Math.max(parseInt(req.query.limit) || 5, 1); // 기본값: 5
       const offset = (page - 1) * limit;
 
+      const searchName = req.query.name || "";
+      const searchYear = req.query.year || "";
+      const searchTerm = req.query.term || "";
+      const searchWorkType = req.query.workType || "";
+
+      // 조건 만들기
+      let whereClause = "WHERE 1=1";
+      const params = [];
+
+      if (searchYear) {
+        whereClause += " AND year = ?";
+        params.push(searchYear);
+      }
+
+      if (searchTerm) {
+        whereClause += " AND term = ?";
+        params.push(searchTerm);
+      }
+
+      if (searchWorkType) {
+        whereClause += " AND workType = ?";
+        params.push(searchWorkType);
+      }
+
+      if (searchName) {
+        whereClause += " AND stdName LIKE ?";
+        params.push(`%${searchName}%`);
+      }
+
       // 총 개수 가져오기
       const [countRows] = await dbpool.execute(
-        "SELECT COUNT(*) AS totalCount FROM student_info"
+        `SELECT COUNT(*) AS totalCount FROM student_info ${whereClause}`,
+        params
       );
       const totalCount = countRows[0].totalCount;
 
@@ -47,8 +77,14 @@ export default async function handler(req, res) {
       const totalPages = totalCount === 0 ? 1 : Math.ceil(totalCount / limit);
 
       // 데이터 가져오기
-      const sql = `SELECT id, year, term, stdName, stdNum, stdDept, workType, created_at FROM student_info ORDER BY created_at DESC LIMIT ${offset}, ${limit}`;
-      const [rows] = await dbpool.execute(sql);
+      const sql = `
+      SELECT id, year, term, stdName, stdNum, stdDept, workType, created_at 
+      FROM student_info  
+      ${whereClause}
+      ORDER BY created_at DESC LIMIT ${offset}, ${limit}
+      `;
+
+      const [rows] = await dbpool.execute(sql, params);
 
       return res.status(200).json({
         students: rows,

@@ -30,6 +30,16 @@ export default function StudentPage() {
   // 삭제할 학생 정보
   const [studentToDelete, setStudentToDelete] = useState(null);
 
+  // 검색용 state
+  const [searchName, setSearchName] = useState("");
+  const [searchYear, setSearchYear] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchWorkType, setSearchWorkType] = useState("");
+
+  // toast 관련 state
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
   // 페이징에 사용할 상태(현재 페이지 & 전체 페이지 수)
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -38,7 +48,17 @@ export default function StudentPage() {
   const fetchStudents = async (page = 1) => {
     try {
       const limit = 5; // 한 페이지에 보여줄 개수
-      const res = await fetch(`/api/student?page=${page}&limit=${limit}`);
+
+      const queryParams = new URLSearchParams({
+        page,
+        limit,
+        year: searchYear,
+        term: searchTerm,
+        workType: searchWorkType,
+        name: searchName,
+      });
+
+      const res = await fetch(`/api/student?${queryParams.toString()}`);
       const data = await res.json();
 
       setStudents(data.students);
@@ -61,6 +81,17 @@ export default function StudentPage() {
     setDeleteModalOpen(true);
   };
 
+  // toast 호출 함수
+  const showToastMessage = (msg) => {
+    setToastMessage(msg);
+    setShowToast(true);
+
+    setTimeout(() => {
+      setShowToast(false);
+      setToastMessage("");
+    }, 3000);
+  };
+
   // 삭제 동작 API
   const confirmDelete = async (id) => {
     const res = await fetch("/api/student", {
@@ -72,7 +103,7 @@ export default function StudentPage() {
     const data = await res.json();
 
     if (res.ok) {
-      alert(data.message);
+      showToastMessage(data.message);
       setDeleteModalOpen(false);
       fetchStudents();
     } else {
@@ -92,21 +123,50 @@ export default function StudentPage() {
         {/* 필터 & 등록 버튼 영역 */}
         <div className={styles.filterSection}>
           <div className={styles.filters}>
-            <select>
-              <option>2025년</option>
-              <option>2024년</option>
+            <select
+              value={searchYear}
+              onChange={(e) => setSearchYear(e.target.value)}
+            >
+              <option value="">전체 연도</option>
+              <option value="2025">2025년</option>
+              <option value="2024">2024년</option>
             </select>
-            <select>
-              <option>1학기</option>
-              <option>2학기</option>
+
+            <select
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            >
+              <option value="">전체 학기</option>
+              <option value="1학기">1학기</option>
+              <option value="2학기">2학기</option>
             </select>
-            <select>
-              <option>전체</option>
-              <option>국가근로장학생</option>
-              <option>대학행정인턴장학생</option>
-              <option>교육지원장학생</option>
+
+            <select
+              value={searchWorkType}
+              onChange={(e) => setSearchWorkType(e.target.value)}
+            >
+              <option value="">전체</option>
+              <option value="국가근로">국가근로장학생</option>
+              <option value="대학행정인턴">대학행정인턴장학생</option>
+              <option value="교육지원">교육지원장학생</option>
             </select>
-            <button className={styles.searchBtn}>조회</button>
+
+            <input
+              type="text"
+              placeholder="학생 이름"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              className={styles.searchInput}
+            />
+            <button
+              className={styles.searchBtn}
+              onClick={() => {
+                setCurrentPage(1);
+                fetchStudents(1);
+              }}
+            >
+              조회
+            </button>
           </div>
           <button
             className={styles.registerBtn}
@@ -189,6 +249,7 @@ export default function StudentPage() {
             initialData={currentStudent}
             onClose={() => setIsModalOpen(false)}
             refreshList={fetchStudents}
+            showToastMessage={showToastMessage}
           />
         )}
 
@@ -199,6 +260,9 @@ export default function StudentPage() {
             onDelete={confirmDelete}
           />
         )}
+
+        {/* Toast */}
+        {showToast && <div className={styles.toast}>{toastMessage}</div>}
       </div>
     </Layout>
   );
