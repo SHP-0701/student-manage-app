@@ -1,5 +1,5 @@
-import styles from '@/styles/SideMenu.module.css';
-import { useRouter } from 'next/router';
+import styles from "@/styles/SideMenu.module.css";
+import { useRouter } from "next/router";
 import {
   FaUser,
   FaUserGraduate,
@@ -7,7 +7,7 @@ import {
   FaChartBar,
   FaSignOutAlt,
   FaHome,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 export default function SideMenu({ username }) {
   const router = useRouter();
@@ -25,15 +25,15 @@ export default function SideMenu({ username }) {
 
       <nav className={styles.nav}>
         <ul>
-          <li onClick={() => router.push('/dashboard')}>
+          <li onClick={() => router.push("/dashboard")}>
             <FaHome />
             대시보드
           </li>
-          <li onClick={() => router.push('/dashboard/student')}>
+          <li onClick={() => router.push("/dashboard/student")}>
             <FaUserGraduate />
             학생 정보
           </li>
-          <li>
+          <li onClick={() => router.push("/dashboard/attendance")}>
             <FaClipboardList />
             출결 기록
           </li>

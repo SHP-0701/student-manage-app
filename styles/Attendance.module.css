@@ -1,0 +1,60 @@
+.container {
+  padding: 2rem;
+  color: #f0f0f0;
+}
+
+.container h2 {
+  margin-bottom: 1.5rem;
+}
+
+.filterSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filterSection select,
+.filterSection input {
+  padding: 0.5rem;
+  background: #1e1e1e;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #eee;
+}
+
+.searchBtn {
+  padding: 0.5rem 1rem;
+  background: #00bcd4;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.searchBtn:hover {
+  background: #00a4ba;
+}
+
+.tableSection table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1b1b1b;
+}
+
+.tableSection th,
+.tableSection td {
+  padding: 0.75rem;
+  border: 1px solid #333;
+  text-align: center;
+}
+
+.tableSection th {
+  background: #2a2a2a;
+  color: #ddd;
+}
+
+.tableSection td {
+  color: #eee;
+}
