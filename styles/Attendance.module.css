@@ -9,9 +9,31 @@
 
 .filterSection {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+.filters {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.registerBtn {
+  padding: 0.5rem 1rem;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.registerBtn:hover {
+  background-color: #1976d2;
 }
 
 .filterSection select,
@@ -25,16 +47,17 @@
 
 .searchBtn {
   padding: 0.5rem 1rem;
-  background: #00bcd4;
-  color: #000;
+  background-color: #444;
+  color: #eee;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
 .searchBtn:hover {
-  background: #00a4ba;
+  background: #555;
 }
 
 .tableSection table {
