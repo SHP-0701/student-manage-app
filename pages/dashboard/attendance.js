@@ -22,6 +22,9 @@ export default function AttendancePage() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
+  // 등록/수정 모달 오픈 state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // 출결 데이터 조회
   const fetchAttendance = async () => {
     const queryParams = new URLSearchParams({
