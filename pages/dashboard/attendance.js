@@ -97,6 +97,7 @@ export default function AttendancePage() {
             startDate={startDate}
             endDate={endDate}
             placeholderText='시작일'
+            dateFormat='yyyy-MM-dd'
           />
           <DatePicker
             selected={endDate}
@@ -105,6 +106,7 @@ export default function AttendancePage() {
             startDate={startDate}
             endDate={endDate}
             placeholderText='종료일'
+            dateFormat='yyyy-MM-dd'
             minDate={startDate}
           />
           <button className={styles.searchBtn}>조회</button>
