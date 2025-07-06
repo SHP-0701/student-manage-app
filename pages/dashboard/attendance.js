@@ -11,6 +11,7 @@ import styles from "@/styles/Attendance.module.css";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import AttendanceFormModal from "@/components/AttendanceFormModal";
 
 export default function AttendancePage() {
   const [attendanceList, setAttendanceList] = useState([]);
@@ -24,6 +25,7 @@ export default function AttendancePage() {
 
   // 등록/수정 모달 오픈 state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mode, setMode] = useState(null);
 
   // 출결 데이터 조회
   const fetchAttendance = async () => {
@@ -117,7 +119,10 @@ export default function AttendancePage() {
           </div>
           <button
             className={styles.registerBtn}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setIsModalOpen(true);
+              setMode("insert");
+            }}
           >
             출결 등록
           </button>
@@ -146,6 +151,14 @@ export default function AttendancePage() {
             </tbody>
           </table>
         </div>
+
+        {/* 출결 등록/수정 모달 */}
+        {isModalOpen && (
+          <AttendanceFormModal
+            mode={mode}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
       </div>
     </Layout>
   );
