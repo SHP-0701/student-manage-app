@@ -49,21 +49,30 @@ export default function AttendanceFormModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // mode에 따라 등록/수정 분기
     const method = mode === "insert" ? "POST" : "PUT";
-    const res = await fetch("/api/attendance", {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
 
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/attendance", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    if (res.ok) {
-      alert(data.message);
-      refreshList();
-      onClose();
-    } else {
-      alert(data.message);
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message);
+        refreshList();
+        onClose();
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(
+        "[/components/AttendanceFormModal.js] 출결 등록 에러 : ",
+        err
+      );
     }
   };
 

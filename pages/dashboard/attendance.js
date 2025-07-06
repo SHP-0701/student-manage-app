@@ -157,6 +157,7 @@ export default function AttendancePage() {
           <AttendanceFormModal
             mode={mode}
             onClose={() => setIsModalOpen(false)}
+            refreshList={fetchAttendance}
           />
         )}
       </div>
