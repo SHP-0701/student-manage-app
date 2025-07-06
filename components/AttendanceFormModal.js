@@ -63,7 +63,7 @@ export default function AttendanceFormModal({
 
       if (res.ok) {
         alert(data.message);
-        refreshList();
+        refreshList(true);
         onClose();
       } else {
         alert(data.message);

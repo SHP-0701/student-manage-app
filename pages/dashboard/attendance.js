@@ -12,6 +12,8 @@ import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AttendanceFormModal from "@/components/AttendanceFormModal";
+import { format } from "date-fns";
+import { getWorkHours } from "@/utils/timeUtils";
 
 export default function AttendancePage() {
   const [attendanceList, setAttendanceList] = useState([]);
@@ -28,22 +30,32 @@ export default function AttendancePage() {
   const [mode, setMode] = useState(null);
 
   // 출결 데이터 조회
-  const fetchAttendance = async () => {
-    const queryParams = new URLSearchParams({
-      name: searchName,
-      year: searchYear,
-      term: searchTerm,
-      workType: searchWorkType,
-    });
+  const fetchAttendance = async (clearFilter = false) => {
+    const queryParams = new URLSearchParams();
 
-    if (startDate)
-      queryParams.append("startDate", startDate.toISOString().split("T")[0]);
-    if (endDate)
-      queryParams.append("endDate", endDate.toISOString().split("T")[0]);
+    if (!clearFilter) {
+      if (searchName) queryParams.append("name", searchName);
+      if (searchYear) queryParams.append("year", searchYear);
+      if (searchTerm) queryParams.append("term", searchTerm);
+      if (searchWorkType) queryParams.append("workType", searchWorkType);
+      if (startDate)
+        queryParams.append("startDate", startDate.toISOString().split("T")[0]);
+      if (endDate)
+        queryParams.append("endDate", endDate.toISOString().split("T")[0]);
+    }
 
-    const res = await fetch(`/api/attendace?${queryParams.toString()}`);
+    const res = await fetch(`/api/attendance?${queryParams.toString()}`);
     const data = await res.json();
     setAttendanceList(data.attendance || []);
+
+    if (clearFilter) {
+      setSearchName("");
+      setSearchYear("");
+      setSearchTerm("");
+      setSearchWorkType("");
+      setStartDate(null);
+      setEndDate(null);
+    }
   };
 
   // 출결 데이터 가져올때 사용
@@ -115,7 +127,12 @@ export default function AttendancePage() {
               dateFormat="yyyy-MM-dd"
               minDate={startDate}
             />
-            <button className={styles.searchBtn}>조회</button>
+            <button
+              className={styles.searchBtn}
+              onClick={() => fetchAttendance()}
+            >
+              조회
+            </button>
           </div>
           <button
             className={styles.registerBtn}
@@ -145,9 +162,24 @@ export default function AttendancePage() {
             </thead>
             <tbody>
               {/* map()으로 출결 데이터 출력 */}
-              <tr>
-                <td colSpan="8">출결 기록이 없습니다.</td>
-              </tr>
+              {attendanceList && attendanceList.length > 0 ? (
+                attendanceList.map((item) => (
+                  <tr key={item.id}>
+                    <td>{format(new Date(item.workDate), "yyyy-MM-dd")}</td>
+                    <td>{item.workType}</td>
+                    <td>{item.stdName}</td>
+                    <td>{item.stdNum}</td>
+                    <td>{item.startTime?.slice(0, 5)}</td>
+                    <td>{item.endTime?.slice(0, 5)}</td>
+                    <td>{getWorkHours(item.startTime, item.endTime)}</td>
+                    <td>{item.remark}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8}>출결 기록이 없습니다.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -157,7 +189,7 @@ export default function AttendancePage() {
           <AttendanceFormModal
             mode={mode}
             onClose={() => setIsModalOpen(false)}
-            refreshList={fetchAttendance}
+            refreshList={(clear) => fetchAttendance(clear)}
           />
         )}
       </div>
