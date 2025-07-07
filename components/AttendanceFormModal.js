@@ -76,10 +76,26 @@ export default function AttendanceFormModal({
     }
   };
 
+  // 학생 선택 버튼 클릭 handler
+  const handleSelectStudent = () => {
+    alert("학생 선택 리스트 모달 열기");
+  };
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h3>{mode === "insert" ? "출결 등록" : "출결 수정"}</h3>
+        <div className={styles.modalHeader}>
+          <h3>{mode === "insert" ? "출결 등록" : "출결 수정"}</h3>
+          {mode === "insert" && (
+            <button
+              className={styles.selectStudentBtn}
+              onClick={handleSelectStudent}
+            >
+              학생 선택
+            </button>
+          )}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <label>날짜</label>
           <input
@@ -104,6 +120,7 @@ export default function AttendanceFormModal({
             name="stdName"
             value={form.stdName}
             onChange={handleChange}
+            readOnly={mode === "modify"}
           />
 
           <label>학번</label>
@@ -112,6 +129,7 @@ export default function AttendanceFormModal({
             name="stdNum"
             value={form.stdNum}
             onChange={handleChange}
+            readOnly={mode === "modify"}
           />
 
           <label>시작시간</label>
