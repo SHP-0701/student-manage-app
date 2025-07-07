@@ -6,6 +6,7 @@
 
 import styles from "@/styles/AttendanceFormModal.module.css";
 import { useState, useEffect } from "react";
+import StudentSelectModal from "./StudentSelectModal";
 
 export default function AttendanceFormModal({
   mode,
@@ -23,6 +24,9 @@ export default function AttendanceFormModal({
     endTime: "",
     note: "", // 비고
   });
+
+  // '학생 선택' 모달 열고 닫기
+  const [isStudentSelectOpen, setIsStudentSelectOpen] = useState(false);
 
   // 수정 모달인 경우 초기값 설정
   useEffect(() => {
@@ -78,7 +82,19 @@ export default function AttendanceFormModal({
 
   // 학생 선택 버튼 클릭 handler
   const handleSelectStudent = () => {
-    alert("학생 선택 리스트 모달 열기");
+    setIsStudentSelectOpen(true);
+  };
+
+  // 학생 선택 핸들러
+  const handleStudentSelected = (std) => {
+    // 학생 선택 시 form에 값 세팅하기
+    setForm((prev) => ({
+      ...prev,
+      stdName: std.stdName,
+      stdNum: std.stdNum,
+      workType: std.workType,
+    }));
+    setIsStudentSelectOpen(false);
   };
 
   return (
@@ -107,7 +123,11 @@ export default function AttendanceFormModal({
           />
 
           <label>근로구분</label>
-          <select name="workType" onChange={handleChange}>
+          <select
+            name="workType"
+            onChange={handleChange}
+            disabled={mode === "modify"}
+          >
             <option value="">근로구분 선택</option>
             <option value="국가근로">국가근로장학생</option>
             <option value="대학행정인턴">대학행정인턴장학생</option>
@@ -162,6 +182,13 @@ export default function AttendanceFormModal({
           </div>
         </form>
       </div>
+      {/* '학생 선택' 모달 */}
+      {isStudentSelectOpen && (
+        <StudentSelectModal
+          onSelect={handleStudentSelected}
+          onClose={() => setIsStudentSelectOpen(false)}
+        />
+      )}
     </div>
   );
 }
