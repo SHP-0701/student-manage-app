@@ -7,10 +7,10 @@
  */
 
 export function getWorkHours(start, end) {
-  if (!start || !end) return "-";
+  if (!start || !end) return '-';
 
-  const [sh, sm] = start.split(":").map(Number); // 시작 시간 쪼개기
-  const [eh, em] = end.split(":").map(Number); // 종료 시간 쪼개기
+  const [sh, sm] = start.split(':').map(Number); // 시작 시간 쪼개기
+  const [eh, em] = end.split(':').map(Number); // 종료 시간 쪼개기
 
   let startMinutes = sh * 60 + sm;
   let endMinutes = eh * 60 + em;
@@ -26,4 +26,29 @@ export function getWorkHours(start, end) {
   const minutes = diffMinutes % 60;
 
   return `${hours} 시간 ${minutes} 분`;
+}
+
+/**
+ * 현재년도 및 학기(1학기 / 2학기) return 해줌
+ * @param {Date} date - 기준 날짜
+ * @returns {Object} { year: '2025', term: '1학기 } - '년도', '학기' 배열
+ */
+
+export function getYearTerm(date) {
+  if (!(date instanceof Date))
+    throw new Error(
+      '[/timeUtils.js] getYearTerm() date param은 Date 객체여야 합니다.'
+    );
+
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+
+  let term = '';
+  if (month >= 3 && month <= 8) {
+    term = '1학기';
+  } else {
+    term = '2학기';
+  }
+
+  return { year: String(year), term };
 }
