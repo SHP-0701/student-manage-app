@@ -186,10 +186,10 @@ export default function StudentPage() {
               <tr>
                 <th>학년도</th>
                 <th>학기</th>
+                <th>근로구분</th>
                 <th>이름</th>
                 <th>학번</th>
                 <th>학과</th>
-                <th>근로구분</th>
                 <th>관리</th>
               </tr>
             </thead>
@@ -200,10 +200,10 @@ export default function StudentPage() {
                   <tr key={std.id}>
                     <td>{std.year}</td>
                     <td>{std.term}</td>
+                    <td>{std.workType}</td>
                     <td>{std.stdName}</td>
                     <td>{std.stdNum}</td>
                     <td>{std.stdDept}</td>
-                    <td>{std.workType}</td>
                     <td>
                       <button
                         className={styles.editBtn}

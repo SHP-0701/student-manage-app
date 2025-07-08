@@ -13,12 +13,17 @@ export default function StudentSelectModal({ onSelect, onClose }) {
   const [students, setStudents] = useState([]);
   const { year, term } = getYearTerm(new Date());
 
+  // 학생 이름 검색 파라미터용
+  const [searchStdName, setSearchStdName] = useState("");
+
   const fetchStudents = async () => {
     try {
       const queryParams = new URLSearchParams({
         year: year,
         term: term,
       });
+
+      if (searchStdName) queryParams.append("name", searchStdName);
 
       const res = await fetch(`/api/student?${queryParams.toString()}`);
       const data = await res.json();
@@ -43,6 +48,16 @@ export default function StudentSelectModal({ onSelect, onClose }) {
     >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>학생 선택</h3>
+        {/* 이름 검색 */}
+        <div className={styles.searchSection}>
+          <input
+            type="text"
+            placeholder="학생 이름"
+            value={searchStdName}
+            onChange={(e) => setSearchStdName(e.target.value)}
+          />
+          <button onClick={fetchStudents}>검색</button>
+        </div>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -63,6 +78,7 @@ export default function StudentSelectModal({ onSelect, onClose }) {
                   <td>{std.workType}</td>
                   <td>
                     <button
+                      className={styles.selectBtn}
                       onClick={() => {
                         onSelect(std);
                         onClose();
