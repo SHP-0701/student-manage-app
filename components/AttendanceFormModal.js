@@ -127,6 +127,7 @@ export default function AttendanceFormModal({
             name="workType"
             onChange={handleChange}
             disabled={mode === "modify"}
+            value={form.workType}
           >
             <option value="">근로구분 선택</option>
             <option value="국가근로">국가근로장학생</option>
