@@ -34,7 +34,13 @@ export default function StudentSelectModal({ onSelect, onClose }) {
   }, []);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClose();
+      }}
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>학생 선택</h3>
         <table className={styles.table}>
