@@ -39,7 +39,8 @@ export default async function handler(req, res) {
   // 출결 내역 조회(GET)
   else if (req.method === "GET") {
     try {
-      const { stdName, year, term, workType, startDate, endDate } = req.query;
+      const { stdName, year, term, workType, stdJob, startDate, endDate } =
+        req.query;
 
       let conditions = []; // 검색 조건
       let params = [];
@@ -64,6 +65,11 @@ export default async function handler(req, res) {
         params.push(workType);
       }
 
+      if (stdJob) {
+        conditions.push("s.stdJob = ?");
+        params.push(stdJob);
+      }
+
       if (startDate) {
         conditions.push("a.workDate >= ?");
         params.push(startDate);
@@ -78,11 +84,7 @@ export default async function handler(req, res) {
         ? `WHERE ${conditions.join(" AND ")}`
         : "";
 
-      console.log("[/api/attendance.js] req.query : ", req.query);
-      console.log("[/api/attendance.js] whereClause : ", whereClause);
-      console.log("[/api/attendance.js] params : ", params);
-
-      const sql = `SELECT a.id, a.workDate, a.workType, a.startTime, a.endTime, a.remark, s.stdName, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC`;
+      const sql = `SELECT a.id, a.workDate, a.workType, a.startTime, a.endTime, a.remark, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC`;
       const [rows] = await dbpool.execute(sql, params);
       return res.status(200).json({ attendance: rows });
     } catch (err) {

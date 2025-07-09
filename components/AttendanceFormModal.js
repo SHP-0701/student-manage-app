@@ -112,70 +112,77 @@ export default function AttendanceFormModal({
           )}
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <label>날짜</label>
-          <input
-            type="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            required
-          />
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.rowGroup}>
+            <label>날짜</label>
+            <input
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              required
+            />
+            <label>근로구분</label>
+            <select
+              name="workType"
+              onChange={handleChange}
+              disabled={mode === "modify"}
+              value={form.workType}
+            >
+              <option value="">근로구분 선택</option>
+              <option value="국가근로">국가근로장학생</option>
+              <option value="대학행정인턴">대학행정인턴장학생</option>
+              <option value="교육지원">교육지원장학생</option>
+            </select>
+          </div>
 
-          <label>근로구분</label>
-          <select
-            name="workType"
-            onChange={handleChange}
-            disabled={mode === "modify"}
-            value={form.workType}
-          >
-            <option value="">근로구분 선택</option>
-            <option value="국가근로">국가근로장학생</option>
-            <option value="대학행정인턴">대학행정인턴장학생</option>
-            <option value="교육지원">교육지원장학생</option>
-          </select>
+          <div className={styles.rowGroup}>
+            <label>이름</label>
+            <input
+              type="text"
+              name="stdName"
+              value={form.stdName}
+              onChange={handleChange}
+              readOnly={mode === "modify"}
+            />
 
-          <label>이름</label>
-          <input
-            type="text"
-            name="stdName"
-            value={form.stdName}
-            onChange={handleChange}
-            readOnly={mode === "modify"}
-          />
+            <label>학번</label>
+            <input
+              type="text"
+              name="stdNum"
+              value={form.stdNum}
+              onChange={handleChange}
+              readOnly={mode === "modify"}
+            />
+          </div>
 
-          <label>학번</label>
-          <input
-            type="text"
-            name="stdNum"
-            value={form.stdNum}
-            onChange={handleChange}
-            readOnly={mode === "modify"}
-          />
+          <div className={styles.rowGroup}>
+            <label>시작시간</label>
+            <input
+              type="time"
+              name="startTime"
+              value={form.startTime}
+              onChange={handleChange}
+            />
 
-          <label>시작시간</label>
-          <input
-            type="time"
-            name="startTime"
-            value={form.startTime}
-            onChange={handleChange}
-          />
+            <label>종료시간</label>
+            <input
+              type="time"
+              name="endTime"
+              value={form.endTime}
+              onChange={handleChange}
+            />
+          </div>
 
-          <label>종료시간</label>
-          <input
-            type="time"
-            name="endTime"
-            value={form.endTime}
-            onChange={handleChange}
-          />
-
-          <label>비고</label>
-          <input
-            type="text"
-            name="note"
-            value={form.note}
-            onChange={handleChange}
-          />
+          <div>
+            <label>비고</label>
+            <input
+              type="text"
+              name="note"
+              value={form.note}
+              onChange={handleChange}
+            />
+          </div>
 
           <div className={styles.buttonGroup}>
             <button>저장</button>

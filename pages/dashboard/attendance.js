@@ -21,6 +21,7 @@ export default function AttendancePage() {
   const [searchYear, setSearchYear] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchWorkType, setSearchWorkType] = useState("");
+  const [searchStdJob, setSearchStdJob] = useState("");
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -38,6 +39,8 @@ export default function AttendancePage() {
       if (searchYear) queryParams.append("year", searchYear);
       if (searchTerm) queryParams.append("term", searchTerm);
       if (searchWorkType) queryParams.append("workType", searchWorkType);
+      if (searchStdJob) queryParams.append("stdJob", searchStdJob);
+
       if (startDate)
         queryParams.append("startDate", startDate.toISOString().split("T")[0]);
       if (endDate)
@@ -53,6 +56,7 @@ export default function AttendancePage() {
       setSearchYear("");
       setSearchTerm("");
       setSearchWorkType("");
+      setSearchStdJob("");
       setStartDate(null);
       setEndDate(null);
     }
@@ -152,6 +156,7 @@ export default function AttendancePage() {
               <tr>
                 <th>날짜</th>
                 <th>근로구분</th>
+                <th>담당업무</th>
                 <th>이름</th>
                 <th>학번</th>
                 <th>시작시간</th>
@@ -167,6 +172,7 @@ export default function AttendancePage() {
                   <tr key={item.id}>
                     <td>{format(new Date(item.workDate), "yyyy-MM-dd")}</td>
                     <td>{item.workType}</td>
+                    <td>{item.stdJob}</td>
                     <td>{item.stdName}</td>
                     <td>{item.stdNum}</td>
                     <td>{item.startTime?.slice(0, 5)}</td>
@@ -177,7 +183,7 @@ export default function AttendancePage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={8}>출결 기록이 없습니다.</td>
+                  <td colSpan={9}>출결 기록이 없습니다.</td>
                 </tr>
               )}
             </tbody>
