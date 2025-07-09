@@ -17,12 +17,12 @@
   border: 1px solid #333;
   border-radius: 12px;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .modal h2 {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   color: #f0f0f0;
   text-align: center;
 }
@@ -33,6 +33,15 @@
   gap: 1rem;
 }
 
+.rowGroup {
+  display: flex;
+  gap: 1rem;
+}
+
+.rowGroup label {
+  flex: 1;
+}
+
 .form label {
   display: flex;
   flex-direction: column;
@@ -41,7 +50,8 @@
   font-size: 0.9rem;
 }
 
-.form input, .form select {
+.form input,
+.form select {
   margin-top: 0.4rem;
   padding: 0.5rem;
   border: 1px solid #444;
@@ -72,14 +82,13 @@
 
 .save {
   padding: 0.5rem 1rem;
-  background: #00bcd4;
+  background: #0047ab;
   border: none;
   border-radius: 4px;
-  color: #000;
-  font-weight: bold;
+  color: #fff;
   cursor: pointer;
 }
 
 .save:hover {
-  background: #00a4ba;
+  background: #003b8e;
 }
