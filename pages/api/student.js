@@ -63,6 +63,11 @@ export default async function handler(req, res) {
         params.push(searchWorkType);
       }
 
+      if (searchStdJob) {
+        whereClause += ' AND stdJob = ?';
+        params.push(searchStdJob);
+      }
+
       if (searchName) {
         whereClause += ' AND stdName LIKE ?';
         params.push(`%${searchName}%`);
