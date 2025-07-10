@@ -18,6 +18,7 @@ export default function AttendanceFormModal({
   const [form, setForm] = useState({
     date: '',
     workType: '',
+    stdJob: '',
     stdName: '',
     stdNum: '',
     startTime: '',
@@ -34,6 +35,7 @@ export default function AttendanceFormModal({
       setForm({
         date: initialData.date || '',
         workType: initialData.workType || '',
+        stdJob: initialData.stdJob || '',
         stdName: initialData.stdName || '',
         stdNum: initialData.stdNum || '',
         startTime: initialData.startTime || '',
@@ -93,6 +95,7 @@ export default function AttendanceFormModal({
       stdName: std.stdName,
       stdNum: std.stdNum,
       workType: std.workType,
+      stdJob: std.stdJob,
     }));
     setIsStudentSelectOpen(false);
   };
@@ -187,7 +190,23 @@ export default function AttendanceFormModal({
             </label>
           </div>
 
-          <div>
+          <div className={styles.rowGroup}>
+            <label>
+              담당업무
+              <select
+                name='stdJob'
+                onChange={handleChange}
+                disabled={mode === 'modify'}
+                value={form.stdJob}
+              >
+                <option value=''>담당업무 선택</option>
+                <option value='카운터'>카운터</option>
+                <option value='실습실'>실습실</option>
+                <option value='ECSC'>ECSC</option>
+                <option value='모니터링'>모니터링</option>
+              </select>
+            </label>
+
             <label>
               비고
               <input
