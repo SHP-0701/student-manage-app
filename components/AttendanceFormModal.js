@@ -4,9 +4,10 @@
  * initialData: 수정 시 데이터
  */
 
-import styles from '@/styles/AttendanceFormModal.module.css';
-import { useState, useEffect } from 'react';
-import StudentSelectModal from './StudentSelectModal';
+import ModalLayout from "./ModalLayout";
+import styles from "@/styles/AttendanceFormModal.module.css";
+import { useState, useEffect } from "react";
+import StudentSelectModal from "./StudentSelectModal";
 
 export default function AttendanceFormModal({
   mode,
@@ -16,14 +17,14 @@ export default function AttendanceFormModal({
 }) {
   // 상태값
   const [form, setForm] = useState({
-    date: '',
-    workType: '',
-    stdJob: '',
-    stdName: '',
-    stdNum: '',
-    startTime: '',
-    endTime: '',
-    note: '', // 비고
+    date: "",
+    workType: "",
+    stdJob: "",
+    stdName: "",
+    stdNum: "",
+    startTime: "",
+    endTime: "",
+    note: "", // 비고
   });
 
   // '학생 선택' 모달 열고 닫기
@@ -31,16 +32,16 @@ export default function AttendanceFormModal({
 
   // 수정 모달인 경우 초기값 설정
   useEffect(() => {
-    if (mode === 'modify' && initialData) {
+    if (mode === "modify" && initialData) {
       setForm({
-        date: initialData.date || '',
-        workType: initialData.workType || '',
-        stdJob: initialData.stdJob || '',
-        stdName: initialData.stdName || '',
-        stdNum: initialData.stdNum || '',
-        startTime: initialData.startTime || '',
-        endTime: initialData.endTime || '',
-        note: initialData.note || '',
+        date: initialData.date || "",
+        workType: initialData.workType || "",
+        stdJob: initialData.stdJob || "",
+        stdName: initialData.stdName || "",
+        stdNum: initialData.stdNum || "",
+        startTime: initialData.startTime || "",
+        endTime: initialData.endTime || "",
+        note: initialData.note || "",
       });
     }
   }, [mode, initialData]);
@@ -56,12 +57,12 @@ export default function AttendanceFormModal({
     e.preventDefault();
 
     // mode에 따라 등록/수정 분기
-    const method = mode === 'insert' ? 'POST' : 'PUT';
+    const method = mode === "insert" ? "POST" : "PUT";
 
     try {
-      const res = await fetch('/api/attendance', {
+      const res = await fetch("/api/attendance", {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
@@ -76,7 +77,7 @@ export default function AttendanceFormModal({
       }
     } catch (err) {
       console.error(
-        '[/components/AttendanceFormModal.js] 출결 등록 에러 : ',
+        "[/components/AttendanceFormModal.js] 출결 등록 에러 : ",
         err
       );
     }
@@ -101,129 +102,128 @@ export default function AttendanceFormModal({
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.modalHeader}>
-          <h3>{mode === 'insert' ? '출결 등록' : '출결 수정'}</h3>
-          {mode === 'insert' && (
-            <button
-              className={styles.selectStudentBtn}
-              onClick={handleSelectStudent}
+    <ModalLayout onClose={onClose} maxWidth={450}>
+      <div className={styles.modalHeader}>
+        <h3>{mode === "insert" ? "출결 등록" : "출결 수정"}</h3>
+        {mode === "insert" && (
+          <button
+            className={styles.selectStudentBtn}
+            onClick={handleSelectStudent}
+          >
+            학생 선택
+          </button>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.rowGroup}>
+          <label>
+            날짜
+            <input
+              type="date"
+              name="date"
+              value={form.date}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label>
+            근로구분
+            <select
+              name="workType"
+              onChange={handleChange}
+              disabled={mode === "modify"}
+              value={form.workType}
             >
-              학생 선택
-            </button>
-          )}
+              <option value="">근로구분 선택</option>
+              <option value="국가근로">국가근로장학생</option>
+              <option value="대학행정인턴">대학행정인턴장학생</option>
+              <option value="교육지원">교육지원장학생</option>
+            </select>
+          </label>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.rowGroup}>
-            <label>
-              날짜
-              <input
-                type='date'
-                name='date'
-                value={form.date}
-                onChange={handleChange}
-                required
-              />
-            </label>
+        <div className={styles.rowGroup}>
+          <label>
+            이름
+            <input
+              type="text"
+              name="stdName"
+              value={form.stdName}
+              onChange={handleChange}
+              readOnly={mode === "modify"}
+            />
+          </label>
 
-            <label>
-              근로구분
-              <select
-                name='workType'
-                onChange={handleChange}
-                disabled={mode === 'modify'}
-                value={form.workType}
-              >
-                <option value=''>근로구분 선택</option>
-                <option value='국가근로'>국가근로장학생</option>
-                <option value='대학행정인턴'>대학행정인턴장학생</option>
-                <option value='교육지원'>교육지원장학생</option>
-              </select>
-            </label>
-          </div>
+          <label>
+            학번
+            <input
+              type="text"
+              name="stdNum"
+              value={form.stdNum}
+              onChange={handleChange}
+              readOnly={mode === "modify"}
+            />
+          </label>
+        </div>
 
-          <div className={styles.rowGroup}>
-            <label>
-              이름
-              <input
-                type='text'
-                name='stdName'
-                value={form.stdName}
-                onChange={handleChange}
-                readOnly={mode === 'modify'}
-              />
-            </label>
+        <div className={styles.rowGroup}>
+          <label>
+            시작시간
+            <input
+              type="time"
+              name="startTime"
+              value={form.startTime}
+              onChange={handleChange}
+            />
+          </label>
 
-            <label>
-              학번
-              <input
-                type='text'
-                name='stdNum'
-                value={form.stdNum}
-                onChange={handleChange}
-                readOnly={mode === 'modify'}
-              />
-            </label>
-          </div>
+          <label>
+            종료시간
+            <input
+              type="time"
+              name="endTime"
+              value={form.endTime}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
 
-          <div className={styles.rowGroup}>
-            <label>
-              시작시간
-              <input
-                type='time'
-                name='startTime'
-                value={form.startTime}
-                onChange={handleChange}
-              />
-            </label>
+        <div className={styles.rowGroup}>
+          <label>
+            담당업무
+            <select
+              name="stdJob"
+              onChange={handleChange}
+              disabled={mode === "modify"}
+              value={form.stdJob}
+            >
+              <option value="">담당업무 선택</option>
+              <option value="카운터">카운터</option>
+              <option value="실습실">실습실</option>
+              <option value="ECSC">ECSC</option>
+              <option value="모니터링">모니터링</option>
+            </select>
+          </label>
 
-            <label>
-              종료시간
-              <input
-                type='time'
-                name='endTime'
-                value={form.endTime}
-                onChange={handleChange}
-              />
-            </label>
-          </div>
+          <label>
+            비고
+            <input
+              type="text"
+              name="note"
+              value={form.note}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
 
-          <div className={styles.rowGroup}>
-            <label>
-              담당업무
-              <select
-                name='stdJob'
-                onChange={handleChange}
-                disabled={mode === 'modify'}
-                value={form.stdJob}
-              >
-                <option value=''>담당업무 선택</option>
-                <option value='카운터'>카운터</option>
-                <option value='실습실'>실습실</option>
-                <option value='ECSC'>ECSC</option>
-                <option value='모니터링'>모니터링</option>
-              </select>
-            </label>
+        <div className={styles.buttonGroup}>
+          <button>저장</button>
+          <button onClick={onClose}>취소</button>
+        </div>
+      </form>
 
-            <label>
-              비고
-              <input
-                type='text'
-                name='note'
-                value={form.note}
-                onChange={handleChange}
-              />
-            </label>
-          </div>
-
-          <div className={styles.buttonGroup}>
-            <button>저장</button>
-            <button onClick={onClose}>취소</button>
-          </div>
-        </form>
-      </div>
       {/* '학생 선택' 모달 */}
       {isStudentSelectOpen && (
         <StudentSelectModal
@@ -231,6 +231,6 @@ export default function AttendanceFormModal({
           onClose={() => setIsStudentSelectOpen(false)}
         />
       )}
-    </div>
+    </ModalLayout>
   );
 }

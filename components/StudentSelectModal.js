@@ -4,6 +4,7 @@
  * '수정' 모달에서는 렌더링 되지 않음.
  */
 
+import ModalLayout from "@/components/ModalLayout";
 import styles from "@/styles/StudentSelectModal.module.css";
 import { useEffect, useState } from "react";
 import { getYearTerm } from "@/utils/timeUtils";
@@ -39,69 +40,61 @@ export default function StudentSelectModal({ onSelect, onClose }) {
   }, []);
 
   return (
-    <div
-      className={styles.overlay}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClose();
-      }}
-    >
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h3>학생 선택</h3>
-        {/* 이름 검색 */}
-        <div className={styles.searchSection}>
-          <input
-            type="text"
-            placeholder="학생 이름"
-            value={searchStdName}
-            onChange={(e) => setSearchStdName(e.target.value)}
-          />
-          <button onClick={fetchStudents}>검색</button>
-        </div>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>이름</th>
-              <th>학번</th>
-              <th>학과</th>
-              <th>근로구분</th>
-              <th>선택</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.length > 0 ? (
-              students.map((std) => (
-                <tr key={std.id}>
-                  <td>{std.stdName}</td>
-                  <td>{std.stdNum}</td>
-                  <td>{std.stdDept}</td>
-                  <td>{std.workType}</td>
-                  <td>
-                    <button
-                      className={styles.selectBtn}
-                      onClick={() => {
-                        onSelect(std);
-                        onClose();
-                      }}
-                    >
-                      선택
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>조회된 학생이 없습니다.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        <div className={styles.buttonGroup}>
-          <button className={styles.closeBtn} onClick={onClose}>
-            닫기
-          </button>
-        </div>
+    <ModalLayout onClose={onClose} maxWidth={500}>
+      <h2>학생 선택</h2>
+      {/* 이름 검색 */}
+      <div className={styles.searchSection}>
+        <input
+          type="text"
+          placeholder="학생 이름"
+          value={searchStdName}
+          onChange={(e) => setSearchStdName(e.target.value)}
+        />
+        <button onClick={fetchStudents}>검색</button>
       </div>
-    </div>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>학번</th>
+            <th>학과</th>
+            <th>근로구분</th>
+            <th>선택</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.length > 0 ? (
+            students.map((std) => (
+              <tr key={std.id}>
+                <td>{std.stdName}</td>
+                <td>{std.stdNum}</td>
+                <td>{std.stdDept}</td>
+                <td>{std.workType}</td>
+                <td>
+                  <button
+                    className={styles.selectBtn}
+                    onClick={() => {
+                      onSelect(std);
+                      onClose();
+                    }}
+                  >
+                    선택
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5}>조회된 학생이 없습니다.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <div className={styles.buttonGroup}>
+        <button className={styles.closeBtn} onClick={onClose}>
+          닫기
+        </button>
+      </div>
+    </ModalLayout>
   );
 }
