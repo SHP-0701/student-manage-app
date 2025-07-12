@@ -14,6 +14,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AttendanceFormModal from "@/components/AttendanceFormModal";
 import { format } from "date-fns";
 import { getWorkHours } from "@/utils/timeUtils";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 
 export default function AttendancePage() {
   const [attendanceList, setAttendanceList] = useState([]);
@@ -28,7 +29,58 @@ export default function AttendancePage() {
 
   // 등록/수정 모달 오픈 state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [mode, setMode] = useState(null);
+
+  // 수정/삭제 시 선택된 학생 데이터 넘김
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
+  // toast
+  const [toastMsg, setToastMsg] = useState("");
+  const [showToast, setShowToast] = useState(false);
+
+  // 수정 버튼 클릭 시 실행
+  const handleModify = (item) => {
+    setMode("modify");
+    setSelectedStudent(item);
+    setIsModalOpen(true);
+  };
+
+  // 삭제 버튼 핸들러
+  const handleDelete = (student) => {
+    setDeleteModalOpen(true);
+    setSelectedStudent(student);
+  };
+
+  // 삭제 API 요청
+  const confirmDelete = async (id) => {
+    const res = await fetch("/api/attendance", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showToastMessage(data.message);
+      setDeleteModalOpen(false);
+      fetchAttendance();
+    } else {
+      alert(data.message);
+    }
+  };
+
+  // toast 호출 함수
+  const showToastMessage = (msg) => {
+    setToastMsg(msg);
+    setShowToast(true);
+
+    setTimeout(() => {
+      setShowToast(false);
+      setToastMsg("");
+    }, 3000);
+  };
 
   // 출결 데이터 조회
   const fetchAttendance = async (clearFilter = false) => {
@@ -163,6 +215,7 @@ export default function AttendancePage() {
                 <th>종료시간</th>
                 <th>근로시간</th>
                 <th>비고</th>
+                <th>관리</th>
               </tr>
             </thead>
             <tbody>
@@ -179,25 +232,52 @@ export default function AttendancePage() {
                     <td>{item.endTime?.slice(0, 5)}</td>
                     <td>{getWorkHours(item.startTime, item.endTime)}</td>
                     <td>{item.remark}</td>
+                    <td>
+                      <button
+                        className={styles.editBtn}
+                        onClick={() => handleModify(item)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleDelete(item)}
+                      >
+                        삭제
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9}>출결 기록이 없습니다.</td>
+                  <td colSpan={10}>출결 기록이 없습니다.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
 
-        {/* 출결 등록/수정 모달 */}
+        {/* 모달 렌더링 */}
         {isModalOpen && (
           <AttendanceFormModal
             mode={mode}
             onClose={() => setIsModalOpen(false)}
             refreshList={(clear) => fetchAttendance(clear)}
+            initialData={selectedStudent}
           />
         )}
+
+        {deleteModalOpen && (
+          <ConfirmDeleteModal
+            title={"근로학생 출결 기록 삭제"}
+            onClose={() => setDeleteModalOpen(false)}
+            message={`${selectedStudent.stdName} 학생의 출결 기록을 삭제하시겠습니까?`}
+            onDelete={() => confirmDelete(selectedStudent.id)}
+          />
+        )}
+
+        {/* toast */}
+        {showToast && <div className={styles.toast}>{toastMsg}</div>}
       </div>
     </Layout>
   );

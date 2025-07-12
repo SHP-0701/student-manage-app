@@ -6,7 +6,7 @@
 
 import Layout from "@/components/Layout";
 import StudentFormModal from "@/components/StudentFormModal";
-import StudentDeleteConfirmModal from "@/components/StudentDeleteConfirmModal";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import styles from "@/styles/Student.module.css";
 import { useEffect, useState } from "react";
 
@@ -269,10 +269,11 @@ export default function StudentPage() {
         )}
 
         {deleteModalOpen && (
-          <StudentDeleteConfirmModal
-            student={studentToDelete}
+          <ConfirmDeleteModal
+            title={"학생 정보 삭제"}
             onClose={() => setDeleteModalOpen(false)}
-            onDelete={confirmDelete}
+            message={`${studentToDelete.stdName} 학생 정보를 삭제하시겠습니까?`}
+            onDelete={() => confirmDelete(studentToDelete.id)}
           />
         )}
 

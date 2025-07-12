@@ -9,10 +9,11 @@ export default async function handler(req, res) {
   // 출결 등록(POST)
   if (req.method === "POST") {
     try {
-      const { stdNum, stdName, workType, date, startTime, endTime, note } =
+      console.log("[/api/attendance.js] 출결 등록 api 호출");
+      const { stdNum, stdName, workType, workDate, startTime, endTime, note } =
         req.body;
-
-      if (!stdNum || !date || !stdName)
+      console.log("출결 등록 데이터 요청값: ", req.body);
+      if (!stdNum || !workDate || !stdName)
         return res.status(400).json({ message: "필수 값이 누락되었습니다." });
 
       const sql =
@@ -20,7 +21,7 @@ export default async function handler(req, res) {
       const values = [
         stdNum,
         stdName,
-        date,
+        workDate,
         startTime,
         endTime,
         note,
@@ -95,10 +96,49 @@ export default async function handler(req, res) {
 
   // 출결 내역 수정(PUT)
   else if (req.method === "PUT") {
+    const {
+      id,
+      workDate,
+      workType,
+      stdJob,
+      stdName,
+      stdNum,
+      startTime,
+      endTime,
+      note,
+    } = req.body;
+
+    if (!id) return res.status(400).json({ message: "출결 ID가 필요합니다." });
+
+    try {
+      const [result] = await dbpool.query(
+        `UPDATE student_attendance SET workDate = ?, workType = ?, stdName = ?, stdNum = ?, startTime = ?, endTime = ?, remark = ? WHERE id = ?`,
+        [workDate, workType, stdName, stdNum, startTime, endTime, note, id]
+      );
+
+      res.status(200).json({ message: "출결 수정 성공" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "출결 수정 실패 ", error: err });
+    }
   }
 
   // 출결 내역 삭제(DELETE)
   else if (req.method === "DELETE") {
+    const { id } = req.body;
+
+    if (!id) return res.status(400).json({ message: "출결 ID가 필요합니다" });
+
+    try {
+      const [result] = await dbpool.query(
+        `DELETE FROM student_attendance WHERE id = ?`,
+        [id]
+      );
+      res.status(200).json({ message: "출결 삭제 성공!" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "출결 삭제 실패 ", error: err });
+    }
   } else {
     return res.status(405).json({ message: "허용되지 않은 메서드" });
   }
