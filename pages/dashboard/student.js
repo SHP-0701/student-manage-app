@@ -185,6 +185,7 @@ export default function StudentPage() {
             className={styles.registerBtn}
             onClick={() => {
               setMode("insert");
+              setCurrentStudent(null);
               setIsModalOpen(true);
             }}
           >
@@ -264,7 +265,7 @@ export default function StudentPage() {
             initialData={currentStudent}
             onClose={() => setIsModalOpen(false)}
             refreshList={fetchStudents}
-            showToastMessage={showToastMessage}
+            showToastMsg={showToastMessage}
           />
         )}
 

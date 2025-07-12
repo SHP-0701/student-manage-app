@@ -11,7 +11,6 @@ import styles from "@/styles/Attendance.module.css";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AttendanceFormModal from "@/components/AttendanceFormModal";
 import { format } from "date-fns";
 import { getWorkHours } from "@/utils/timeUtils";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
