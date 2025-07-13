@@ -1,7 +1,5 @@
 /*
  * 학생 정보 등록 & 수정 모달(StudentFormModal)
- * DB Table(student_info) COLUMN
- * | [id] | [year] | [term] | [stdName] | [stdNum(학번)] | [stdDept(학부/과)] | [workType(근로구분)] | [stdJob(담당업무)] | [created_at] |
  */
 
 import ModalLayout from "@/components/ModalLayout";

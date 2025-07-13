@@ -14,6 +14,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import { getWorkHours } from "@/utils/timeUtils";
 import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import AttendanceFormModal from "@/components/AttendanceFormModal";
 
 export default function AttendancePage() {
   const [attendanceList, setAttendanceList] = useState([]);
@@ -62,7 +63,7 @@ export default function AttendancePage() {
     const data = await res.json();
 
     if (res.ok) {
-      showToastMessage(data.message);
+      showToastMsg(data.message);
       setDeleteModalOpen(false);
       fetchAttendance();
     } else {
@@ -71,7 +72,7 @@ export default function AttendancePage() {
   };
 
   // toast 호출 함수
-  const showToastMessage = (msg) => {
+  const showToastMsg = (msg) => {
     setToastMsg(msg);
     setShowToast(true);
 
@@ -205,6 +206,8 @@ export default function AttendancePage() {
           <table>
             <thead>
               <tr>
+                <th>학년도</th>
+                <th>학기</th>
                 <th>날짜</th>
                 <th>근로구분</th>
                 <th>담당업무</th>
@@ -222,7 +225,9 @@ export default function AttendancePage() {
               {attendanceList && attendanceList.length > 0 ? (
                 attendanceList.map((item) => (
                   <tr key={item.id}>
-                    <td>{format(new Date(item.workDate), "yyyy-MM-dd")}</td>
+                    <td>{item.year}</td>
+                    <td>{item.term}</td>
+                    <td>{item.workDate}</td>
                     <td>{item.workType}</td>
                     <td>{item.stdJob}</td>
                     <td>{item.stdName}</td>
@@ -230,7 +235,7 @@ export default function AttendancePage() {
                     <td>{item.startTime?.slice(0, 5)}</td>
                     <td>{item.endTime?.slice(0, 5)}</td>
                     <td>{getWorkHours(item.startTime, item.endTime)}</td>
-                    <td>{item.remark}</td>
+                    <td>{item.note}</td>
                     <td>
                       <button
                         className={styles.editBtn}
@@ -249,7 +254,7 @@ export default function AttendancePage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10}>출결 기록이 없습니다.</td>
+                  <td colSpan={12}>출결 기록이 없습니다.</td>
                 </tr>
               )}
             </tbody>
@@ -263,6 +268,7 @@ export default function AttendancePage() {
             onClose={() => setIsModalOpen(false)}
             refreshList={(clear) => fetchAttendance(clear)}
             initialData={selectedStudent}
+            showToastMsg={showToastMsg}
           />
         )}
 

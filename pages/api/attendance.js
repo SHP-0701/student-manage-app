@@ -9,23 +9,34 @@ export default async function handler(req, res) {
   // 출결 등록(POST)
   if (req.method === "POST") {
     try {
-      console.log("[/api/attendance.js] 출결 등록 api 호출");
-      const { stdNum, stdName, workType, workDate, startTime, endTime, note } =
-        req.body;
-      console.log("출결 등록 데이터 요청값: ", req.body);
-      if (!stdNum || !workDate || !stdName)
-        return res.status(400).json({ message: "필수 값이 누락되었습니다." });
-
-      const sql =
-        "INSERT INTO student_attendance (stdNum, stdName, workDate, startTime, endTime, remark, workType) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      const values = [
+      const {
+        year,
+        term,
         stdNum,
         stdName,
+        workType,
+        stdJob,
         workDate,
         startTime,
         endTime,
         note,
+      } = req.body;
+      if (!stdNum || !stdName)
+        return res.status(400).json({ message: "필수 값이 누락되었습니다." });
+
+      const sql =
+        "INSERT INTO student_attendance (year, term, stdNum, stdName, workType, stdJob, workDate, startTime, endTime, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      const values = [
+        year,
+        term,
+        stdNum,
+        stdName,
         workType,
+        stdJob,
+        workDate,
+        startTime,
+        endTime,
+        note,
       ];
 
       await dbpool.execute(sql, values);
@@ -85,7 +96,7 @@ export default async function handler(req, res) {
         ? `WHERE ${conditions.join(" AND ")}`
         : "";
 
-      const sql = `SELECT a.id, a.workDate, a.workType, a.startTime, a.endTime, a.remark, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC`;
+      const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, a.workType, s.year, s.term, a.startTime, a.endTime, a.note, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC`;
       const [rows] = await dbpool.execute(sql, params);
       return res.status(200).json({ attendance: rows });
     } catch (err) {
