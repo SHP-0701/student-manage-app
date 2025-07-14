@@ -125,6 +125,8 @@ export default function AttendanceFormModal({
               value={form.year}
               onChange={handleChange}
               required
+              disabled={mode === "modify"}
+              className={mode === "modify" ? styles.disabledInput : ""}
             />
           </label>
           <label>
@@ -135,6 +137,8 @@ export default function AttendanceFormModal({
               value={form.term}
               onChange={handleChange}
               required
+              disabled={mode === "modify"}
+              className={mode === "modify" ? styles.disabledInput : ""}
             />
           </label>
         </div>
@@ -148,6 +152,8 @@ export default function AttendanceFormModal({
               value={form.stdNum}
               onChange={handleChange}
               required
+              disabled={mode === "modify"}
+              className={mode === "modify" ? styles.disabledInput : ""}
             />
           </label>
           <label>
@@ -158,6 +164,8 @@ export default function AttendanceFormModal({
               value={form.stdName}
               onChange={handleChange}
               required
+              disabled={mode === "modify"}
+              className={mode === "modify" ? styles.disabledInput : ""}
             />
           </label>
         </div>
@@ -170,6 +178,8 @@ export default function AttendanceFormModal({
               value={form.workType}
               onChange={handleChange}
               required
+              disabled={mode === "modify"}
+              className={mode === "modify" ? styles.disabledInput : ""}
             />
           </label>
           <label>
@@ -180,6 +190,8 @@ export default function AttendanceFormModal({
               value={form.stdJob}
               onChange={handleChange}
               required
+              disabled={mode === "modify"}
+              className={mode === "modify" ? styles.disabledInput : ""}
             />
           </label>
         </div>

@@ -107,24 +107,14 @@ export default async function handler(req, res) {
 
   // 출결 내역 수정(PUT)
   else if (req.method === "PUT") {
-    const {
-      id,
-      workDate,
-      workType,
-      stdJob,
-      stdName,
-      stdNum,
-      startTime,
-      endTime,
-      note,
-    } = req.body;
+    const { id, workDate, startTime, endTime, note } = req.body;
 
     if (!id) return res.status(400).json({ message: "출결 ID가 필요합니다." });
 
     try {
       const [result] = await dbpool.query(
-        `UPDATE student_attendance SET workDate = ?, workType = ?, stdName = ?, stdNum = ?, startTime = ?, endTime = ?, remark = ? WHERE id = ?`,
-        [workDate, workType, stdName, stdNum, startTime, endTime, note, id]
+        `UPDATE student_attendance SET workDate = ?, startTime = ?, endTime = ?, note = ? WHERE id = ?`,
+        [workDate, startTime, endTime, note, id]
       );
 
       res.status(200).json({ message: "출결 수정 성공" });

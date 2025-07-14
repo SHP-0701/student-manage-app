@@ -87,3 +87,11 @@
 .btnGroup button:first-child:hover {
   background-color: #666;
 }
+
+/* 비활성화(disabled) css */
+input.disabledInput {
+  background: #1e1e1e;
+  color: #888;
+  border: 1px solid #333;
+  cursor: not-allowed;
+}
