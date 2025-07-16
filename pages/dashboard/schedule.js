@@ -4,25 +4,35 @@
  * 오른쪽: 리스트
  */
 
-import Layout from "@/components/Layout";
-import styles from "@/styles/Schedule.module.css";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import { useState, useEffect } from "react";
+import Layout from '@/components/Layout';
+import 'react-calendar/dist/Calendar.css';
+import Calendar from 'react-calendar';
+import styles from '@/styles/Schedule.module.css';
+import { useState, useEffect } from 'react';
 
 export default function SchedulePage() {
   // 선택된 탭
-  const [activeTab, setActiveTab] = useState("실습실");
+  const [activeTab, setActiveTab] = useState('실습실');
+
+  // 선택된 날짜
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   // 탭 목록
-  const tabs = ["실습실", "카운터", "ECSC", "모니터링"];
+  const tabs = ['실습실', '카운터', 'ECSC', '모니터링'];
 
   return (
     <Layout>
       <div className={styles.container}>
+        {/* 페이지 제목 */}
+        <h3 className={styles.pageTitle}>근로시간표 조회</h3>
+
         {/* 왼쪽 영역: 캘린더(react-calendar) */}
         <div className={styles.left}>
-          <Calendar />
+          <Calendar
+            onChange={setSelectedDate}
+            value={selectedDate}
+            className={styles.myCalendar}
+          />
         </div>
 
         {/* 오른쪽 영역: 탭 + 테이블 */}
@@ -32,7 +42,7 @@ export default function SchedulePage() {
               <button
                 key={tab}
                 className={`${styles.tab} ${
-                  activeTab === tab ? styles.active : ""
+                  activeTab === tab ? styles.active : ''
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -46,7 +56,6 @@ export default function SchedulePage() {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>학번</th>
                   <th>성명</th>
                   <th>근로구분</th>
                   <th>담당업무</th>
@@ -55,7 +64,6 @@ export default function SchedulePage() {
               </thead>
               <tbody>
                 <tr>
-                  <td>202512345</td>
                   <td>파이리</td>
                   <td>국가근로</td>
                   <td>카운터</td>
