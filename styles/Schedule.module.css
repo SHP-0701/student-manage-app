@@ -1,4 +1,5 @@
 .container {
+  margin-left: 1.5rem;
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
@@ -15,7 +16,7 @@
 
 .left {
   width: 40%;
-  min-height: 600px;
+  min-height: 450px;
 }
 
 /* react-calendar css */
@@ -29,7 +30,7 @@
   border-radius: 8px;
   border: 1px solid #333;
   color: #ddd;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
 }
 
 .myCalendar :global(.react-calendar__navigation) {
@@ -43,7 +44,13 @@
   border: none;
   color: #ddd;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
+}
+
+.myCalendar :global(.react-calendar__navigation button:hover) {
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
 }
 
 .myCalendar :global(.react-calendar__month-view__weekdays) {
@@ -100,7 +107,7 @@
 
 /* 오른쪽 영역(테이블) */
 .right {
-  width: 50%;
+  width: 55%;
   display: flex;
   flex-direction: column;
 }
@@ -144,7 +151,7 @@
 .table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0;
+  border-spacing: 0 6px;
   border-radius: 8px;
   overflow: hidden;
 }
