@@ -7,6 +7,7 @@
 import Layout from '@/components/Layout';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
+import { isHoliday, getHolidayNames } from '@hyunbinseo/holidays-kr'; // 공휴일 표시 package
 import styles from '@/styles/Schedule.module.css';
 import { useState, useEffect } from 'react';
 
@@ -16,6 +17,9 @@ export default function SchedulePage() {
 
   // 선택된 날짜
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // 현재 월 기준(getMonth() 관련)
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // 탭 목록
   const tabs = ['실습실', '카운터', 'ECSC', '모니터링'];
@@ -29,9 +33,51 @@ export default function SchedulePage() {
         {/* 왼쪽 영역: 캘린더(react-calendar) */}
         <div className={styles.left}>
           <Calendar
+            onActiveStartDateChange={({ activeStartDate }) =>
+              setCurrentMonth(activeStartDate)
+            }
             onChange={setSelectedDate}
             value={selectedDate}
             className={styles.myCalendar}
+            calendarType='gregory'
+            tileClassName={({ date, view }) => {
+              if (view === 'month') {
+                const tileMonth = date.getMonth();
+                const currentViewMonth = currentMonth.getMonth();
+
+                const currentYear = new Date().getFullYear();
+                const tileYear = date.getFullYear();
+
+                if (tileMonth != currentViewMonth) return;
+                if (tileYear === currentYear && isHoliday(date))
+                  return 'holiday';
+
+                const day = date.getDay();
+                if (day === 0) return 'sunday';
+                if (day === 6) return 'saturday';
+              }
+            }}
+            tileContent={({ date, view }) => {
+              if (
+                view === 'month' &&
+                date.getFullYear() === new Date().getFullYear()
+              ) {
+                const currentYear = new Date().getFullYear();
+                if (date.getFullYear() !== currentYear) return null;
+
+                const holidayNames = getHolidayNames(date);
+                if (!holidayNames || holidayNames.length === 0) return null;
+
+                const [main, sub] = holidayNames[0].split('(');
+
+                return (
+                  <div className='holidayLabel'>
+                    <div>{main}</div>
+                    {sub && <div>({sub}</div>}
+                  </div>
+                );
+              }
+            }}
           />
         </div>
 

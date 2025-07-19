@@ -9,4 +9,6 @@
   margin-left: 240px;
   padding: 2rem;
   color: #f0f0f0;
+  caret-color: transparent;
+  user-select: none;
 }
