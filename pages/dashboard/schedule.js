@@ -4,16 +4,16 @@
  * 오른쪽: 리스트
  */
 
-import Layout from '@/components/Layout';
-import 'react-calendar/dist/Calendar.css';
-import Calendar from 'react-calendar';
-import { isHoliday, getHolidayNames } from '@hyunbinseo/holidays-kr'; // 공휴일 표시 package
-import styles from '@/styles/Schedule.module.css';
-import { useState, useEffect } from 'react';
+import Layout from "@/components/Layout";
+import "react-calendar/dist/Calendar.css";
+import Calendar from "react-calendar";
+import { isHoliday, getHolidayNames } from "@hyunbinseo/holidays-kr"; // 공휴일 표시 package
+import styles from "@/styles/Schedule.module.css";
+import { useState, useEffect } from "react";
 
 export default function SchedulePage() {
   // 선택된 탭
-  const [activeTab, setActiveTab] = useState('실습실');
+  const [activeTab, setActiveTab] = useState("실습실");
 
   // 선택된 날짜
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -22,7 +22,7 @@ export default function SchedulePage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // 탭 목록
-  const tabs = ['실습실', '카운터', 'ECSC', '모니터링'];
+  const tabs = ["실습실", "카운터", "ECSC", "모니터링"];
 
   return (
     <Layout>
@@ -39,9 +39,9 @@ export default function SchedulePage() {
             onChange={setSelectedDate}
             value={selectedDate}
             className={styles.myCalendar}
-            calendarType='gregory'
+            calendarType="gregory"
             tileClassName={({ date, view }) => {
-              if (view === 'month') {
+              if (view === "month") {
                 const tileMonth = date.getMonth();
                 const currentViewMonth = currentMonth.getMonth();
 
@@ -50,16 +50,16 @@ export default function SchedulePage() {
 
                 if (tileMonth != currentViewMonth) return;
                 if (tileYear === currentYear && isHoliday(date))
-                  return 'holiday';
+                  return "holiday";
 
                 const day = date.getDay();
-                if (day === 0) return 'sunday';
-                if (day === 6) return 'saturday';
+                if (day === 0) return "sunday";
+                if (day === 6) return "saturday";
               }
             }}
             tileContent={({ date, view }) => {
               if (
-                view === 'month' &&
+                view === "month" &&
                 date.getFullYear() === new Date().getFullYear()
               ) {
                 const currentYear = new Date().getFullYear();
@@ -68,10 +68,10 @@ export default function SchedulePage() {
                 const holidayNames = getHolidayNames(date);
                 if (!holidayNames || holidayNames.length === 0) return null;
 
-                const [main, sub] = holidayNames[0].split('(');
+                const [main, sub] = holidayNames[0].split("(");
 
                 return (
-                  <div className='holidayLabel'>
+                  <div className="holidayLabel">
                     <div>{main}</div>
                     {sub && <div>({sub}</div>}
                   </div>
@@ -88,13 +88,15 @@ export default function SchedulePage() {
               <button
                 key={tab}
                 className={`${styles.tab} ${
-                  activeTab === tab ? styles.active : ''
+                  activeTab === tab ? styles.active : ""
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab}
               </button>
             ))}
+
+            <button className={styles.btnScheduleReg}>시간표 등록</button>
           </div>
 
           {/* 테이블 */}
