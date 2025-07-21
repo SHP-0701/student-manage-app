@@ -1,0 +1,72 @@
+.title {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.gridWrapper {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.grid th,
+.grid td {
+  border: 1px solid #444;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.grid th {
+  background: #2a2a2a;
+  color: #ccc;
+}
+
+.cell {
+  width: 24px;
+  height: 24px;
+  background: #2c2c2c;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 auto;
+  transition: background 0.2s;
+}
+
+.cell:hover {
+  background: #3a3a3a;
+}
+
+.selected {
+  background: #3a82f7 !important;
+}
+
+.btnGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btnGroup button {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: #2a2a2a;
+  color: #ccc;
+}
+
+.btnGroup button:hover {
+  opacity: 0.9;
+}
+
+.submit {
+  background: #3a82f7 !important;
+  color: #fff;
+}

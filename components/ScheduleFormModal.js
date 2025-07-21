@@ -3,24 +3,33 @@
  * 모달 공통 레이아웃(ModalLayout.js) 사용
  */
 
-import { useState } from "react";
-import ModalLayout from "@/components/ModalLayout";
-import styles from "@/styles/ScheduleFormModal.module.css";
+import { useState } from 'react';
+import ModalLayout from '@/components/ModalLayout';
+import styles from '@/styles/ScheduleFormModal.module.css';
+import { FaUser } from 'react-icons/fa';
 
-const days = ["월", "화", "수", "목", "금"];
+const days = ['월', '화', '수', '목', '금'];
 const timeSlots = [
-  "09:00~10:00",
-  "10:00~11:00",
-  "11:00~12:00",
-  "13:00~14:00",
-  "14:00~15:00",
-  "15:00~16:00",
-  "16:00~17:00",
-  "17:00~18:00",
+  '09:00~10:00',
+  '10:00~11:00',
+  '11:00~12:00',
+  '13:00~14:00',
+  '14:00~15:00',
+  '15:00~16:00',
+  '16:00~17:00',
+  '17:00~18:00',
 ];
 
 export default function ScheduleFormModal({ onClose }) {
   const [selected, setSelected] = useState({});
+
+  // '학생 선택'에서 선택된 학생 정보
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
+  // 학생 선택 모달 handler
+  const handleStudentSelect = () => {
+    setSelectedStudent({ name: '파이리', stdNum: '202512345 ' });
+  };
 
   // grid에 cell 클릭 시 실행됨
   const toggleCell = (day, time) => {
@@ -30,9 +39,42 @@ export default function ScheduleFormModal({ onClose }) {
       [key]: !prev[key],
     }));
   };
+
+  // 등록(submit) 버튼 핸들러
+  const handleSubmit = () => {
+    const result = Object.entries(selected)
+      .filter(([_, checked]) => checked)
+      .map(([key]) => {
+        const [day, time] = key.split('-');
+        const [startTime, endTime] = time.split('~');
+        return { days: day, startTime, endTime };
+      });
+
+    console.log('[ScheduleFormModal] 등록할 시간표 : ', result);
+    onClose();
+  };
+
   return (
     <ModalLayout onClose={onClose} maxWidth={700}>
       <h3 className={styles.title}>근로시간표 등록</h3>
+
+      <div className={styles.stdInfoSection}>
+        <div className={styles.stdInfo}>
+          {selectedStudent ? (
+            <span>
+              <FaUser className={styles.icons} />
+              <strong>{selectedStudent.name}</strong> ({selectedStudent.stdNum})
+            </span>
+          ) : (
+            <span className={styles.placeHolder}>
+              <FaUser className={styles.icons} /> 학생을 선택해주세요
+            </span>
+          )}
+        </div>
+        <button className={styles.selectStdBtn} onClick={handleStudentSelect}>
+          학생 선택
+        </button>
+      </div>
 
       <div className={styles.gridWrapper}>
         <table className={styles.grid}>
@@ -54,7 +96,7 @@ export default function ScheduleFormModal({ onClose }) {
                     <td key={key} onClick={() => toggleCell(day, time)}>
                       <div
                         className={`${styles.cell} ${
-                          selected[key] ? styles.selected : ""
+                          selected[key] ? styles.selected : ''
                         }`}
                       />
                     </td>
@@ -68,7 +110,9 @@ export default function ScheduleFormModal({ onClose }) {
 
       <div className={styles.btnGroup}>
         <button onClick={onClose}>취소</button>
-        <button className={styles.submit}>등록</button>
+        <button className={styles.submit} onClick={handleSubmit}>
+          등록
+        </button>
       </div>
     </ModalLayout>
   );
