@@ -5,6 +5,42 @@
   color: #fff;
 }
 
+.stdInfoSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.stdInfo {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.placeHolder {
+  color: #666;
+}
+
+.selectStdBtn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  background: #444;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selectStdBtn:hover {
+  background: #555;
+}
+
+.icons {
+  margin-right: 0.4rem;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+
 .gridWrapper {
   overflow-x: auto;
   margin-bottom: 1.5rem;
