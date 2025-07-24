@@ -82,6 +82,14 @@
   background: #3a82f7 !important;
 }
 
+.check {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1;
+}
+
 .btnGroup {
   display: flex;
   justify-content: flex-end;

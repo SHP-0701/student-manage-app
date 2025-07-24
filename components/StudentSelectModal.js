@@ -1,13 +1,12 @@
 /**
  * 학생 선택 모달
- * 출결 등록 모달에서 '학생 선택' 버튼을 누르면 렌더링 됨.
- * '수정' 모달에서는 렌더링 되지 않음.
+ * 출결 기록 등록 모달, 근로시간표 등록 모달에서 사용하는 공통 모달
  */
 
-import ModalLayout from "@/components/ModalLayout";
-import styles from "@/styles/StudentSelectModal.module.css";
-import { useEffect, useState } from "react";
-import { getYearTerm } from "@/utils/timeUtils";
+import ModalLayout from '@/components/ModalLayout';
+import styles from '@/styles/StudentSelectModal.module.css';
+import { useEffect, useState } from 'react';
+import { getYearTerm } from '@/utils/timeUtils';
 
 export default function StudentSelectModal({ onSelect, onClose }) {
   // 학생 목록
@@ -15,7 +14,7 @@ export default function StudentSelectModal({ onSelect, onClose }) {
   const { year, term } = getYearTerm(new Date());
 
   // 학생 이름 검색 파라미터용
-  const [searchStdName, setSearchStdName] = useState("");
+  const [searchStdName, setSearchStdName] = useState('');
 
   const fetchStudents = async () => {
     try {
@@ -24,13 +23,13 @@ export default function StudentSelectModal({ onSelect, onClose }) {
         term: term,
       });
 
-      if (searchStdName) queryParams.append("name", searchStdName);
+      if (searchStdName) queryParams.append('name', searchStdName);
 
       const res = await fetch(`/api/student?${queryParams.toString()}`);
       const data = await res.json();
       setStudents(data.students || []);
     } catch (err) {
-      console.error("[StudentSelectModal.js] 학생 목록 가져오기 오류 : ", err);
+      console.error('[StudentSelectModal.js] 학생 목록 가져오기 오류 : ', err);
     }
   };
 
@@ -45,8 +44,8 @@ export default function StudentSelectModal({ onSelect, onClose }) {
       {/* 이름 검색 */}
       <div className={styles.searchSection}>
         <input
-          type="text"
-          placeholder="학생 이름"
+          type='text'
+          placeholder='학생 이름'
           value={searchStdName}
           onChange={(e) => setSearchStdName(e.target.value)}
         />
@@ -74,7 +73,14 @@ export default function StudentSelectModal({ onSelect, onClose }) {
                   <button
                     className={styles.selectBtn}
                     onClick={() => {
-                      onSelect(std);
+                      onSelect({
+                        id: std.id,
+                        stdName: std.stdName, // 이름
+                        stdNum: std.stdNum, // 학번
+                        stdDept: std.stdDept,
+                        workType: std.workType,
+                        stdJob: std.stdJob,
+                      });
                       onClose();
                     }}
                   >
