@@ -11,6 +11,8 @@ import { isHoliday, getHolidayNames } from '@hyunbinseo/holidays-kr'; // 공휴�
 import styles from '@/styles/Schedule.module.css';
 import { useState, useEffect } from 'react';
 import ScheduleFormModal from '@/components/ScheduleFormModal';
+import { FaCalendarDay } from 'react-icons/fa';
+import { formatSelectedDate, getYearTerm } from '@/utils/timeUtils';
 
 export default function SchedulePage() {
   // 근로시간표 등록 모달 열기
@@ -27,6 +29,17 @@ export default function SchedulePage() {
 
   // 탭 목록
   const tabs = ['실습실', '카운터', 'ECSC', '모니터링'];
+
+  // 날짜 기준 연도/학기 return 하는 util
+  const currentYearTerm = getYearTerm(new Date());
+
+  // 근로시간표 fetch
+  const fetchSchedule = async () => {
+    try {
+    } catch (err) {
+      console.error('데이터 fetch 실패: ', err);
+    }
+  };
 
   return (
     <Layout>
@@ -108,11 +121,19 @@ export default function SchedulePage() {
             </button>
           </div>
 
+          {/* 선택된 날짜 보여주는 Label */}
+          <div className={styles.selectedDate}>
+            <FaCalendarDay className={styles.dateIcon} />
+            <label>{formatSelectedDate(selectedDate)}</label>
+          </div>
+
           {/* 테이블 */}
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
               <thead>
                 <tr>
+                  <th>학년도</th>
+                  <th>학기</th>
                   <th>성명</th>
                   <th>근로구분</th>
                   <th>담당업무</th>
@@ -121,6 +142,8 @@ export default function SchedulePage() {
               </thead>
               <tbody>
                 <tr>
+                  <td>2025</td>
+                  <td>1학기</td>
                   <td>파이리</td>
                   <td>국가근로</td>
                   <td>카운터</td>

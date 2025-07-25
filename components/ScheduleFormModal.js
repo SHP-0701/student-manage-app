@@ -8,6 +8,7 @@ import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleFormModal.module.css';
 import { FaCheck, FaUser } from 'react-icons/fa';
 import StudentSelectModal from './StudentSelectModal';
+import { getYearTerm } from '@/utils/timeUtils';
 
 const days = ['월', '화', '수', '목', '금'];
 const timeSlots = [
@@ -58,11 +59,15 @@ export default function ScheduleFormModal({ onClose }) {
       });
 
     try {
+      const { year, term } = getYearTerm(new Date());
+
       const res = await fetch('/api/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           stdNum: selectedStudent.stdNum,
+          year,
+          term,
           schedule: result,
         }),
       });

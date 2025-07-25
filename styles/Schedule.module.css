@@ -31,7 +31,7 @@
   border-radius: 8px;
   border: 1px solid #333;
   color: #ddd;
-  font-family: "Pretendard", sans-serif;
+  font-family: 'Pretendard', sans-serif;
 }
 
 .myCalendar :global(.react-calendar__navigation) {
@@ -199,6 +199,30 @@
 .btnScheduleReg:hover {
   background: #3a3a3a;
   color: #fff;
+}
+
+/* 선택된 날짜 보여주는 영역 디자인 */
+.selectedDate {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2a2a2a;
+  border-left: 4px solid #3a82f7;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #ccc;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.selectedDate label {
+  font-weight: 500;
+}
+
+.dateIcon {
+  color: #3a82f7;
+  font-size: 1rem;
 }
 
 /* 테이블 감싸는 영역 */

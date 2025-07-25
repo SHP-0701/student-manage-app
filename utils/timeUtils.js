@@ -52,3 +52,20 @@ export function getYearTerm(date) {
 
   return { year: String(year), term };
 }
+
+/**
+ * 요일 한글로 포맷하는 함수
+ * @param {Date} date - 기준 날짜
+ * @returns {String} - ${formatted} 근로시간표입니다.
+ */
+export function formatSelectedDate(date) {
+  const options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    weekday: 'short',
+  };
+  const formatted = new Intl.DateTimeFormat('ko-KR', options).format(date);
+
+  return `${formatted} 근로시간표입니다.`;
+}
