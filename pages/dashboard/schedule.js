@@ -12,11 +12,18 @@ import styles from '@/styles/Schedule.module.css';
 import { useState, useEffect } from 'react';
 import ScheduleFormModal from '@/components/ScheduleFormModal';
 import { FaCalendarDay } from 'react-icons/fa';
-import { formatSelectedDate, getYearTerm } from '@/utils/timeUtils';
+import {
+  formatSelectedDate,
+  getKoreanDayName,
+  getYearTerm,
+} from '@/utils/timeUtils';
 
 export default function SchedulePage() {
   // 근로시간표 등록 모달 열기
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 근로시간표 담는 state
+  const [scheduleData, setScheduleData] = useState(null);
 
   // 선택된 탭
   const [activeTab, setActiveTab] = useState('실습실');
@@ -36,10 +43,21 @@ export default function SchedulePage() {
   // 근로시간표 fetch
   const fetchSchedule = async () => {
     try {
+      const res = await fetch(
+        `/api/schedule?year=${currentYearTerm.year}&term=${
+          currentYearTerm.term
+        }&stdJob=${activeTab}&day=${getKoreanDayName(new Date())}`
+      );
+      const result = await res.json();
+      setScheduleData(result);
     } catch (err) {
       console.error('데이터 fetch 실패: ', err);
     }
   };
+
+  useEffect(() => {
+    fetchSchedule();
+  }, [activeTab, selectedDate]);
 
   return (
     <Layout>
@@ -141,14 +159,26 @@ export default function SchedulePage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>2025</td>
-                  <td>1학기</td>
-                  <td>파이리</td>
-                  <td>국가근로</td>
-                  <td>카운터</td>
-                  <td>09:00~12:00</td>
-                </tr>
+                {scheduleData.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} style={{ textAlign: 'center' }}>
+                      해당 날짜의 근로시간표가 없습니다.
+                    </td>
+                  </tr>
+                ) : (
+                  scheduleData.map((item, idx) => (
+                    <tr key={idx}>
+                      <td>{currentYearTerm.year}</td>
+                      <td>{currentYearTerm.term}</td>
+                      <td>{item.stdName}</td>
+                      <td>{item.workType}</td>
+                      <td>{item.stdJob}</td>
+                      <td>
+                        {item.startTime}~{item.endTime}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

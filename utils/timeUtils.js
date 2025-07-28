@@ -69,3 +69,14 @@ export function formatSelectedDate(date) {
 
   return `${formatted} 근로시간표입니다.`;
 }
+
+/**
+ * 요일 한글로 포맷(0 = 일, 1 = 월, 2 = 화... 6 = 토)
+ * @param {Date} - 선택된 날짜
+ * @return {Stirng} - 선택된 날짜의 요일 문자열
+ */
+
+export function getKoreanDayName(date) {
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  return days[date.getDay()];
+}
