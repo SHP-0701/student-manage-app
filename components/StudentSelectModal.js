@@ -75,6 +75,8 @@ export default function StudentSelectModal({ onSelect, onClose }) {
                     onClick={() => {
                       onSelect({
                         id: std.id,
+                        year: std.year,
+                        term: std.term,
                         stdName: std.stdName, // 이름
                         stdNum: std.stdNum, // 학번
                         stdDept: std.stdDept,
