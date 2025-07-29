@@ -56,7 +56,7 @@ export function getYearTerm(date) {
 /**
  * 요일 한글로 포맷하는 함수
  * @param {Date} date - 기준 날짜
- * @returns {String} - ${formatted} 근로시간표입니다.
+ * @returns {String} - ${formatted}
  */
 export function formatSelectedDate(date) {
   const options = {
@@ -67,7 +67,7 @@ export function formatSelectedDate(date) {
   };
   const formatted = new Intl.DateTimeFormat('ko-KR', options).format(date);
 
-  return `${formatted} 근로시간표입니다.`;
+  return `${formatted}`;
 }
 
 /**
@@ -79,4 +79,66 @@ export function formatSelectedDate(date) {
 export function getKoreanDayName(date) {
   const days = ['일', '월', '화', '수', '목', '금', '토'];
   return days[date.getDay()];
+}
+
+/**
+ * 연속된 시간대들을 병합하는
+ * @param {string[]} ranges - "HH:mm ~ HH:mm" 형식의 시간 문자열 배열
+ * @returns {string[]} - 병합된 시간대 배열 "09:00~10:00", "10:00~11:00" -> "09:00~11:00"
+ */
+export function mergeWorkTime(ranges) {
+  if (!ranges || ranges.length === 0) return;
+
+  // 중복 제거
+  const unique = Array.from(new Set(ranges));
+
+  // 문자열을 '분' 단위 숫자로 parse -> "09:00~10:00" = { start: 540, end: 600 }
+  const parsed = unique.map((range) => {
+    const [start, end] = range.split('~');
+    return {
+      start,
+      end,
+      startMin: timeToMinutes(start),
+      endMin: timeToMinutes(end),
+    };
+  });
+
+  // 시작 시간 기준으로 정렬
+  parsed.sort((a, b) => a.startMin - b.startMin);
+  const merged = [];
+
+  // 순차적 비교하면서 연속된 시간대 병합
+  for (let i = 0; i < parsed.length; i++) {
+    const current = parsed[i]; // 현재 시간대
+
+    if (merged.length === 0) {
+      merged.push({ ...current });
+    } else {
+      const last = merged[merged.length - 1];
+
+      if (last.endMin === current.startMin) {
+        // 연속되면 병합
+        last.end = current.end;
+        last.endMin = current.endMin;
+      } else {
+        merged.push({ ...current });
+      }
+    }
+  }
+
+  // "HH:mm ~ HH:mm" 형식으로 변환
+  return merged.map(({ start, end }) => `${start}~${end}`);
+}
+
+/** "HH:mm -> 분(min)으로 변환" */
+function timeToMinutes(timeStr) {
+  const [hour, minute] = timeStr.split(':').map(Number);
+  return hour * 60 + minute;
+}
+
+/** 분(min) -> "HH:mm" 문자열로 변환 */
+function minutesToTime(minutes) {
+  const hour = Math.floor(minutes / 60);
+  const minute = minutes % 60;
+  return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
 }

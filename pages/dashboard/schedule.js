@@ -16,6 +16,7 @@ import {
   formatSelectedDate,
   getKoreanDayName,
   getYearTerm,
+  mergeWorkTime,
 } from '@/utils/timeUtils';
 
 export default function SchedulePage() {
@@ -23,7 +24,7 @@ export default function SchedulePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 근로시간표 담는 state
-  const [scheduleData, setScheduleData] = useState(null);
+  const [scheduleData, setScheduleData] = useState([]);
 
   // 선택된 탭
   const [activeTab, setActiveTab] = useState('실습실');
@@ -46,14 +47,55 @@ export default function SchedulePage() {
       const res = await fetch(
         `/api/schedule?year=${currentYearTerm.year}&term=${
           currentYearTerm.term
-        }&stdJob=${activeTab}&day=${getKoreanDayName(new Date())}`
+        }&stdJob=${activeTab}&day=${getKoreanDayName(selectedDate)}`
       );
       const result = await res.json();
-      setScheduleData(result);
+
+      console.log('[/dashboard/schedule.js] API fetch result: ', result);
+
+      const grouped = groupStudentSchedule(result);
+      setScheduleData(grouped);
     } catch (err) {
       console.error('데이터 fetch 실패: ', err);
     }
   };
+
+  // 학생별 그룹화 실시
+  function groupStudentSchedule(data) {
+    const grouped = {};
+
+    data.forEach(
+      ({ stdNum, stdName, workType, stdJob, startTime, endTime, day }) => {
+        const key = `${stdNum}-${day}`; // 같은 학생 같은 요일 기준 그룹
+
+        if (!grouped[key]) {
+          grouped[key] = {
+            stdNum,
+            stdName,
+            workType,
+            stdJob,
+            day,
+            timeRanges: [],
+          };
+        }
+
+        const timeRange = `${startTime}~${endTime}`;
+
+        if (!grouped[key].timeRanges.includes(timeRange)) {
+          grouped[key].timeRanges.push(timeRange);
+        }
+      }
+    );
+
+    // 병합된 시간대 결과 붙이기
+    return Object.values(grouped).map((group) => {
+      const mergedTimes = mergeWorkTime(group.timeRanges);
+      return {
+        ...group,
+        mergedTimes,
+      };
+    });
+  }
 
   useEffect(() => {
     fetchSchedule();
@@ -142,7 +184,9 @@ export default function SchedulePage() {
           {/* 선택된 날짜 보여주는 Label */}
           <div className={styles.selectedDate}>
             <FaCalendarDay className={styles.dateIcon} />
-            <label>{formatSelectedDate(selectedDate)}</label>
+            <label>
+              {formatSelectedDate(selectedDate)} {activeTab} 시간표입니다.
+            </label>
           </div>
 
           {/* 테이블 */}
@@ -173,9 +217,7 @@ export default function SchedulePage() {
                       <td>{item.stdName}</td>
                       <td>{item.workType}</td>
                       <td>{item.stdJob}</td>
-                      <td>
-                        {item.startTime}~{item.endTime}
-                      </td>
+                      <td>{item.mergedTimes.join(', ')}</td>
                     </tr>
                   ))
                 )}

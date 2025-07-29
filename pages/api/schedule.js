@@ -33,17 +33,18 @@ export default async function handler(req, res) {
   else if (req.method === 'GET') {
     const { year, term, stdJob, day } = req.query; // url param
 
+    console.log('[/api/schedule.js] URL param: ', req.query);
+
     if (!year || !term || !stdJob || !day)
       return res.status(400).json({ message: 'URL Param을 찾을 수 없습니다.' });
 
     try {
-      const query = `SELECT ss.stdNum, si.stdName, si.stdJob, ss.day, DATE_FORMAT(ss.startTime, '%H:%i') as startTime, DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
+      const query = `SELECT ss.stdNum, si.stdName, si.stdJob, si.workType, ss.day, DATE_FORMAT(ss.startTime, '%H:%i') as startTime, DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
       FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum 
       WHERE ss.year = ? AND ss.term = ? AND si.stdJob = ? AND ss.day = ? 
       ORDER BY ss.stdNum, ss.day, ss.startTime`;
 
       const [rows] = await dbpool.execute(query, [year, term, stdJob, day]);
-
       return res.status(200).json(rows);
     } catch (err) {
       console.error('DB 에러: ', err);
