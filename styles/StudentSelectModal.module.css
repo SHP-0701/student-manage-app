@@ -1,4 +1,4 @@
-/* 검색 영역(searchSection) */
+/* 검색 영역 */
 .searchSection {
   display: flex;
   gap: 0.6rem;
@@ -27,11 +27,12 @@
   background: #00a4ba;
 }
 
-/* 검색 영역 끝 */
-
+/* 학생 목록 테이블 */
 .table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 1rem;
 }
 
 .table thead {
@@ -45,10 +46,41 @@
   border-bottom: 1px solid #444;
 }
 
+/* '이름' column */
+.table th:nth-child(1) {
+  width: 60px;
+}
+
+/* '학번' column */
+.table th:nth-child(2) {
+  width: 80px;
+}
+
+/* '학과' column */
+.table th:nth-child(3) {
+  width: 200px;
+}
+
+/* '근로구분' column */
+.table th:nth-child(4) {
+  width: 100px;
+}
+
+/* '선택' column */
+.table th:nth-child(5) {
+  width: 80px;
+}
+
+.table th {
+  color: #fff;
+  font-weight: 600;
+}
+
 .table tbody tr:hover {
   background: #333;
 }
 
+/* 선택 버튼 */
 .selectBtn {
   padding: 0.4rem 0.8rem;
   background: #00bcd4; /* 파란색 계열 */
@@ -63,6 +95,34 @@
   background: #00a4ba; /* hover 시 조금 더 진한 파랑 */
 }
 
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.pageBtn {
+  padding: 0.4rem 0.8rem;
+  background: #2a2a2a;
+  color: #eee;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pageBtn:hover {
+  background: #444;
+}
+
+.activePage {
+  background: #00bcd4;
+  color: #000;
+  font-weight: bold;
+}
+
+/* 닫기 버튼 영역 */
 .buttonGroup {
   display: flex;
   justify-content: flex-end;

@@ -38,6 +38,9 @@ export default async function handler(req, res) {
       const limit = Math.max(parseInt(req.query.limit) || 5, 1); // 기본값: 5
       const offset = (page - 1) * limit;
 
+      console.log('[/api/student.js] page: ', page);
+      console.log('[/api/student.js] limit: ', limit);
+
       const searchName = req.query.name || '';
       const searchYear = req.query.year || '';
       const searchTerm = req.query.term || '';

@@ -16,31 +16,47 @@ export default function StudentSelectModal({ onSelect, onClose }) {
   // 학생 이름 검색 파라미터용
   const [searchStdName, setSearchStdName] = useState('');
 
+  // 페이징
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 5; // 한 페이지 당 5개 보여줌
+
   const fetchStudents = async () => {
     try {
       const queryParams = new URLSearchParams({
         year: year,
         term: term,
+        page: currentPage,
+        limit: itemsPerPage,
       });
 
       if (searchStdName) queryParams.append('name', searchStdName);
 
       const res = await fetch(`/api/student?${queryParams.toString()}`);
       const data = await res.json();
+
       setStudents(data.students || []);
+      setTotalPages(data.totalPages || 1);
     } catch (err) {
       console.error('[StudentSelectModal.js] 학생 목록 가져오기 오류 : ', err);
     }
   };
 
+  // '검색' 버튼 핸들러
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchStudents();
+  };
+
   // 학생 목록 가져오기
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [currentPage]);
 
   return (
-    <ModalLayout onClose={onClose} maxWidth={500}>
+    <ModalLayout onClose={onClose} maxWidth={650}>
       <h2>학생 선택</h2>
+
       {/* 이름 검색 */}
       <div className={styles.searchSection}>
         <input
@@ -49,8 +65,10 @@ export default function StudentSelectModal({ onSelect, onClose }) {
           value={searchStdName}
           onChange={(e) => setSearchStdName(e.target.value)}
         />
-        <button onClick={fetchStudents}>검색</button>
+        <button onClick={handleSearch}>검색</button>
       </div>
+
+      {/* 학생 목록 테이블 영역 */}
       <table className={styles.table}>
         <thead>
           <tr>
@@ -77,8 +95,8 @@ export default function StudentSelectModal({ onSelect, onClose }) {
                         id: std.id,
                         year: std.year,
                         term: std.term,
-                        stdName: std.stdName, // 이름
-                        stdNum: std.stdNum, // 학번
+                        stdName: std.stdName,
+                        stdNum: std.stdNum,
                         stdDept: std.stdDept,
                         workType: std.workType,
                         stdJob: std.stdJob,
@@ -98,6 +116,25 @@ export default function StudentSelectModal({ onSelect, onClose }) {
           )}
         </tbody>
       </table>
+
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={`${styles.pageBtn} ${
+                currentPage === i + 1 ? styles.activePage : ''
+              }`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* 닫기 버튼 */}
       <div className={styles.buttonGroup}>
         <button className={styles.closeBtn} onClick={onClose}>
           닫기
