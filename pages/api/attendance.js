@@ -3,11 +3,11 @@
  * REST API 사용(POST, GET, PUT, DELETE)
  */
 
-import dbpool from "@/lib/db";
+import dbpool from '@/lib/db';
 
 export default async function handler(req, res) {
   // 출결 등록(POST)
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     try {
       const {
         year,
@@ -22,10 +22,10 @@ export default async function handler(req, res) {
         note,
       } = req.body;
       if (!stdNum || !stdName)
-        return res.status(400).json({ message: "필수 값이 누락되었습니다." });
+        return res.status(400).json({ message: '필수 값이 누락되었습니다.' });
 
       const sql =
-        "INSERT INTO student_attendance (year, term, stdNum, stdName, workType, stdJob, workDate, startTime, endTime, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        'INSERT INTO student_attendance (year, term, stdNum, stdName, workType, stdJob, workDate, startTime, endTime, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
       const values = [
         year,
         term,
@@ -41,15 +41,15 @@ export default async function handler(req, res) {
 
       await dbpool.execute(sql, values);
 
-      return res.status(200).json({ message: "학생 출결 등록 성공" });
+      return res.status(200).json({ message: '학생 출결 등록 성공' });
     } catch (err) {
-      console.error("[/api/attendance.js] POST 에러 : ", err);
-      return res.status(500).json({ message: "서버 오류 발생" });
+      console.error('[/api/attendance.js] POST 에러 : ', err);
+      return res.status(500).json({ message: '서버 오류 발생' });
     }
   }
 
   // 출결 내역 조회(GET)
-  else if (req.method === "GET") {
+  else if (req.method === 'GET') {
     try {
       const { stdName, year, term, workType, stdJob, startDate, endDate } =
         req.query;
@@ -58,58 +58,60 @@ export default async function handler(req, res) {
       let params = [];
 
       if (stdName) {
-        conditions.push("s.stdName LIKE ?");
+        conditions.push('s.stdName LIKE ?');
         params.push(`%${stdName}`);
       }
 
       if (year) {
-        conditions.push("s.year = ?");
+        conditions.push('s.year = ?');
         params.push(year);
       }
 
       if (term) {
-        conditions.push("s.term = ?");
+        conditions.push('s.term = ?');
         params.push(term);
       }
 
       if (workType) {
-        conditions.push("a.workType = ?");
+        conditions.push('a.workType = ?');
         params.push(workType);
       }
 
       if (stdJob) {
-        conditions.push("s.stdJob = ?");
+        conditions.push('s.stdJob = ?');
         params.push(stdJob);
       }
 
       if (startDate) {
-        conditions.push("a.workDate >= ?");
+        conditions.push('a.workDate >= ?');
         params.push(startDate);
       }
 
       if (endDate) {
-        conditions.push("a.workDate <= ?");
+        conditions.push('a.workDate <= ?');
         params.push(endDate);
       }
 
       const whereClause = conditions.length
-        ? `WHERE ${conditions.join(" AND ")}`
-        : "";
+        ? `WHERE ${conditions.join(' AND ')}`
+        : '';
+
+      console.log('[/api/attendance.js] whereClause: ', whereClause);
 
       const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, a.workType, s.year, s.term, a.startTime, a.endTime, a.note, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC`;
       const [rows] = await dbpool.execute(sql, params);
       return res.status(200).json({ attendance: rows });
     } catch (err) {
-      console.error("[/api/attendance.js] GET 에러 : ", err);
-      return res.status(500).json({ message: "조회 실패" });
+      console.error('[/api/attendance.js] GET 에러 : ', err);
+      return res.status(500).json({ message: '조회 실패' });
     }
   }
 
   // 출결 내역 수정(PUT)
-  else if (req.method === "PUT") {
+  else if (req.method === 'PUT') {
     const { id, workDate, startTime, endTime, note } = req.body;
 
-    if (!id) return res.status(400).json({ message: "출결 ID가 필요합니다." });
+    if (!id) return res.status(400).json({ message: '출결 ID가 필요합니다.' });
 
     try {
       const [result] = await dbpool.query(
@@ -117,30 +119,30 @@ export default async function handler(req, res) {
         [workDate, startTime, endTime, note, id]
       );
 
-      res.status(200).json({ message: "출결 수정 성공" });
+      res.status(200).json({ message: '출결 수정 성공' });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "출결 수정 실패 ", error: err });
+      res.status(500).json({ message: '출결 수정 실패 ', error: err });
     }
   }
 
   // 출결 내역 삭제(DELETE)
-  else if (req.method === "DELETE") {
+  else if (req.method === 'DELETE') {
     const { id } = req.body;
 
-    if (!id) return res.status(400).json({ message: "출결 ID가 필요합니다" });
+    if (!id) return res.status(400).json({ message: '출결 ID가 필요합니다' });
 
     try {
       const [result] = await dbpool.query(
         `DELETE FROM student_attendance WHERE id = ?`,
         [id]
       );
-      res.status(200).json({ message: "출결 삭제 성공!" });
+      res.status(200).json({ message: '출결 삭제 성공!' });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "출결 삭제 실패 ", error: err });
+      res.status(500).json({ message: '출결 삭제 실패 ', error: err });
     }
   } else {
-    return res.status(405).json({ message: "허용되지 않은 메서드" });
+    return res.status(405).json({ message: '허용되지 않은 메서드' });
   }
 }
