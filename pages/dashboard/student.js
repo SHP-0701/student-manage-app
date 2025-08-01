@@ -4,11 +4,11 @@
  * ㅇ 학생 조회 시 근로구분별, 연도별, 학기별 조건 검색
  */
 
-import Layout from "@/components/Layout";
-import StudentFormModal from "@/components/StudentFormModal";
-import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
-import styles from "@/styles/Student.module.css";
-import { useEffect, useState } from "react";
+import Layout from '@/components/Layout';
+import StudentFormModal from '@/components/StudentFormModal';
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
+import styles from '@/styles/Student.module.css';
+import { useEffect, useState } from 'react';
 
 export default function StudentPage() {
   // 모달 창 오픈(등록/수정) state
@@ -18,7 +18,7 @@ export default function StudentPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   // 모달 등록/수정/삭제 분기
-  const [mode, setMode] = useState("");
+  const [mode, setMode] = useState('');
 
   // 학생 목록 state
   const [students, setStudents] = useState([]);
@@ -30,14 +30,14 @@ export default function StudentPage() {
   const [studentToDelete, setStudentToDelete] = useState(null);
 
   // 검색용 state
-  const [searchName, setSearchName] = useState("");
-  const [searchYear, setSearchYear] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchWorkType, setSearchWorkType] = useState("");
-  const [searchStdJob, setSearchStdJob] = useState("");
+  const [searchName, setSearchName] = useState('');
+  const [searchYear, setSearchYear] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchWorkType, setSearchWorkType] = useState('');
+  const [searchStdJob, setSearchStdJob] = useState('');
 
   // toast 관련 state
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
 
   // 페이징에 사용할 상태(현재 페이지 & 전체 페이지 수)
@@ -56,7 +56,7 @@ export default function StudentPage() {
         term: searchTerm,
         workType: searchWorkType,
         stdJob: searchStdJob,
-        name: searchName,
+        stdName: searchName,
       });
 
       const res = await fetch(`/api/student?${queryParams.toString()}`);
@@ -65,13 +65,13 @@ export default function StudentPage() {
       setStudents(data.students);
       setTotalPages(data.totalPages);
     } catch (err) {
-      console.error("[/dashboard/student.js] 학생 정보 가져오기 오류 : ", err);
+      console.error('[/dashboard/student.js] 학생 정보 가져오기 오류 : ', err);
     }
   };
 
   // '수정' 버튼 클릭 핸들러
   const handleEdit = (student) => {
-    setMode("modify");
+    setMode('modify');
     setCurrentStudent(student);
     setIsModalOpen(true);
   };
@@ -89,15 +89,15 @@ export default function StudentPage() {
 
     setTimeout(() => {
       setShowToast(false);
-      setToastMessage("");
+      setToastMessage('');
     }, 3000);
   };
 
   // 삭제 동작 API
   const confirmDelete = async (id) => {
-    const res = await fetch("/api/student", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+    const res = await fetch('/api/student', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
 
@@ -128,44 +128,44 @@ export default function StudentPage() {
               value={searchYear}
               onChange={(e) => setSearchYear(e.target.value)}
             >
-              <option value="">전체 연도</option>
-              <option value="2025">2025년</option>
-              <option value="2024">2024년</option>
+              <option value=''>전체 연도</option>
+              <option value='2025'>2025년</option>
+              <option value='2024'>2024년</option>
             </select>
 
             <select
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             >
-              <option value="">전체 학기</option>
-              <option value="1학기">1학기</option>
-              <option value="2학기">2학기</option>
+              <option value=''>전체 학기</option>
+              <option value='1학기'>1학기</option>
+              <option value='2학기'>2학기</option>
             </select>
 
             <select
               value={searchWorkType}
               onChange={(e) => setSearchWorkType(e.target.value)}
             >
-              <option value="">전체</option>
-              <option value="국가근로">국가근로장학생</option>
-              <option value="대학행정인턴">대학행정인턴장학생</option>
-              <option value="교육지원">교육지원장학생</option>
+              <option value=''>전체</option>
+              <option value='국가근로'>국가근로장학생</option>
+              <option value='대학행정인턴'>대학행정인턴장학생</option>
+              <option value='교육지원'>교육지원장학생</option>
             </select>
 
             <select
               value={searchStdJob}
               onChange={(e) => setSearchStdJob(e.target.value)}
             >
-              <option value="">전체</option>
-              <option value="카운터">카운터</option>
-              <option value="실습실">실습실</option>
-              <option value="ECSC">ECSC</option>
-              <option value="모니터링">모니터링</option>
+              <option value=''>전체</option>
+              <option value='카운터'>카운터</option>
+              <option value='실습실'>실습실</option>
+              <option value='ECSC'>ECSC</option>
+              <option value='모니터링'>모니터링</option>
             </select>
 
             <input
-              type="text"
-              placeholder="학생 이름"
+              type='text'
+              placeholder='학생 이름'
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
               className={styles.searchInput}
@@ -184,7 +184,7 @@ export default function StudentPage() {
           <button
             className={styles.registerBtn}
             onClick={() => {
-              setMode("insert");
+              setMode('insert');
               setCurrentStudent(null);
               setIsModalOpen(true);
             }}
@@ -238,7 +238,7 @@ export default function StudentPage() {
                 ))
               ) : (
                 <tr>
-                  <td colspan="8">등록된 학생 정보가 없습니다.</td>
+                  <td colspan='8'>등록된 학생 정보가 없습니다.</td>
                 </tr>
               )}
             </tbody>
@@ -250,7 +250,7 @@ export default function StudentPage() {
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i + 1}
-              className={currentPage === i + 1 ? styles.activePage : ""}
+              className={currentPage === i + 1 ? styles.activePage : ''}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}
@@ -271,7 +271,7 @@ export default function StudentPage() {
 
         {deleteModalOpen && (
           <ConfirmDeleteModal
-            title={"학생 정보 삭제"}
+            title={'학생 정보 삭제'}
             onClose={() => setDeleteModalOpen(false)}
             message={`${studentToDelete.stdName} 학생 정보를 삭제하시겠습니까?`}
             onDelete={() => confirmDelete(studentToDelete.id)}

@@ -38,10 +38,7 @@ export default async function handler(req, res) {
       const limit = Math.max(parseInt(req.query.limit) || 5, 1); // 기본값: 5
       const offset = (page - 1) * limit;
 
-      console.log('[/api/student.js] page: ', page);
-      console.log('[/api/student.js] limit: ', limit);
-
-      const searchName = req.query.name || '';
+      const searchName = req.query.stdName || '';
       const searchYear = req.query.year || '';
       const searchTerm = req.query.term || '';
       const searchWorkType = req.query.workType || '';
@@ -75,6 +72,8 @@ export default async function handler(req, res) {
         whereClause += ' AND stdName LIKE ?';
         params.push(`%${searchName}%`);
       }
+
+      console.log('[/api/student.js] where조건(whereClause): ', whereClause);
 
       // 총 개수 가져오기
       const [countRows] = await dbpool.execute(
