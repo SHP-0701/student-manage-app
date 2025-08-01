@@ -11,7 +11,6 @@ import styles from '@/styles/Attendance.module.css';
 import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { format } from 'date-fns';
 import { getWorkHours } from '@/utils/timeUtils';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import AttendanceFormModal from '@/components/AttendanceFormModal';
@@ -21,7 +20,6 @@ export default function AttendancePage() {
   const [searchName, setSearchName] = useState('');
   const [searchYear, setSearchYear] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchWorkType, setSearchWorkType] = useState('');
   const [searchStdJob, setSearchStdJob] = useState('');
 
   const [startDate, setStartDate] = useState(null);
@@ -87,12 +85,10 @@ export default function AttendancePage() {
     const queryParams = new URLSearchParams();
 
     if (!clearFilter) {
-      if (searchName) queryParams.append('stdName', searchName);
       if (searchYear) queryParams.append('year', searchYear);
       if (searchTerm) queryParams.append('term', searchTerm);
-      if (searchWorkType) queryParams.append('workType', searchWorkType);
+      if (searchName) queryParams.append('stdName', searchName);
       if (searchStdJob) queryParams.append('stdJob', searchStdJob);
-
       if (startDate)
         queryParams.append('startDate', startDate.toISOString().split('T')[0]);
       if (endDate)
@@ -107,7 +103,6 @@ export default function AttendancePage() {
       setSearchName('');
       setSearchYear('');
       setSearchTerm('');
-      setSearchWorkType('');
       setSearchStdJob('');
       setStartDate(null);
       setEndDate(null);
@@ -147,13 +142,14 @@ export default function AttendancePage() {
             </select>
 
             <select
-              value={searchWorkType}
-              onChange={(e) => setSearchWorkType(e.target.value)}
+              value={searchStdJob}
+              onChange={(e) => setSearchStdJob(e.target.value)}
             >
-              <option value=''>전체 근로구분</option>
-              <option value='국가근로'>국가근로장학생</option>
-              <option value='대학행정인턴'>대학행정인턴장학생</option>
-              <option value='교육지원'>교육지원장학생</option>
+              <option value=''>전체 담당업무</option>
+              <option value='실습실'>실습실</option>
+              <option value='카운터'>카운터</option>
+              <option value='ECSC'>ECSC</option>
+              <option value='모니터링'>모니터링</option>
             </select>
 
             <input
@@ -209,7 +205,6 @@ export default function AttendancePage() {
                 <th>학년도</th>
                 <th>학기</th>
                 <th>날짜</th>
-                <th>근로구분</th>
                 <th>담당업무</th>
                 <th>이름</th>
                 <th>학번</th>
@@ -228,7 +223,6 @@ export default function AttendancePage() {
                     <td>{item.year}</td>
                     <td>{item.term}</td>
                     <td>{item.workDate}</td>
-                    <td>{item.workType}</td>
                     <td>{item.stdJob}</td>
                     <td>{item.stdName}</td>
                     <td>{item.stdNum}</td>
@@ -254,7 +248,12 @@ export default function AttendancePage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={12}>출결 기록이 없습니다.</td>
+                  <td
+                    colSpan={11}
+                    style={{ textAlign: 'center', padding: '1rem' }}
+                  >
+                    출결 기록이 없습니다.
+                  </td>
                 </tr>
               )}
             </tbody>
