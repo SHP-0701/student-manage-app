@@ -31,20 +31,25 @@ export default async function handler(req, res) {
 
   // 조회(GET)
   else if (req.method === 'GET') {
-    const { year, term, stdJob, day } = req.query; // url param
+    const { year, term, stdJob, workDate } = req.query; // url param
 
-    console.log('[/api/schedule.js] URL param: ', req.query);
+    console.log('[/api/schedule.js] URL param is: ', req.query);
 
-    if (!year || !term || !stdJob || !day)
+    if (!year || !term || !stdJob || !workDate)
       return res.status(400).json({ message: 'URL Param을 찾을 수 없습니다.' });
 
     try {
-      const query = `SELECT ss.stdNum, si.stdName, si.stdJob, si.workType, ss.day, DATE_FORMAT(ss.startTime, '%H:%i') as startTime, DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
+      const query = `SELECT ss.stdNum, si.stdName, si.stdJob, si.workType, DATE_FORMAT(ss.startTime, '%H:%i') as startTime, DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
       FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum 
-      WHERE ss.year = ? AND ss.term = ? AND si.stdJob = ? AND ss.day = ? 
-      ORDER BY ss.stdNum, ss.day, ss.startTime`;
+      WHERE ss.year = ? AND ss.term = ? AND si.stdJob = ? AND ss.workDate = ?
+      ORDER BY ss.stdNum, ss.workDate, ss.startTime`;
 
-      const [rows] = await dbpool.execute(query, [year, term, stdJob, day]);
+      const [rows] = await dbpool.execute(query, [
+        year,
+        term,
+        stdJob,
+        workDate,
+      ]);
       return res.status(200).json(rows);
     } catch (err) {
       console.error('DB 에러: ', err);

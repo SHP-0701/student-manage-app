@@ -92,7 +92,7 @@ export default async function handler(req, res) {
 
       console.log('[/api/attendance.js] where조건(whereClause): ', whereClause);
 
-      const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, s.year, s.term, a.startTime, a.endTime, a.note, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC`;
+      const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, s.year, s.term, a.startTime, a.endTime, a.note, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC, a.created_at DESC`;
       const [rows] = await dbpool.execute(sql, params);
       return res.status(200).json({ attendance: rows });
     } catch (err) {

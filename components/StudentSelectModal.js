@@ -30,7 +30,7 @@ export default function StudentSelectModal({ onSelect, onClose }) {
         limit: itemsPerPage,
       });
 
-      if (searchStdName) queryParams.append('name', searchStdName);
+      if (searchStdName) queryParams.append('stdName', searchStdName);
 
       const res = await fetch(`/api/student?${queryParams.toString()}`);
       const data = await res.json();

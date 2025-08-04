@@ -6,82 +6,40 @@
 import { useState } from 'react';
 import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleFormModal.module.css';
-import { FaCheck, FaUser } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa';
 import StudentSelectModal from './StudentSelectModal';
 import { getYearTerm } from '@/utils/timeUtils';
 
-const days = ['월', '화', '수', '목', '금'];
-const timeSlots = [
-  '09:00~10:00',
-  '10:00~11:00',
-  '11:00~12:00',
-  '13:00~14:00',
-  '14:00~15:00',
-  '15:00~16:00',
-  '16:00~17:00',
-  '17:00~18:00',
-];
-
 export default function ScheduleFormModal({ onClose }) {
-  const [selected, setSelected] = useState({});
-
   // '학생 선택'에서 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   // '학생 선택' 모달 렌더링 제어
   const [showStudentModal, setShowStudentModal] = useState(false);
 
+  // 날짜 & 시간 입력 상태값
+  const [workDate, setWorkDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+
+  // 현재 날짜 기준 '학년도', '학기' 가져옴
+  const { year, term } = getYearTerm(new Date());
+
   // 학생 선택 모달 handler
   const handleStudentSelect = () => {
     setShowStudentModal(true);
-  };
-
-  // grid에 cell 클릭 시 실행됨
-  const toggleCell = (day, time) => {
-    const key = `${day}-${time}`;
-    setSelected((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
   };
 
   // 등록(submit) 버튼 핸들러
   const handleSubmit = async () => {
     if (!selectedStudent) return alert('학생을 먼저 선택해주세요');
 
-    // selected 안에 저장돼있는 grid 선택 값들을 다 쪼개서 result라는 새로운 배열로 return
-    const result = Object.entries(selected)
-      .filter(([_, checked]) => checked)
-      .map(([key]) => {
-        const [day, time] = key.split('-');
-        const [startTime, endTime] = time.split('~');
-        return { days: day, startTime, endTime };
-      });
-
     try {
-      const { year, term } = getYearTerm(new Date());
-
-      const res = await fetch('/api/schedule', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          stdNum: selectedStudent.stdNum,
-          year,
-          term,
-          schedule: result,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert('근로시간표가 등록되었습니다.');
-        onClose();
-      } else {
-        alert(`등록 실패: ${data.message}`);
-      }
     } catch (err) {
-      console.error('[ScheduleFormModal] handleSubmit() 등록 오류: ', err);
+      console.error(
+        '[/components/ScheduleFormModal.js] handleSubmit() 등록 오류: ',
+        err
+      );
       alert('등록 중 오류 발생');
     }
   };
@@ -109,38 +67,43 @@ export default function ScheduleFormModal({ onClose }) {
         </button>
       </div>
 
-      <div className={styles.gridWrapper}>
-        <table className={styles.grid}>
-          <thead>
-            <tr>
-              <th>시간/요일</th>
-              {days.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {timeSlots.map((time) => (
-              <tr key={time}>
-                <td>{time}</td>
-                {days.map((day) => {
-                  const key = `${day}-${time}`;
-                  return (
-                    <td key={key} onClick={() => toggleCell(day, time)}>
-                      <div
-                        className={`${styles.cell} ${
-                          selected[key] ? styles.selected : ''
-                        }`}
-                      >
-                        {selected[key] && <FaCheck className={styles.check} />}
-                      </div>
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* 근로시간표 내용 입력 영역 */}
+      <div className={styles.formSection}>
+        <div className={styles.row}>
+          <label>
+            학년도
+            <input type='text' value={year} readOnly />
+          </label>
+          <label>
+            학기
+            <input type='text' value={term} readOnly />
+          </label>
+        </div>
+
+        <div className={styles.row}>
+          <label>
+            학번
+            <input type='text' value={selectedStudent?.stdNum || ''} readOnly />
+          </label>
+          <label>
+            성명
+            <input
+              type='text'
+              value={selectedStudent?.stdName || ''}
+              readOnly
+            />
+          </label>
+        </div>
+        <div className={styles.row}>
+          <label>
+            근로일자
+            <input
+              type='date'
+              value={workDate}
+              onChange={(e) => setWorkDate(e.target.value)}
+            />
+          </label>
+        </div>
       </div>
 
       <div className={styles.btnGroup}>

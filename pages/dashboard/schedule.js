@@ -14,9 +14,9 @@ import ScheduleFormModal from '@/components/ScheduleFormModal';
 import { FaCalendarDay } from 'react-icons/fa';
 import {
   formatSelectedDate,
-  getKoreanDayName,
   getYearTerm,
   mergeWorkTime,
+  getLocalDateString,
 } from '@/utils/timeUtils';
 
 export default function SchedulePage() {
@@ -47,7 +47,7 @@ export default function SchedulePage() {
       const res = await fetch(
         `/api/schedule?year=${currentYearTerm.year}&term=${
           currentYearTerm.term
-        }&stdJob=${activeTab}&day=${getKoreanDayName(selectedDate)}`
+        }&stdJob=${activeTab}&workDate=${getLocalDateString(selectedDate)}`
       );
       const result = await res.json();
 
@@ -64,28 +64,26 @@ export default function SchedulePage() {
   function groupStudentSchedule(data) {
     const grouped = {};
 
-    data.forEach(
-      ({ stdNum, stdName, workType, stdJob, startTime, endTime, day }) => {
-        const key = `${stdNum}-${day}`; // 같은 학생 같은 요일 기준 그룹
+    data.forEach(({ stdNum, stdName, stdJob, startTime, endTime }) => {
+      const key = `${stdNum}-${day}`; // 같은 학생 같은 요일 기준 그룹
 
-        if (!grouped[key]) {
-          grouped[key] = {
-            stdNum,
-            stdName,
-            workType,
-            stdJob,
-            day,
-            timeRanges: [],
-          };
-        }
-
-        const timeRange = `${startTime}~${endTime}`;
-
-        if (!grouped[key].timeRanges.includes(timeRange)) {
-          grouped[key].timeRanges.push(timeRange);
-        }
+      if (!grouped[key]) {
+        grouped[key] = {
+          stdNum,
+          stdName,
+          workType,
+          stdJob,
+          day,
+          timeRanges: [],
+        };
       }
-    );
+
+      const timeRange = `${startTime}~${endTime}`;
+
+      if (!grouped[key].timeRanges.includes(timeRange)) {
+        grouped[key].timeRanges.push(timeRange);
+      }
+    });
 
     // 병합된 시간대 결과 붙이기
     return Object.values(grouped).map((group) => {
