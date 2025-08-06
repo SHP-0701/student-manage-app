@@ -7,25 +7,30 @@ import dbpool from '@/lib/db';
 export default async function handler(req, res) {
   // 등록(POST)
   if (req.method === 'POST') {
-    const { stdNum, year, term, schedule } = req.body;
+    const { year, term, workDate, stdNum, startTime, endTime } = req.body;
 
-    if (!stdNum || !year || !term)
+    if (!stdNum || !year || !term || !workDate || !startTime || !endTime)
       return res.status(400).json({ message: '잘못된 요청입니다.' });
 
     try {
-      for (const entry of schedule) {
-        const { days, startTime, endTime } = entry;
+      // 중복 등록 방지
+      const [isExist] = await dbpool.query(
+        `SELECT id FROM student_schedule WHERE stdNum = ? AND workDate = ?`,
+        [stdNum, workDate]
+      );
+      if (isExist.length > 0)
+        return res.status(409).json({ message: '이미 등록된 날짜입니다.' });
 
-        await dbpool.execute(
-          `INSERT INTO student_schedule (year, term, stdNum, day, startTime, endTime) VALUES (?, ?, ?, ?, ?, ?)`,
-          [year, term, stdNum, days, startTime, endTime]
-        );
-      }
+      // 근로시간표 등록
+      const query = `INSERT INTO student_schedule(year, term, workDate, stdNum, startTime, endTime) VALUES(?, ?, ?, ?, ?, ?)`;
+      const values = [year, term, workDate, stdNum, startTime, endTime];
+      const [result] = await dbpool.execute(query, values);
 
-      res.status(200).json({ message: '근로시간표 등록 완료' });
+      if (result.affectedRows > 0)
+        return res.status(200).json({ message: '근로시간표 등록 성공' });
     } catch (err) {
       console.error('[/api/schedule] 오류: ', err);
-      res.status(500).json({ message: '서버 오류' });
+      return res.status(500).json({ message: '서버 오류' });
     }
   }
 
@@ -39,10 +44,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'URL Param을 찾을 수 없습니다.' });
 
     try {
-      const query = `SELECT ss.stdNum, si.stdName, si.stdJob, si.workType, DATE_FORMAT(ss.startTime, '%H:%i') as startTime, DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
+      const query = `
+      SELECT 
+        ss.stdNum, 
+        si.stdName, 
+        si.stdJob, 
+        si.workType, 
+        DATE_FORMAT(ss.startTime, '%H:%i') as startTime, 
+        DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
       FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum 
       WHERE ss.year = ? AND ss.term = ? AND si.stdJob = ? AND ss.workDate = ?
       ORDER BY ss.stdNum, ss.workDate, ss.startTime`;
+
+      console.log('[/api/schedule.js] 조회(GET) SQL Query: ', query);
 
       const [rows] = await dbpool.execute(query, [
         year,

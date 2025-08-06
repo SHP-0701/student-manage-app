@@ -37,6 +37,10 @@ export default function AttendancePage() {
   const [toastMsg, setToastMsg] = useState('');
   const [showToast, setShowToast] = useState(false);
 
+  // 페이징에 사용할 상태(현재 페이지 & 전체 페이지 수)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   // 수정 버튼 클릭 시 실행
   const handleModify = (item) => {
     setMode('modify');
@@ -81,7 +85,7 @@ export default function AttendancePage() {
   };
 
   // 출결 데이터 조회
-  const fetchAttendance = async (clearFilter = false) => {
+  const fetchAttendance = async (clearFilter = false, page = 1) => {
     const queryParams = new URLSearchParams();
 
     if (!clearFilter) {
@@ -95,9 +99,15 @@ export default function AttendancePage() {
         queryParams.append('endDate', endDate.toISOString().split('T')[0]);
     }
 
+    queryParams.append('page', page); // 페이지 추가
+    queryParams.append('limit', 5); // 한 페이지당 5개 row
+
     const res = await fetch(`/api/attendance?${queryParams.toString()}`);
     const data = await res.json();
+
     setAttendanceList(data.attendance || []);
+    setTotalPages(data.totalPages || 1);
+    setCurrentPage(data.currentPage || 1);
 
     if (clearFilter) {
       setSearchName('');
@@ -111,8 +121,8 @@ export default function AttendancePage() {
 
   // 출결 데이터 가져올때 사용
   useEffect(() => {
-    fetchAttendance();
-  }, []);
+    fetchAttendance(false, currentPage);
+  }, [currentPage]);
 
   return (
     <Layout>
@@ -181,7 +191,10 @@ export default function AttendancePage() {
             />
             <button
               className={styles.searchBtn}
-              onClick={() => fetchAttendance()}
+              onClick={() => {
+                setCurrentPage(1); // 페이지 초기화
+                fetchAttendance(false, 1);
+              }}
             >
               조회
             </button>
@@ -258,6 +271,21 @@ export default function AttendancePage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* 페이지네이션(pagination) */}
+        <div className={styles.pagination}>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={`${styles.pageBtn} ${
+                currentPage === i + 1 ? styles.activePage : ''
+              }`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
 
         {/* 모달 렌더링 */}

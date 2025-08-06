@@ -51,50 +51,76 @@ export default async function handler(req, res) {
   // 출결 내역 조회(GET)
   else if (req.method === 'GET') {
     try {
-      const { stdName, year, term, stdJob, startDate, endDate } = req.query;
+      // 페이지네이션 관련 param
+      const page = Math.max(parseInt(req.query.page) || 1, 1);
+      const limit = Math.max(parseInt(req.query.limit) || 5, 1);
+      const offset = (page - 1) * limit;
 
-      let conditions = []; // 검색 조건
-      let params = [];
+      // 검색 조건 처리
+      const stdName = req.query.stdName || '';
+      const year = req.query.year || '';
+      const term = req.query.term || '';
+      const stdJob = req.query.stdJob || '';
+      const startDate = req.query.startDate || '';
+      const endDate = req.query.endDate || '';
+
+      let whereClause = 'WHERE 1=1';
+      const params = [];
 
       if (stdName) {
-        conditions.push('s.stdName LIKE ?');
-        params.push(`%${stdName}`);
+        whereClause += ' AND i.stdName LIKE ?';
+        params.push(`%${stdName}%`);
       }
 
       if (year) {
-        conditions.push('s.year = ?');
+        whereClause += ' AND a.year = ?';
         params.push(year);
       }
 
       if (term) {
-        conditions.push('s.term = ?');
+        whereClause += ' AND a.term = ?';
         params.push(term);
       }
 
       if (stdJob) {
-        conditions.push('s.stdJob = ?');
+        whereClause += ' AND i.stdJob = ?';
         params.push(stdJob);
       }
 
       if (startDate) {
-        conditions.push('a.workDate >= ?');
+        whereClause += ' AND a.workDate >= ?';
         params.push(startDate);
       }
 
       if (endDate) {
-        conditions.push('a.workDate <= ?');
+        whereClause += ' AND a.workDate <= ?';
         params.push(endDate);
       }
 
-      const whereClause = conditions.length
-        ? `WHERE ${conditions.join(' AND ')}`
-        : '';
-
       console.log('[/api/attendance.js] where조건(whereClause): ', whereClause);
 
-      const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, s.year, s.term, a.startTime, a.endTime, a.note, s.stdName, s.stdJob, s.stdNum FROM student_attendance a JOIN student_info s ON a.stdNum = s.stdNum ${whereClause} ORDER BY a.workDate DESC, a.created_at DESC`;
+      // 데이터 총 개수(total) 가져오기
+      const [totalRows] = await dbpool.execute(
+        `SELECT COUNT(*) as totalCount FROM student_attendance a JOIN student_info i ON a.stdNum = i.stdNum ${whereClause}`,
+        params
+      );
+
+      const totalCount = totalRows[0].totalCount;
+      const totalPages = totalCount === 0 ? 1 : Math.ceil(totalCount / limit);
+
+      console.log('[/api/attendance.js] totalCount: ', totalCount);
+      console.log('[/api/attendance.js] totalPages: ', totalPages);
+
+      const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, i.year, i.term, a.startTime, a.endTime, a.note, i.stdName, i.stdJob, i.stdNum 
+      FROM student_attendance a JOIN student_info i ON a.stdNum = i.stdNum 
+      ${whereClause} ORDER BY a.workDate DESC, a.created_at DESC LIMIT ${offset}, ${limit}`;
+
+      console.log('[/api/attendance.js] 실행될 조회(GET) SQL Query: ', sql);
+
       const [rows] = await dbpool.execute(sql, params);
-      return res.status(200).json({ attendance: rows });
+      return res
+        .status(200)
+        .json({ attendance: rows, totalCount, totalPages, currentPage: page });
     } catch (err) {
       console.error('[/api/attendance.js] GET 에러 : ', err);
       return res.status(500).json({ message: '조회 실패' });

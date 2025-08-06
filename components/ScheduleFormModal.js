@@ -8,7 +8,8 @@ import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleFormModal.module.css';
 import { FaUser } from 'react-icons/fa';
 import StudentSelectModal from './StudentSelectModal';
-import { getYearTerm } from '@/utils/timeUtils';
+import { getYearTerm, getLocalDateString } from '@/utils/timeUtils';
+import DatePicker from 'react-datepicker';
 
 export default function ScheduleFormModal({ onClose }) {
   // '학생 선택'에서 선택된 학생 정보
@@ -33,8 +34,29 @@ export default function ScheduleFormModal({ onClose }) {
   // 등록(submit) 버튼 핸들러
   const handleSubmit = async () => {
     if (!selectedStudent) return alert('학생을 먼저 선택해주세요');
+    if (startTime >= endTime)
+      return alert('시작 시간은 종료 시간보다 빠르거나 같을 수 없습니다.');
 
     try {
+      const res = await fetch('/api/schedule', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          stdNum: selectedStudent.stdNum,
+          year,
+          term,
+          workDate: getLocalDateString(workDate),
+          startTime,
+          endTime,
+        }),
+      });
+
+      if (!res.ok) throw new Error('등록 실패');
+
+      alert('근로시간표 등록 완료');
+      onClose();
     } catch (err) {
       console.error(
         '[/components/ScheduleFormModal.js] handleSubmit() 등록 오류: ',
@@ -45,7 +67,7 @@ export default function ScheduleFormModal({ onClose }) {
   };
 
   return (
-    <ModalLayout onClose={onClose} maxWidth={700}>
+    <ModalLayout onClose={onClose} maxWidth={400}>
       <h3 className={styles.title}>근로시간표 등록</h3>
 
       <div className={styles.stdInfoSection}>
@@ -97,10 +119,32 @@ export default function ScheduleFormModal({ onClose }) {
         <div className={styles.row}>
           <label>
             근로일자
+            <DatePicker
+              selected={workDate}
+              onChange={(date) => setWorkDate(date)}
+              dateFormat='yyyy-MM-dd'
+              placeholderText='근로일자 선택'
+              className={styles.datePickerInput}
+            />
+          </label>
+        </div>
+        <div className={styles.row}>
+          <label>
+            시작 시간
             <input
-              type='date'
-              value={workDate}
-              onChange={(e) => setWorkDate(e.target.value)}
+              type='time'
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            종료 시간
+            <input
+              type='time'
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+              required
             />
           </label>
         </div>
