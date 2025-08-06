@@ -10,6 +10,7 @@ import { FaUser } from 'react-icons/fa';
 import StudentSelectModal from './StudentSelectModal';
 import { getYearTerm, getLocalDateString } from '@/utils/timeUtils';
 import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function ScheduleFormModal({ onClose }) {
   // '학생 선택'에서 선택된 학생 정보
