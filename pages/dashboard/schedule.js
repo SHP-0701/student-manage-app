@@ -50,50 +50,12 @@ export default function SchedulePage() {
         }&stdJob=${activeTab}&workDate=${getLocalDateString(selectedDate)}`
       );
       const result = await res.json();
-
       console.log('[/dashboard/schedule.js] API fetch result: ', result);
-
-      const grouped = groupStudentSchedule(result);
-      setScheduleData(grouped);
+      setScheduleData(result);
     } catch (err) {
       console.error('데이터 fetch 실패: ', err);
     }
   };
-
-  // 학생별 그룹화 실시
-  function groupStudentSchedule(data) {
-    const grouped = {};
-
-    data.forEach(({ stdNum, stdName, stdJob, startTime, endTime }) => {
-      const key = `${stdNum}-${day}`; // 같은 학생 같은 요일 기준 그룹
-
-      if (!grouped[key]) {
-        grouped[key] = {
-          stdNum,
-          stdName,
-          workType,
-          stdJob,
-          day,
-          timeRanges: [],
-        };
-      }
-
-      const timeRange = `${startTime}~${endTime}`;
-
-      if (!grouped[key].timeRanges.includes(timeRange)) {
-        grouped[key].timeRanges.push(timeRange);
-      }
-    });
-
-    // 병합된 시간대 결과 붙이기
-    return Object.values(grouped).map((group) => {
-      const mergedTimes = mergeWorkTime(group.timeRanges);
-      return {
-        ...group,
-        mergedTimes,
-      };
-    });
-  }
 
   useEffect(() => {
     fetchSchedule();
@@ -215,7 +177,9 @@ export default function SchedulePage() {
                       <td>{item.stdName}</td>
                       <td>{item.workType}</td>
                       <td>{item.stdJob}</td>
-                      <td>{item.mergedTimes.join(', ')}</td>
+                      <td>
+                        {item.startTime} ~ {item.endTime}
+                      </td>
                     </tr>
                   ))
                 )}

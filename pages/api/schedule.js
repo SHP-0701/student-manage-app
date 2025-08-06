@@ -56,8 +56,6 @@ export default async function handler(req, res) {
       WHERE ss.year = ? AND ss.term = ? AND si.stdJob = ? AND ss.workDate = ?
       ORDER BY ss.stdNum, ss.workDate, ss.startTime`;
 
-      console.log('[/api/schedule.js] 조회(GET) SQL Query: ', query);
-
       const [rows] = await dbpool.execute(query, [
         year,
         term,
