@@ -9,7 +9,9 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { year, term, workDate, stdNum, startTime, endTime } = req.body;
 
-    if (!stdNum || !year || !term || !workDate || !startTime || !endTime)
+    console.log('[/api/schedule.js] 전체 req.body ', req.body);
+
+    if (!stdNum || !workDate)
       return res.status(400).json({ message: '잘못된 요청입니다.' });
 
     try {

@@ -20,7 +20,7 @@ export default function ScheduleFormModal({ onClose }) {
   const [showStudentModal, setShowStudentModal] = useState(false);
 
   // 날짜 & 시간 입력 상태값
-  const [workDate, setWorkDate] = useState('');
+  const [workDate, setWorkDate] = useState(null);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
 
@@ -54,16 +54,17 @@ export default function ScheduleFormModal({ onClose }) {
         }),
       });
 
-      if (!res.ok) throw new Error('등록 실패');
+      // 백엔드에서 넘어온 message 확인용
+      const data = await res.json();
 
-      alert('근로시간표 등록 완료');
-      onClose();
+      if (res.ok) {
+        alert('근로시간표 등록 완료');
+        onClose();
+      } else {
+        return alert(data.message);
+      }
     } catch (err) {
-      console.error(
-        '[/components/ScheduleFormModal.js] handleSubmit() 등록 오류: ',
-        err
-      );
-      alert('등록 중 오류 발생');
+      console.error('[ScheduleFormModal.js] handleSubmit() Error ', err);
     }
   };
 
@@ -122,7 +123,15 @@ export default function ScheduleFormModal({ onClose }) {
             근로일자
             <DatePicker
               selected={workDate}
-              onChange={(date) => setWorkDate(date)}
+              onChange={(date) => {
+                console.log(
+                  '[/components/ScheduleFormModal.js] Datepicker 선택된 날짜: ',
+                  date,
+                  ' 타입: ',
+                  typeof date
+                );
+                setWorkDate(date);
+              }}
               dateFormat='yyyy-MM-dd'
               placeholderText='근로일자 선택'
               className={styles.datePickerInput}

@@ -97,8 +97,6 @@ export default async function handler(req, res) {
         params.push(endDate);
       }
 
-      console.log('[/api/attendance.js] where조건(whereClause): ', whereClause);
-
       // 데이터 총 개수(total) 가져오기
       const [totalRows] = await dbpool.execute(
         `SELECT COUNT(*) as totalCount FROM student_attendance a JOIN student_info i ON a.stdNum = i.stdNum ${whereClause}`,
@@ -108,14 +106,9 @@ export default async function handler(req, res) {
       const totalCount = totalRows[0].totalCount;
       const totalPages = totalCount === 0 ? 1 : Math.ceil(totalCount / limit);
 
-      console.log('[/api/attendance.js] totalCount: ', totalCount);
-      console.log('[/api/attendance.js] totalPages: ', totalPages);
-
       const sql = `SELECT a.id, DATE_FORMAT(a.workDate, '%Y-%m-%d') AS workDate, i.year, i.term, a.startTime, a.endTime, a.note, i.stdName, i.stdJob, i.stdNum 
       FROM student_attendance a JOIN student_info i ON a.stdNum = i.stdNum 
       ${whereClause} ORDER BY a.workDate DESC, a.created_at DESC LIMIT ${offset}, ${limit}`;
-
-      console.log('[/api/attendance.js] 실행될 조회(GET) SQL Query: ', sql);
 
       const [rows] = await dbpool.execute(sql, params);
       return res
