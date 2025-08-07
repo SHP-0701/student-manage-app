@@ -100,7 +100,7 @@ export default function AttendancePage() {
     }
 
     queryParams.append('page', page); // 페이지 추가
-    queryParams.append('limit', 5); // 한 페이지당 5개 row
+    queryParams.append('limit', 7); // 한 페이지당 7개 row
 
     const res = await fetch(`/api/attendance?${queryParams.toString()}`);
     const data = await res.json();
@@ -215,16 +215,16 @@ export default function AttendancePage() {
           <table>
             <thead>
               <tr>
-                <th>학년도</th>
-                <th>학기</th>
-                <th>날짜</th>
-                <th>담당업무</th>
-                <th>이름</th>
-                <th>학번</th>
-                <th>시작시간</th>
-                <th>종료시간</th>
-                <th>근로시간</th>
-                <th>비고</th>
+                <th style={{ width: '60px' }}>학년도</th>
+                <th style={{ width: '60px' }}>학기</th>
+                <th style={{ width: '100px' }}>날짜</th>
+                <th style={{ width: '70px' }}>담당업무</th>
+                <th style={{ width: '60px' }}>이름</th>
+                <th style={{ width: '90px' }}>학번</th>
+                <th style={{ width: '70px' }}>시작시간</th>
+                <th style={{ width: '70px' }}>종료시간</th>
+                <th style={{ width: '100px' }}>근로시간</th>
+                <th style={{ width: '400px' }}>비고</th>
                 <th>관리</th>
               </tr>
             </thead>

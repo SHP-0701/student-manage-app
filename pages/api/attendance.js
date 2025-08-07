@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     try {
       // 페이지네이션 관련 param
       const page = Math.max(parseInt(req.query.page) || 1, 1);
-      const limit = Math.max(parseInt(req.query.limit) || 5, 1);
+      const limit = Math.max(parseInt(req.query.limit) || 7, 1);
       const offset = (page - 1) * limit;
 
       // 검색 조건 처리

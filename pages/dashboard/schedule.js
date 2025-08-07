@@ -57,6 +57,11 @@ export default function SchedulePage() {
     }
   };
 
+  // 모달에서 submit 완료하면 부모 컴포넌트로 전달
+  function handleSubmitSuccess(stdJob) {
+    if (stdJob === activeTab) fetchSchedule();
+  }
+
   useEffect(() => {
     fetchSchedule();
   }, [activeTab, selectedDate]);
@@ -190,7 +195,10 @@ export default function SchedulePage() {
 
         {/* 모달 영역 */}
         {isModalOpen && (
-          <ScheduleFormModal onClose={() => setIsModalOpen(false)} />
+          <ScheduleFormModal
+            onClose={() => setIsModalOpen(false)}
+            onSubmitSuccess={handleSubmitSuccess}
+          />
         )}
       </div>
     </Layout>

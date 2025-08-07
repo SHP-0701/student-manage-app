@@ -12,7 +12,7 @@ import { getYearTerm, getLocalDateString } from '@/utils/timeUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function ScheduleFormModal({ onClose }) {
+export default function ScheduleFormModal({ onClose, onSubmitSuccess }) {
   // '학생 선택'에서 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
 
@@ -58,7 +58,8 @@ export default function ScheduleFormModal({ onClose }) {
       const data = await res.json();
 
       if (res.ok) {
-        alert('근로시간표 등록 완료');
+        alert(data.message);
+        onSubmitSuccess(selectedStudent.stdJob);
         onClose();
       } else {
         return alert(data.message);
