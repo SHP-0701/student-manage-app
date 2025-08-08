@@ -31,6 +31,9 @@ export default function SchedulePage() {
   // 선택된 날짜
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  // 근로시간표 수정을 위한 state
+  const [editSchedule, setEditSchedule] = useState(null);
+
   // 현재 월 기준(getMonth() 관련)
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -145,7 +148,7 @@ export default function SchedulePage() {
             </button>
           </div>
 
-          {/* 선택된 날짜 보여주는 Label */}
+          {/* 선택된 날짜 보여주는 근로시간표 Label */}
           <div className={styles.selectedDate}>
             <FaCalendarDay className={styles.dateIcon} />
             <label>
@@ -153,17 +156,18 @@ export default function SchedulePage() {
             </label>
           </div>
 
-          {/* 테이블 */}
+          {/* 근로시간표 테이블 */}
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>학년도</th>
-                  <th>학기</th>
-                  <th>성명</th>
-                  <th>근로구분</th>
-                  <th>담당업무</th>
-                  <th>근로시간</th>
+                  <th style={{ width: '50px' }}>학년도</th>
+                  <th style={{ width: '60px' }}>학기</th>
+                  <th style={{ width: '80px' }}>성명</th>
+                  <th style={{ width: '90px' }}>근로구분</th>
+                  <th style={{ width: '90px' }}>담당업무</th>
+                  <th style={{ width: '100px' }}>근로시간</th>
+                  <th style={{ width: '140px' }}>관리</th>
                 </tr>
               </thead>
               <tbody>
@@ -184,9 +188,62 @@ export default function SchedulePage() {
                       <td>
                         {item.startTime} ~ {item.endTime}
                       </td>
+                      <td>
+                        <button
+                          className={styles.modBtn}
+                          onClick={() => {
+                            setEditSchedule(item);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          수정
+                        </button>
+                        <button className={styles.delBtn}>삭제</button>
+                      </td>
                     </tr>
                   ))
                 )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 선택된 날짜 보여주는 근로변경사항 Label */}
+          <div className={styles.selectedDate}>
+            <FaCalendarDay className={styles.dateIcon} />
+            <label>
+              {formatSelectedDate(selectedDate)} {activeTab} 근로변경사항
+              입니다.
+            </label>
+          </div>
+
+          {/* 근로변경사항 Table */}
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th style={{ width: '80px' }}>담당업무</th>
+                  <th style={{ width: '60px' }}>성명</th>
+                  <th style={{ width: '80px' }}>원래 근로</th>
+                  <th style={{ width: '160px' }}>변경 근로</th>
+                  <th>변경 사유</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* 데이터 임시(실제 데이터 아님) */}
+                <tr>
+                  <td>카운터</td>
+                  <td>파이리</td>
+                  <td>09:00~12:00</td>
+                  <td>8/11(월) 13:00~15:00</td>
+                  <td>병원 진료로 인한 근로 변경</td>
+                </tr>
+                <tr>
+                  <td>카운터</td>
+                  <td>파이리</td>
+                  <td>09:00~12:00</td>
+                  <td>8/11(월) 13:00~15:00</td>
+                  <td>병원 진료로 인한 근로 변경</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -195,8 +252,13 @@ export default function SchedulePage() {
         {/* 모달 영역 */}
         {isModalOpen && (
           <ScheduleFormModal
-            onClose={() => setIsModalOpen(false)}
+            onClose={() => {
+              setIsModalOpen(false);
+              setEditSchedule(null);
+            }}
             onSubmitSuccess={handleSubmitSuccess}
+            editItem={editSchedule}
+            mode={editSchedule ? 'modify' : 'insert'}
           />
         )}
       </div>

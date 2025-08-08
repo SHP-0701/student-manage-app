@@ -3,7 +3,7 @@
  * 모달 공통 레이아웃(ModalLayout.js) 사용
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleFormModal.module.css';
 import { FaUser } from 'react-icons/fa';
@@ -12,7 +12,15 @@ import { getYearTerm, getLocalDateString } from '@/utils/timeUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function ScheduleFormModal({ onClose, onSubmitSuccess }) {
+export default function ScheduleFormModal({
+  onClose,
+  onSubmitSuccess,
+  editItem,
+  mode = 'insert',
+}) {
+  const isModify = mode === 'modify';
+  console.log('[ScheduleFormModal.js] 수정 모드 인가요? ', isModify);
+
   // '학생 선택'에서 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
 
@@ -71,9 +79,13 @@ export default function ScheduleFormModal({ onClose, onSubmitSuccess }) {
 
   const datePickerRef = useRef();
 
+  useEffect(() => {}, [isModify, editItem]);
+
   return (
     <ModalLayout onClose={onClose} maxWidth={400}>
-      <h3 className={styles.title}>근로시간표 등록</h3>
+      <h3 className={styles.title}>
+        근로시간표 {mode === 'insert' ? '등록' : '수정'}
+      </h3>
 
       <div className={styles.stdInfoSection}>
         <div className={styles.stdInfo}>
