@@ -15,7 +15,6 @@ import { FaCalendarDay } from 'react-icons/fa';
 import {
   formatSelectedDate,
   getYearTerm,
-  mergeWorkTime,
   getLocalDateString,
 } from '@/utils/timeUtils';
 

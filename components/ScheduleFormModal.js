@@ -3,7 +3,7 @@
  * 모달 공통 레이아웃(ModalLayout.js) 사용
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleFormModal.module.css';
 import { FaUser } from 'react-icons/fa';
@@ -69,6 +69,8 @@ export default function ScheduleFormModal({ onClose, onSubmitSuccess }) {
     }
   };
 
+  const datePickerRef = useRef();
+
   return (
     <ModalLayout onClose={onClose} maxWidth={400}>
       <h3 className={styles.title}>근로시간표 등록</h3>
@@ -123,19 +125,18 @@ export default function ScheduleFormModal({ onClose, onSubmitSuccess }) {
           <label>
             근로일자
             <DatePicker
+              ref={datePickerRef}
               selected={workDate}
               onChange={(date) => {
-                console.log(
-                  '[/components/ScheduleFormModal.js] Datepicker 선택된 날짜: ',
-                  date,
-                  ' 타입: ',
-                  typeof date
-                );
                 setWorkDate(date);
+                // 달력 입력 폼 닫기(setTimeout() 사용)
+                setTimeout(() => {
+                  datePickerRef.current?.setOpen(false);
+                }, 0);
               }}
+              shouldCloseOnSelect={true}
               dateFormat='yyyy-MM-dd'
               placeholderText='근로일자 선택'
-              className={styles.datePickerInput}
             />
           </label>
         </div>
