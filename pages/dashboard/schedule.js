@@ -64,6 +64,33 @@ export default function SchedulePage() {
     if (stdJob === activeTab) fetchSchedule();
   }
 
+  // 삭제 버튼 handler
+  const handleDelete = async (item) => {
+    if (!item.id) return alert('삭제 대상 정보가 올바르지 않습니다');
+
+    const ok = confirm(
+      `[삭제 확인]\n${item.stdName} - ${item.startTime} ~ ${item.endTime} 항목을 삭제하시겠습니까? `
+    );
+
+    if (!ok) return;
+
+    try {
+      const res = await fetch(`/api/schedule?id=${item.id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+        await fetchSchedule();
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error('[/dashboard/schedule.js] handleDelete 에러: ', err);
+      alert('삭제 중 오류 발생');
+    }
+  };
+
   useEffect(() => {
     fetchSchedule();
   }, [activeTab, selectedDate]);
@@ -198,7 +225,12 @@ export default function SchedulePage() {
                         >
                           수정
                         </button>
-                        <button className={styles.delBtn}>삭제</button>
+                        <button
+                          className={styles.delBtn}
+                          onClick={() => handleDelete(item)}
+                        >
+                          삭제
+                        </button>
                       </td>
                     </tr>
                   ))

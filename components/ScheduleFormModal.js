@@ -19,7 +19,7 @@ export default function ScheduleFormModal({
   mode = 'insert',
 }) {
   const isModify = mode === 'modify';
-  console.log('[ScheduleFormModal.js] 수정 모드 인가요? ', isModify);
+  console.log('[ScheduleFormModal.js] editItem 안에는 뭐가 있나요? ', editItem);
 
   // '학생 선택'에서 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -47,30 +47,55 @@ export default function ScheduleFormModal({
       return alert('시작 시간은 종료 시간보다 빠르거나 같을 수 없습니다.');
 
     try {
-      const res = await fetch('/api/schedule', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          stdNum: selectedStudent.stdNum,
-          year,
-          term,
-          workDate: getLocalDateString(workDate),
-          startTime,
-          endTime,
-        }),
-      });
+      // 수정(PUT) 요청
+      if (isModify && editItem) {
+        const res = await fetch(`/api/schedule`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: editItem.id,
+            startTime,
+            endTime,
+          }),
+        });
 
-      // 백엔드에서 넘어온 message 확인용
-      const data = await res.json();
-
-      if (res.ok) {
-        alert(data.message);
-        onSubmitSuccess(selectedStudent.stdJob);
-        onClose();
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          onSubmitSuccess(editItem.stdJob);
+          onClose();
+        } else {
+          return alert(data.message);
+        }
       } else {
-        return alert(data.message);
+        if (!workDate) return alert('근로일자를 선택해주세요.');
+
+        // 등록(POST) 요청
+        const res = await fetch('/api/schedule', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            stdNum: selectedStudent.stdNum,
+            year,
+            term,
+            workDate: getLocalDateString(workDate),
+            startTime,
+            endTime,
+          }),
+        });
+
+        // 백엔드에서 넘어온 message 확인용
+        const data = await res.json();
+
+        if (res.ok) {
+          alert(data.message);
+          onSubmitSuccess(selectedStudent.stdJob);
+          onClose();
+        } else {
+          return alert(data.message);
+        }
       }
     } catch (err) {
       console.error('[ScheduleFormModal.js] handleSubmit() Error ', err);
@@ -79,7 +104,16 @@ export default function ScheduleFormModal({
 
   const datePickerRef = useRef();
 
-  useEffect(() => {}, [isModify, editItem]);
+  useEffect(() => {
+    if (isModify && editItem) {
+      setStartTime(editItem.startTime);
+      setEndTime(editItem.endTime);
+      setSelectedStudent({
+        stdName: editItem.stdName,
+        stdNum: editItem.stdNum,
+      });
+    }
+  }, [isModify, editItem]);
 
   return (
     <ModalLayout onClose={onClose} maxWidth={400}>
@@ -101,9 +135,11 @@ export default function ScheduleFormModal({
             </span>
           )}
         </div>
-        <button className={styles.selectStdBtn} onClick={handleStudentSelect}>
-          학생 선택
-        </button>
+        {!isModify && (
+          <button className={styles.selectStdBtn} onClick={handleStudentSelect}>
+            학생 선택
+          </button>
+        )}
       </div>
 
       {/* 근로시간표 내용 입력 영역 */}
@@ -136,22 +172,27 @@ export default function ScheduleFormModal({
         <div className={styles.row}>
           <label>
             근로일자
-            <DatePicker
-              ref={datePickerRef}
-              selected={workDate}
-              onChange={(date) => {
-                setWorkDate(date);
-                // 달력 입력 폼 닫기(setTimeout() 사용)
-                setTimeout(() => {
-                  datePickerRef.current?.setOpen(false);
-                }, 0);
-              }}
-              shouldCloseOnSelect={true}
-              dateFormat='yyyy-MM-dd'
-              placeholderText='근로일자 선택'
-            />
+            {isModify ? (
+              <div className={styles.readOnlyDate}>{editItem.workDate}</div>
+            ) : (
+              <DatePicker
+                ref={datePickerRef}
+                selected={workDate}
+                onChange={(date) => {
+                  setWorkDate(date);
+                  // 달력 입력 폼 닫기(setTimeout() 사용)
+                  setTimeout(() => {
+                    datePickerRef.current?.setOpen(false);
+                  }, 0);
+                }}
+                shouldCloseOnSelect={true}
+                dateFormat='yyyy-MM-dd'
+                placeholderText='근로일자 선택'
+              />
+            )}
           </label>
         </div>
+
         <div className={styles.row}>
           <label>
             시작 시간
@@ -177,7 +218,7 @@ export default function ScheduleFormModal({
       <div className={styles.btnGroup}>
         <button onClick={onClose}>취소</button>
         <button className={styles.submit} onClick={handleSubmit}>
-          등록
+          {isModify ? '수정' : '등록'}
         </button>
       </div>
 

@@ -48,6 +48,8 @@ export default async function handler(req, res) {
     try {
       const query = `
       SELECT 
+        ss.id,
+        date_format(ss.workDate, '%Y-%m-%d') as workDate,
         ss.stdNum, 
         si.stdName, 
         si.stdJob, 
@@ -68,6 +70,71 @@ export default async function handler(req, res) {
     } catch (err) {
       console.error('DB 에러: ', err);
       return res.status(500).json({ message: '서버 에러' });
+    }
+  }
+
+  // 수정(PUT)
+  else if (req.method === 'PUT') {
+    const { id, startTime, endTime } = req.body;
+
+    if (!id)
+      return res
+        .status(400)
+        .json({ message: '근로시간표 ID가 존재하지 않습니다' });
+    if (!startTime || !endTime)
+      return res
+        .status(400)
+        .json({ message: '시작시간 / 종료시간은 필수입니다' });
+
+    if (startTime >= endTime)
+      return res
+        .status(400)
+        .json({ message: '시작시간은 종료시간보다 빠르거나 같을 수 없습니다' });
+
+    try {
+      let sql = `UPDATE student_schedule SET startTime = ?, endTime = ?, updated_at = NOW() WHERE id = ?`;
+      let params = [startTime, endTime, id];
+
+      const [result] = await dbpool.query(sql, params);
+
+      if (result.affectedRows === 0)
+        return res
+          .status(404)
+          .json({ message: '수정할 대상을 찾을 수 없습니다 ' });
+
+      return res.status(200).json({ message: '근로시간표 수정 완료' });
+    } catch (err) {
+      console.error('[/api/schedule.js] Error: ', err);
+      return res
+        .status(500)
+        .json({ message: '근로시간표 수정 실패', error: err });
+    }
+  }
+
+  // 삭제(DELETE)
+  else if (req.method === 'DELETE') {
+    const id = req.query.id;
+
+    if (!id)
+      return res.status(400).json({ message: '근로시간표 ID가 필요합니다.' });
+
+    try {
+      const [result] = await dbpool.execute(
+        `DELETE FROM student_schedule WHERE id =?`,
+        [id]
+      );
+
+      if (result.affectedRows === 0)
+        return res
+          .status(404)
+          .json({ message: '삭제 대상을 찾을 수 없습니다. ' });
+
+      return res.status(200).json({ message: '근로시간표 삭제 성공' });
+    } catch (err) {
+      console.error('[/api/schedule.js] DELETE error: ', err);
+      return res
+        .status(500)
+        .json({ message: '근로시간표 삭제 실패', error: err });
     }
   } else {
     res.setHeader('Allow', ['POST']);
