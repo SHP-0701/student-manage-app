@@ -226,6 +226,27 @@
   font-size: 1rem;
 }
 
+/* 근로변경사항 버튼 영역(btnWrapper) */
+.btnWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.changeRegisterBtn {
+  background-color: #4cafef;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.changeRegisterBtn:hover {
+  background-color: #3a9dd9;
+}
+
 /* 테이블 감싸는 영역 */
 .tableWrapper {
   overflow-x: auto;

@@ -169,7 +169,10 @@ export default function SchedulePage() {
 
             <button
               className={styles.btnScheduleReg}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setEditSchedule(null);
+                setIsModalOpen(true);
+              }}
             >
               시간표 등록
             </button>
@@ -188,25 +191,26 @@ export default function SchedulePage() {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th style={{ width: '50px' }}>학년도</th>
+                  <th style={{ width: '60px' }}>학년도</th>
                   <th style={{ width: '60px' }}>학기</th>
-                  <th style={{ width: '80px' }}>성명</th>
-                  <th style={{ width: '90px' }}>근로구분</th>
-                  <th style={{ width: '90px' }}>담당업무</th>
-                  <th style={{ width: '100px' }}>근로시간</th>
-                  <th style={{ width: '140px' }}>관리</th>
+                  <th style={{ width: '60px' }}>성명</th>
+                  <th style={{ width: '70px' }}>근로구분</th>
+                  <th style={{ width: '70px' }}>담당업무</th>
+                  <th style={{ width: '90px' }}>근로시간</th>
+                  <th style={{ width: '60px' }}>근로확인</th>
+                  <th style={{ width: '120px' }}>관리</th>
                 </tr>
               </thead>
               <tbody>
                 {scheduleData.length === 0 ? (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: 'center' }}>
+                    <td colSpan={7} style={{ textAlign: 'center' }}>
                       해당 날짜의 근로시간표가 없습니다.
                     </td>
                   </tr>
                 ) : (
-                  scheduleData.map((item, idx) => (
-                    <tr key={idx}>
+                  scheduleData.map((item) => (
+                    <tr key={item.id}>
                       <td>{currentYearTerm.year}</td>
                       <td>{currentYearTerm.term}</td>
                       <td>{item.stdName}</td>
@@ -214,6 +218,9 @@ export default function SchedulePage() {
                       <td>{item.stdJob}</td>
                       <td>
                         {item.startTime} ~ {item.endTime}
+                      </td>
+                      <td>
+                        <button className={styles.checkBtn}>확인</button>
                       </td>
                       <td>
                         <button
@@ -246,6 +253,13 @@ export default function SchedulePage() {
               {formatSelectedDate(selectedDate)} {activeTab} 근로변경사항
               입니다.
             </label>
+          </div>
+
+          {/* 근로변경사항 등록 버튼 영역 */}
+          <div className={styles.btnWrapper}>
+            <button className={styles.changeRegisterBtn}>
+              근로변경사항 등록
+            </button>
           </div>
 
           {/* 근로변경사항 Table */}
