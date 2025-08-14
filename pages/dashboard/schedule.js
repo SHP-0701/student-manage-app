@@ -17,10 +17,14 @@ import {
   getYearTerm,
   getLocalDateString,
 } from '@/utils/timeUtils';
+import ScheduleChangeFormModal from '@/components/ScheduleChangeFormModal';
 
 export default function SchedulePage() {
   // 근로시간표 등록 모달 열기
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 근로변경사항 등록/수정 모달 열기
+  const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
   // 근로시간표 담는 state
   const [scheduleData, setScheduleData] = useState([]);
@@ -192,9 +196,9 @@ export default function SchedulePage() {
               <thead>
                 <tr>
                   <th style={{ width: '60px' }}>학년도</th>
-                  <th style={{ width: '60px' }}>학기</th>
+                  <th style={{ width: '50px' }}>학기</th>
                   <th style={{ width: '60px' }}>성명</th>
-                  <th style={{ width: '70px' }}>근로구분</th>
+                  <th style={{ width: '80px' }}>근로구분</th>
                   <th style={{ width: '70px' }}>담당업무</th>
                   <th style={{ width: '90px' }}>근로시간</th>
                   <th style={{ width: '60px' }}>근로확인</th>
@@ -257,7 +261,10 @@ export default function SchedulePage() {
 
           {/* 근로변경사항 등록 버튼 영역 */}
           <div className={styles.btnWrapper}>
-            <button className={styles.changeRegisterBtn}>
+            <button
+              className={styles.changeRegisterBtn}
+              onClick={() => setIsChangeModalOpen(true)}
+            >
               근로변경사항 등록
             </button>
           </div>
@@ -305,6 +312,11 @@ export default function SchedulePage() {
             onSubmitSuccess={handleSubmitSuccess}
             editItem={editSchedule}
             mode={editSchedule ? 'modify' : 'insert'}
+          />
+        )}
+        {isChangeModalOpen && (
+          <ScheduleChangeFormModal
+            onClose={() => setIsChangeModalOpen(false)}
           />
         )}
       </div>
