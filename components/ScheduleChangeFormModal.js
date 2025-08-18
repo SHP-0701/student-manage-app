@@ -6,6 +6,7 @@ import styles from '@/styles/ScheduleChangeFormModal.module.css';
 import { FaUser } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import StudentSelectModal from './StudentSelectModal';
 
 export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
   // 등록 or 수정 분리
@@ -14,14 +15,17 @@ export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
   // 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
 
+  // 학생 선택 모달 on/off
+  const [showStudentModal, setShowStudentModal] = useState(false);
+
   // 선택된 날짜 정보
   const [changeDate, setChangeDate] = useState(new Date());
   const datePickerRef = useRef(null);
 
   // DB Column과 매칭
-  const [beforeTime, setBeforeTime] = useState('');
-  const [afterTime, setAfterTime] = useState('');
-  const [reason, setReason] = useState('');
+  const [beforeTime, setBeforeTime] = useState(''); // 변경이전
+  const [afterTime, setAfterTime] = useState(''); // 변경후
+  const [reason, setReason] = useState(''); // 변경사유
 
   return (
     <ModalLayout onClose={onClose} maxWidth={400}>
@@ -46,7 +50,14 @@ export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
           )}
         </div>
         {!isModify && (
-          <button className={styles.selectStdBtn}>학생 선택</button>
+          <button
+            type='button'
+            onClick={() => setShowStudentModal(true)}
+            className={styles.selectStdBtn}
+            disabled={isModify}
+          >
+            학생 선택
+          </button>
         )}
       </div>
 
@@ -69,13 +80,19 @@ export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
           </label>
           <label>
             담당업무
-            <input type='text' value={selectedStudent?.stdJob || ''} />
+            <input type='text' value={selectedStudent?.stdJob || ''} readOnly />
           </label>
         </div>
         <div className={styles.row}>
           <label>
             이전 근무시간
-            <input type='text' name='beforeTime' value={beforeTime} />
+            <input
+              type='text'
+              name='beforeTime'
+              value={beforeTime}
+              onChange={(e) => setBeforeTime(e.target.value)}
+              placeholder='예시: 09:00~12:00'
+            />
           </label>
         </div>
         <div className={styles.row}>
@@ -105,12 +122,22 @@ export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
         </div>
         {/* 버튼 영역(등록/취소) */}
         <div className={styles.btnGroup}>
-          <button onClick={onClose}>취소</button>
-          <button className={styles.btnSubmit}>
+          <button type='button' onClick={onClose}>
+            취소
+          </button>
+          <button type='submit' className={styles.btnSubmit}>
             {isModify ? '수정' : '등록'}
           </button>
         </div>
       </div>
+
+      {/* 모달(Modal) 영역 */}
+      {showStudentModal && (
+        <StudentSelectModal
+          onSelect={(student) => setSelectedStudent(student)}
+          onClose={() => setShowStudentModal(false)}
+        />
+      )}
     </ModalLayout>
   );
 }

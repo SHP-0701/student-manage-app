@@ -276,7 +276,7 @@ export default function SchedulePage() {
                 <tr>
                   <th style={{ width: '80px' }}>담당업무</th>
                   <th style={{ width: '60px' }}>성명</th>
-                  <th style={{ width: '80px' }}>원래 근로</th>
+                  <th style={{ width: '80px' }}>기존 근로</th>
                   <th style={{ width: '160px' }}>변경 근로</th>
                   <th>변경 사유</th>
                 </tr>
