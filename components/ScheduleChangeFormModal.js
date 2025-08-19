@@ -8,7 +8,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import StudentSelectModal from './StudentSelectModal';
 
-export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
+export default function ScheduleChangeFormModal({
+  onClose,
+  mode = 'insert',
+  modifyItem,
+}) {
   // 등록 or 수정 분리
   const isModify = mode === 'modify';
 
@@ -27,8 +31,26 @@ export default function ScheduleChangeFormModal({ onClose, mode = 'insert' }) {
   const [afterTime, setAfterTime] = useState(''); // 변경후
   const [reason, setReason] = useState(''); // 변경사유
 
+  // submit 버튼 handler
+  const handleSubmit = async () => {
+    if (!selectedStudent) return alert('학생을 선택해주세요.');
+
+    try {
+      // 등록(POST)
+      const res = await fetch('/api/changeschedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          stdNum: selectedStudent.stdNum,
+        }),
+      });
+    } catch (err) {
+      console.error('[ScheduleChangeFormModal.js] handleSubmit() 에러: ', err);
+    }
+  };
+
   return (
-    <ModalLayout onClose={onClose} maxWidth={400}>
+    <ModalLayout onClose={onClose} maxWidth={450}>
       {/* Modal Title */}
       <h3 className={styles.title}>
         근로변경사항 {isModify ? '수정' : '등록'}

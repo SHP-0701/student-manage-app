@@ -19,7 +19,6 @@ export default function ScheduleFormModal({
   mode = 'insert',
 }) {
   const isModify = mode === 'modify';
-  console.log('[ScheduleFormModal.js] editItem 안에는 뭐가 있나요? ', editItem);
 
   // '학생 선택'에서 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
