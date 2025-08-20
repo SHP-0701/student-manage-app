@@ -9,5 +9,35 @@ export default async function handler(req, res) {
   // 등록(POST)
   if (req.method === 'POST') {
     // 프론트에서 넘어온 req.body(param)
+    const { stdJob, stdNum, changeDate, beforeTime, afterTime, reason } =
+      req.body;
+
+    if (!stdNum || !stdJob)
+      return res
+        .status(400)
+        .json({ message: '잘못된 요청입니다. 다시 확인해주세요.' });
+
+    try {
+      const query = `INSERT INTO student_changeSchedule(stdNum, stdJob, changeDate, beforeTime, afterTime, reason) VALUES(?, ?, ?, ?, ?, ?)`;
+      const values = [
+        stdNum,
+        stdJob,
+        changeDate,
+        beforeTime,
+        afterTime,
+        reason,
+      ];
+      const [result] = await dbpool.execute(query, values);
+
+      if (result.affectedRows > 0)
+        return res.status(200).json({ message: '근로변경사항 등록 완료' });
+    } catch (err) {
+      console.error('[/api/changeschedule] 등록(POST) 에러: ', err);
+      return res.status(500).json({ message: '서버 에러' });
+    }
+  }
+
+  // 조회(GET)
+  else if (req.method === 'GET') {
   }
 }

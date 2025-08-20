@@ -56,7 +56,6 @@ export default function SchedulePage() {
         }&stdJob=${activeTab}&workDate=${getLocalDateString(selectedDate)}`
       );
       const result = await res.json();
-      console.log('[/dashboard/schedule.js] API fetch result: ', result);
       setScheduleData(result);
     } catch (err) {
       console.error('데이터 fetch 실패: ', err);

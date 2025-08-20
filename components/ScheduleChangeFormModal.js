@@ -7,6 +7,7 @@ import { FaUser } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import StudentSelectModal from './StudentSelectModal';
+import { getLocalDateString } from '@/utils/timeUtils';
 
 export default function ScheduleChangeFormModal({
   onClose,
@@ -35,15 +36,32 @@ export default function ScheduleChangeFormModal({
   const handleSubmit = async () => {
     if (!selectedStudent) return alert('학생을 선택해주세요.');
 
+    if (!reason) return alert('변경사유를 입력하세요.');
+
     try {
       // 등록(POST)
       const res = await fetch('/api/changeschedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          // 백엔드로 넘길 param들 설정
+          stdJob: selectedStudent.stdJob,
           stdNum: selectedStudent.stdNum,
+          changeDate: getLocalDateString(changeDate),
+          beforeTime,
+          afterTime,
+          reason,
         }),
       });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message);
+        onClose();
+      } else {
+        return alert(data.message);
+      }
     } catch (err) {
       console.error('[ScheduleChangeFormModal.js] handleSubmit() 에러: ', err);
     }
@@ -147,7 +165,7 @@ export default function ScheduleChangeFormModal({
           <button type='button' onClick={onClose}>
             취소
           </button>
-          <button type='submit' className={styles.btnSubmit}>
+          <button className={styles.btnSubmit} onClick={handleSubmit}>
             {isModify ? '수정' : '등록'}
           </button>
         </div>

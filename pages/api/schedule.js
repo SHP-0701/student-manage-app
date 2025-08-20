@@ -13,14 +13,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: '잘못된 요청입니다.' });
 
     try {
-      // 중복 등록 방지
-      const [isExist] = await dbpool.query(
-        `SELECT id FROM student_schedule WHERE stdNum = ? AND workDate = ?`,
-        [stdNum, workDate]
-      );
-      if (isExist.length > 0)
-        return res.status(409).json({ message: '이미 등록된 날짜입니다.' });
-
       // 근로시간표 등록
       const query = `INSERT INTO student_schedule(year, term, workDate, stdNum, startTime, endTime) VALUES(?, ?, ?, ?, ?, ?)`;
       const values = [year, term, workDate, stdNum, startTime, endTime];
