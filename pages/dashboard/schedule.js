@@ -29,6 +29,9 @@ export default function SchedulePage() {
   // 근로시간표 담는 state
   const [scheduleData, setScheduleData] = useState([]);
 
+  // 근로변경사항 담는 state
+  const [changeSchedule, setChangeSchedule] = useState([]);
+
   // 선택된 탭
   const [activeTab, setActiveTab] = useState('실습실');
 
@@ -62,6 +65,22 @@ export default function SchedulePage() {
     }
   };
 
+  // 근로변경사항 fetch
+  const fetchChangeSchedule = async () => {
+    try {
+      const res = await fetch(
+        `/api/changeschedule?changeDate=${getLocalDateString(selectedDate)}`
+      );
+      const result = await res.json();
+      console.log(
+        '[/dashboard/schedule.js] fetchChangeSchedule() 결과 result: ',
+        result
+      );
+    } catch (err) {
+      console.error('[/dashboard/schedule.js] 근로변경사항 fetch 실패: ', err);
+    }
+  };
+
   // 모달에서 submit 완료하면 부모 컴포넌트로 전달
   function handleSubmitSuccess(stdJob) {
     if (stdJob === activeTab) fetchSchedule();
@@ -72,7 +91,11 @@ export default function SchedulePage() {
     if (!item.id) return alert('삭제 대상 정보가 올바르지 않습니다');
 
     const ok = confirm(
-      `[삭제 확인]\n${item.stdName} - ${item.startTime} ~ ${item.endTime} 항목을 삭제하시겠습니까? `
+      `[삭제 확인]\n날짜: ${getLocalDateString(selectedDate)}\n학생명: ${
+        item.stdName
+      }\n근로시간: ${item.startTime} ~ ${
+        item.endTime
+      }\n항목을 삭제하시겠습니까?`
     );
 
     if (!ok) return;
@@ -96,6 +119,7 @@ export default function SchedulePage() {
 
   useEffect(() => {
     fetchSchedule();
+    fetchChangeSchedule();
   }, [activeTab, selectedDate]);
 
   return (

@@ -29,8 +29,10 @@ export default async function handler(req, res) {
       ];
       const [result] = await dbpool.execute(query, values);
 
-      if (result.affectedRows > 0)
+      if (result.affectedRows > 0) {
         return res.status(200).json({ message: '근로변경사항 등록 완료' });
+      }
+      return res.status(500).json({ message: '등록 실패...' });
     } catch (err) {
       console.error('[/api/changeschedule] 등록(POST) 에러: ', err);
       return res.status(500).json({ message: '서버 에러' });
@@ -39,5 +41,9 @@ export default async function handler(req, res) {
 
   // 조회(GET)
   else if (req.method === 'GET') {
+    // 학생 상관없이 '변경일자' 기준으로 조회 실시
+    const { changeDate } = req.query;
+    console.log('[/api/changeschedule.js] 조회(GET) changeDate: ', changeDate);
+    return res.status(200).json({ message: '조회 완료' });
   }
 }
