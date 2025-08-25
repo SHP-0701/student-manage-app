@@ -1,6 +1,6 @@
 /* 근로변경사항 등록/수정 모달(ScheduleChangeFormModal) */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleChangeFormModal.module.css';
 import { FaUser } from 'react-icons/fa';
@@ -13,6 +13,7 @@ export default function ScheduleChangeFormModal({
   onClose,
   mode = 'insert',
   modifyItem,
+  onSubmitSuccess,
 }) {
   // 등록 or 수정 분리
   const isModify = mode === 'modify';
@@ -66,6 +67,17 @@ export default function ScheduleChangeFormModal({
       console.error('[ScheduleChangeFormModal.js] handleSubmit() 에러: ', err);
     }
   };
+
+  useEffect(() => {
+    if (isModify) {
+      // 학생 정보 세팅
+      setSelectedStudent({
+        stdName: modifyItem.stdName,
+        stdJob: modifyItem.stdJob,
+        stdNum: modifyItem.stdNum,
+      });
+    }
+  }, [isModify, modifyItem]);
 
   return (
     <ModalLayout onClose={onClose} maxWidth={450}>

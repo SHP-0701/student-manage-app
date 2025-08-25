@@ -41,6 +41,9 @@ export default function SchedulePage() {
   // 근로시간표 수정을 위한 state
   const [editSchedule, setEditSchedule] = useState(null);
 
+  // 근로변경사항 수정을 위한 state
+  const [editChangeSchedule, setEditChangeSchedule] = useState(null);
+
   // 현재 월 기준(getMonth() 관련)
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -69,13 +72,12 @@ export default function SchedulePage() {
   const fetchChangeSchedule = async () => {
     try {
       const res = await fetch(
-        `/api/changeschedule?changeDate=${getLocalDateString(selectedDate)}`
+        `/api/changeschedule?changeDate=${getLocalDateString(
+          selectedDate
+        )}&tab=${activeTab}`
       );
       const result = await res.json();
-      console.log(
-        '[/dashboard/schedule.js] fetchChangeSchedule() 결과 result: ',
-        result
-      );
+      setChangeSchedule(result.data);
     } catch (err) {
       console.error('[/dashboard/schedule.js] 근로변경사항 fetch 실패: ', err);
     }
@@ -114,6 +116,32 @@ export default function SchedulePage() {
     } catch (err) {
       console.error('[/dashboard/schedule.js] handleDelete 에러: ', err);
       alert('삭제 중 오류 발생');
+    }
+  };
+
+  // 근로변경사항 삭제 버튼 handler
+  const handleChangeDelete = async (item) => {
+    const ok = confirm(
+      `[삭제 확인]\n${item.changeDate} 일자\n${item.stdName} 학생 근로변경사항을 삭제하시겠습니까?`
+    );
+
+    if (!ok) return;
+
+    try {
+      const res = await fetch(`/api/changeschedule?id=${item.id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+        await fetchChangeSchedule();
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error('[/dashboard/schedule.js] handleChangeDelete() 에러', err);
+      return alert('삭제 중 에러 발생');
     }
   };
 
@@ -231,7 +259,7 @@ export default function SchedulePage() {
               <tbody>
                 {scheduleData.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ textAlign: 'center' }}>
+                    <td colSpan={8} style={{ textAlign: 'center' }}>
                       해당 날짜의 근로시간표가 없습니다.
                     </td>
                   </tr>
@@ -286,7 +314,10 @@ export default function SchedulePage() {
           <div className={styles.btnWrapper}>
             <button
               className={styles.changeRegisterBtn}
-              onClick={() => setIsChangeModalOpen(true)}
+              onClick={() => {
+                setIsChangeModalOpen(true);
+                setEditChangeSchedule(null);
+              }}
             >
               근로변경사항 등록
             </button>
@@ -297,51 +328,90 @@ export default function SchedulePage() {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th style={{ width: '80px' }}>담당업무</th>
+                  <th style={{ width: '70px' }}>담당업무</th>
                   <th style={{ width: '60px' }}>성명</th>
-                  <th style={{ width: '80px' }}>기존 근로</th>
+                  <th style={{ width: '70px' }}>기존 근로</th>
                   <th style={{ width: '160px' }}>변경 근로</th>
                   <th>변경 사유</th>
+                  <th style={{ width: '120px' }}>관리</th>
                 </tr>
               </thead>
               <tbody>
-                {/* 데이터 임시(실제 데이터 아님) */}
-                <tr>
-                  <td>카운터</td>
-                  <td>파이리</td>
-                  <td>09:00~12:00</td>
-                  <td>8/11(월) 13:00~15:00</td>
-                  <td>병원 진료로 인한 근로 변경</td>
-                </tr>
-                <tr>
-                  <td>카운터</td>
-                  <td>파이리</td>
-                  <td>09:00~12:00</td>
-                  <td>8/11(월) 13:00~15:00</td>
-                  <td>병원 진료로 인한 근로 변경</td>
-                </tr>
+                {changeSchedule.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      style={{
+                        textAlign: 'center',
+                        padding: '12px',
+                        color: '#777',
+                      }}
+                    >
+                      근로변경사항이 없습니다.
+                    </td>
+                  </tr>
+                ) : (
+                  changeSchedule.map((row) => (
+                    <tr key={row.id}>
+                      <td>{row.stdJob}</td>
+                      <td>{row.stdName}</td>
+                      <td>{row.beforeTime}</td>
+                      <td>{row.afterTime}</td>
+                      <td>{row.reason}</td>
+                      <td>
+                        <button
+                          className={styles.modBtn}
+                          onClick={() => {
+                            setEditChangeSchedule(row);
+                            setIsChangeModalOpen(true);
+                          }}
+                        >
+                          수정
+                        </button>
+                        <button
+                          className={styles.delBtn}
+                          onClick={() => handleChangeDelete(row)}
+                        >
+                          삭제
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
         {/* 모달 영역 */}
-        {isModalOpen && (
-          <ScheduleFormModal
-            onClose={() => {
-              setIsModalOpen(false);
-              setEditSchedule(null);
-            }}
-            onSubmitSuccess={handleSubmitSuccess}
-            editItem={editSchedule}
-            mode={editSchedule ? 'modify' : 'insert'}
-          />
-        )}
-        {isChangeModalOpen && (
-          <ScheduleChangeFormModal
-            onClose={() => setIsChangeModalOpen(false)}
-          />
-        )}
+        {
+          // 근로시간표 등록&수정 모달
+          isModalOpen && (
+            <ScheduleFormModal
+              onClose={() => {
+                setIsModalOpen(false);
+                setEditSchedule(null);
+              }}
+              onSubmitSuccess={handleSubmitSuccess}
+              editItem={editSchedule}
+              mode={editSchedule ? 'modify' : 'insert'}
+            />
+          )
+        }
+        {
+          // 근로변경사항 등록&수정 모달
+          isChangeModalOpen && (
+            <ScheduleChangeFormModal
+              onClose={() => {
+                setIsChangeModalOpen(false);
+                setEditChangeSchedule(null);
+              }}
+              mode={editChangeSchedule ? 'modify' : 'insert'}
+              modifyItem={editChangeSchedule}
+              onSubmitSuccess={fetchChangeSchedule}
+            />
+          )
+        }
       </div>
     </Layout>
   );

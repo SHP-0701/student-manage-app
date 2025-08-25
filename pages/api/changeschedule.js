@@ -41,9 +41,46 @@ export default async function handler(req, res) {
 
   // 조회(GET)
   else if (req.method === 'GET') {
-    // 학생 상관없이 '변경일자' 기준으로 조회 실시
-    const { changeDate } = req.query;
-    console.log('[/api/changeschedule.js] 조회(GET) changeDate: ', changeDate);
-    return res.status(200).json({ message: '조회 완료' });
+    try {
+      // 학생 상관없이 '변경일자', '선택된탭' 기준으로 조회 실시
+      const { changeDate, tab } = req.query;
+
+      if (!changeDate)
+        return res.status(400).json({ message: '변경일자를 확인해주세요.' });
+
+      const sql = `SELECT c.id, i.stdNum, i.stdName, c.stdJob, date_format(c.changeDate, '%Y-%m-%d') AS changeDate, c.beforeTime, c.afterTime, c.reason FROM student_info AS i JOIN student_changeSchedule AS c ON i.stdNum = c.stdNum WHERE c.changeDate = ? AND c.stdJob =? ORDER BY c.id DESC`;
+      const [rows] = await dbpool.execute(sql, [changeDate, tab]);
+
+      return res.status(200).json({ length: rows.length, data: rows });
+    } catch (err) {
+      console.error('[/api/changeschedule.js] 조회(GET) 에러: ', err);
+      return res.status(500).json({ message: '서버 에러' });
+    }
+  }
+
+  // 삭제(DELETE)
+  else if (req.method === 'DELETE') {
+    const id = req.query.id;
+
+    if (!id)
+      return res
+        .status(400)
+        .json({ message: '근로변경사항 ID를 확인해주세요.' });
+
+    try {
+      const sql = `DELETE FROM student_changeSchedule WHERE id =?`;
+      const [result] = await dbpool.execute(sql, [id]);
+
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ message: '삭제 대상을 찾을 수 없습니다. ' });
+      } else {
+        return res.status(200).json({ message: '근로변경사항 삭제 완료 ' });
+      }
+    } catch (err) {
+      console.error('[/api/changeschedule.js] 삭제(DELETE) 에러: ', err);
+      return res.status(500).json({ message: '서버 에러 발생' });
+    }
   }
 }
