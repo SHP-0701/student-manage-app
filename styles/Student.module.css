@@ -63,15 +63,17 @@
   background-color: #1976d2;
 }
 
+/* 학생정보 테이블 스타일 */
 .tableSection table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   background-color: #1b1b1b;
 }
 
 .tableSection th,
 .tableSection td {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.5rem;
   border: 1px solid #333;
   text-align: center;
   white-space: nowrap;
@@ -90,11 +92,6 @@
 
 .tableSection tbody tr:hover {
   background-color: #222;
-}
-
-.tableSection th:nth-child(1),
-.tableSection td:nth-child(1) {
-  text-align: center;
 }
 
 .tableSection td {
@@ -128,6 +125,42 @@
 .deleteBtn:hover {
   background-color: #c0392b;
 }
+
+/* 각 컬럼별 너비 지정 */
+.tableSection th:nth-child(1),
+.tableSection td:nth-child(1) {
+  width: 80px;
+} /* 학년도 */
+.tableSection th:nth-child(2),
+.tableSection td:nth-child(2) {
+  width: 70px;
+} /* 학기 */
+.tableSection th:nth-child(3),
+.tableSection td:nth-child(3) {
+  width: 120px;
+} /* 근로구분 */
+.tableSection th:nth-child(4),
+.tableSection td:nth-child(4) {
+  width: 90px;
+} /* 담당업무 */
+.tableSection th:nth-child(5),
+.tableSection td:nth-child(5) {
+  width: 100px;
+} /* 이름 */
+.tableSection th:nth-child(6),
+.tableSection td:nth-child(6) {
+  width: 120px;
+} /* 학번 */
+.tableSection th:nth-child(7),
+.tableSection td:nth-child(7) {
+  width: 200px;
+} /* 학과 */
+.tableSection th:nth-child(8),
+.tableSection td:nth-child(8) {
+  width: 140px;
+} /* 관리 */
+
+/* 테이블 스타일 끝 */
 
 .pagination {
   margin-top: 1.5rem;

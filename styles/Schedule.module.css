@@ -247,23 +247,35 @@
   background-color: #3a9dd9;
 }
 
-/* 테이블 감싸는 영역 */
-.tableWrapper {
-  overflow-x: auto;
+/*** 근로시간표 테이블(scheduleTable) 스타일 시작 ***/
+.scheduleTableWrapper {
   border-radius: 8px;
   border: 1px solid #333;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.table {
+.scheduleTable {
   width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0 6px;
-  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
 }
 
-.table th {
+.scheduleTable thead {
+  display: block;
+  width: 100%;
+}
+
+.scheduleTable thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.scheduleTable thead th {
   background: #2b2b2b;
   color: #f0f0f0;
   font-weight: 600;
@@ -273,25 +285,269 @@
   border-bottom: 1px solid #444;
 }
 
-.table td {
+.scheduleTable tbody {
+  display: block;
+  max-height: 265px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.scheduleTable tbody tr {
+  display: table;
+  width: calc(100% + 6px);
+  table-layout: fixed;
+}
+
+/* 근로시간표 tbody 스크롤바 */
+.scheduleTable tbody::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scheduleTable tbody::-webkit-scrollbar-track {
+  background: #0d0d0d;
+  border-radius: 8px;
+  border: 1px solid #222;
+}
+
+.scheduleTable tbody::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 8px;
+  border: 1px solid #888;
+  transition: all 0.3s ease;
+}
+
+.scheduleTable tbody::-webkit-scrollbar-thumb:hover {
+  background: #777;
+  border-color: #aaa;
+}
+
+.scheduleTable tbody::-webkit-scrollbar-thumb:active {
+  background: #888;
+}
+
+.scheduleTable tbody::-webkit-scrollbar-corner {
+  background: #0d0d0d;
+  border: 1px solid #222;
+}
+
+.scheduleTable td {
   background: #1e1e1e;
   color: #ccc;
   font-size: 0.85rem;
   padding: 0.75rem 1rem;
   text-align: center;
   border-bottom: 1px solid #2a2a2a;
+  display: table-cell;
 }
 
-/* 테이블 짝수 행 배경 색깔 다르게 */
-.table tr:nth-child(even) td {
+.scheduleTable tr:nth-child(even) td {
   background: #252525;
 }
 
-.table tr:hover td {
+.scheduleTable tr:hover td {
   background: #333;
   color: #fff;
   transition: background 0.2s ease;
 }
+
+/* 근로시간표 thead th, tbody td 너비 설정 */
+.scheduleTable thead th:nth-child(1) {
+  width: 60px;
+} /* 학년도 */
+.scheduleTable thead th:nth-child(2) {
+  width: 50px;
+} /* 학기 */
+.scheduleTable thead th:nth-child(3) {
+  width: 60px;
+} /* 성명 */
+.scheduleTable thead th:nth-child(4) {
+  width: 80px;
+} /* 근로구분 */
+.scheduleTable thead th:nth-child(5) {
+  width: 70px;
+} /* 담당업무 */
+.scheduleTable thead th:nth-child(6) {
+  width: 90px;
+} /* 근로시간 */
+.scheduleTable thead th:nth-child(7) {
+  width: 60px;
+} /* 근로확인 */
+.scheduleTable thead th:nth-child(8) {
+  width: 120px;
+} /* 관리 */
+
+.scheduleTable tbody td:nth-child(1) {
+  width: 60px;
+}
+.scheduleTable tbody td:nth-child(2) {
+  width: 50px;
+}
+.scheduleTable tbody td:nth-child(3) {
+  width: 60px;
+}
+.scheduleTable tbody td:nth-child(4) {
+  width: 80px;
+}
+.scheduleTable tbody td:nth-child(5) {
+  width: 70px;
+}
+.scheduleTable tbody td:nth-child(6) {
+  width: 90px;
+}
+.scheduleTable tbody td:nth-child(7) {
+  width: 60px;
+}
+.scheduleTable tbody td:nth-child(8) {
+  width: 120px;
+}
+
+/*** 근로시간표 테이블(scheduleTable) 스타일 끝 ***/
+
+/*** 근로변경사항 테이블(changeTable) 스타일 시작 ***/
+.changeTableWrapper {
+  border-radius: 8px;
+  border: 1px solid #333;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.changeTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.changeTable thead {
+  display: block;
+  width: 100%;
+}
+
+.changeTable thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.changeTable thead th {
+  background: #2b2b2b;
+  color: #f0f0f0;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #444;
+}
+
+.changeTable tbody {
+  display: block;
+  max-height: 265px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.changeTable tbody tr {
+  display: table;
+  width: calc(100% + 6px);
+  table-layout: fixed;
+}
+
+/* 근로변경사항 tbody 스크롤바 */
+.changeTable tbody::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.changeTable tbody::-webkit-scrollbar-track {
+  background: #0d0d0d;
+  border-radius: 8px;
+  border: 1px solid #222;
+}
+
+.changeTable tbody::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 8px;
+  border: 1px solid #888;
+  transition: all 0.3s ease;
+}
+
+.changeTable tbody::-webkit-scrollbar-thumb:hover {
+  background: #777;
+  border-color: #aaa;
+}
+
+.changeTable tbody::-webkit-scrollbar-thumb:active {
+  background: #888;
+}
+
+.changeTable tbody::-webkit-scrollbar-corner {
+  background: #0d0d0d;
+  border: 1px solid #222;
+}
+
+.changeTable td {
+  background: #1e1e1e;
+  color: #ccc;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #2a2a2a;
+  display: table-cell;
+}
+
+.changeTable tr:nth-child(even) td {
+  background: #252525;
+}
+
+.changeTable tr:hover td {
+  background: #333;
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+/* 근로변경사항 thead th, tbody td 너비 설정 */
+.changeTable thead th:nth-child(1) {
+  width: 80px;
+} /* 담당업무 */
+.changeTable thead th:nth-child(2) {
+  width: 70px;
+} /* 성명 */
+.changeTable thead th:nth-child(3) {
+  width: 100px;
+} /* 기존 근로 */
+.changeTable thead th:nth-child(4) {
+  width: 200px;
+} /* 변경 근로 */
+.changeTable thead th:nth-child(5) {
+  width: auto;
+} /* 변경 사유 */
+.changeTable thead th:nth-child(6) {
+  width: 120px;
+} /* 관리 */
+
+.changeTable tbody td:nth-child(1) {
+  width: 80px;
+}
+.changeTable tbody td:nth-child(2) {
+  width: 70px;
+}
+.changeTable tbody td:nth-child(3) {
+  width: 100px;
+}
+.changeTable tbody td:nth-child(4) {
+  width: 200px;
+}
+.changeTable tbody td:nth-child(5) {
+  width: auto;
+}
+.changeTable tbody td:nth-child(6) {
+  width: 120px;
+}
+
+/*** 근로변경사항 테이블 스타일 끝 ***/
 
 /* 수정, 삭제 버튼 디자인 */
 .modBtn {

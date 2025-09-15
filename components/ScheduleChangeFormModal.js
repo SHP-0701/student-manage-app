@@ -13,10 +13,9 @@ export default function ScheduleChangeFormModal({
   onClose,
   mode = 'insert',
   modifyItem,
-  onSubmitSuccess,
 }) {
   // 등록 or 수정 분리
-  const isModify = mode === 'modify';
+  const isModify = mode === 'modify'; // mode가 'modify'면 true
 
   // 선택된 학생 정보
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -36,36 +35,48 @@ export default function ScheduleChangeFormModal({
   // submit 버튼 handler
   const handleSubmit = async () => {
     if (!selectedStudent) return alert('학생을 선택해주세요.');
-
     if (!reason) return alert('변경사유를 입력하세요.');
 
     try {
-      // 등록(POST)
-      const res = await fetch('/api/changeschedule', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          // 백엔드로 넘길 param들 설정
-          stdJob: selectedStudent.stdJob,
-          stdNum: selectedStudent.stdNum,
-          changeDate: getLocalDateString(changeDate),
-          beforeTime,
-          afterTime,
-          reason,
-        }),
-      });
+      const requestData = RequestData();
 
-      const data = await res.json();
+      console.log('[ScheduleChangeFormModal.js] requestData is ', requestData);
+
+      const res = await submitScheduleChange(requestData);
 
       if (res.ok) {
+        const data = await res.json();
         alert(data.message);
         onClose();
       } else {
-        return alert(data.message);
+        const data = await res.json();
+        alert(data.message);
       }
     } catch (err) {
       console.error('[ScheduleChangeFormModal.js] handleSubmit() 에러: ', err);
     }
+  };
+
+  // 백엔드 요청 reqData
+  const RequestData = () => ({
+    stdJob: selectedStudent.stdJob,
+    stdNum: selectedStudent.stdNum,
+    changeDate: isModify
+      ? getLocalDateString(new Date(modifyItem.changeDate))
+      : getLocalDateString(changeDate),
+    beforeTime,
+    afterTime,
+    reason,
+    ...(isModify && { id: modifyItem.id }),
+  });
+
+  // 백엔드 fetch 요청
+  const submitScheduleChange = (data) => {
+    return fetch(`/api/changeschedule`, {
+      method: isModify ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
   };
 
   useEffect(() => {
@@ -76,6 +87,11 @@ export default function ScheduleChangeFormModal({
         stdJob: modifyItem.stdJob,
         stdNum: modifyItem.stdNum,
       });
+
+      setChangeDate(new Date(modifyItem.changeDate)); // 변경일자
+      setBeforeTime(modifyItem.beforeTime); // 기존근로
+      setAfterTime(modifyItem.afterTime);
+      setReason(modifyItem.reason); // 변경사유
     }
   }, [isModify, modifyItem]);
 

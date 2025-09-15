@@ -8,6 +8,7 @@ export default async function handler(req, res) {
   // 등록(POST)
   if (req.method === 'POST') {
     const { year, term, workDate, stdNum, startTime, endTime } = req.body;
+    console.log('[/api/schedule.js] 등록(POST) req.body: ', req.body);
 
     if (!stdNum || !workDate)
       return res.status(400).json({ message: '잘못된 요청입니다.' });
@@ -29,15 +30,19 @@ export default async function handler(req, res) {
   // 조회(GET)
   else if (req.method === 'GET') {
     const { year, term, stdJob, workDate } = req.query; // url param
+    console.log(
+      '[/api/schedule.js] 조회(GET) 메소드 - param 확인: ',
+      req.query
+    );
 
-    console.log('[/api/schedule.js] URL param is: ', req.query);
-
-    if (!year || !term || !stdJob || !workDate)
+    if (!stdJob || !workDate)
       return res.status(400).json({ message: 'URL Param을 찾을 수 없습니다.' });
 
     try {
       const query = `
       SELECT 
+        si.year,
+        si.term,
         ss.id,
         date_format(ss.workDate, '%Y-%m-%d') as workDate,
         ss.stdNum, 
@@ -46,15 +51,15 @@ export default async function handler(req, res) {
         si.workType, 
         DATE_FORMAT(ss.startTime, '%H:%i') as startTime, 
         DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
-      FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum 
-      WHERE ss.year = ? AND ss.term = ? AND si.stdJob = ? AND ss.workDate = ?
+      FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum AND si.year = ss.year AND si.term = ss.term
+      WHERE si.stdJob = ? AND ss.workDate = ? AND ss.year = ? AND ss.term = ?
       ORDER BY ss.stdNum, ss.workDate, ss.startTime`;
 
       const [rows] = await dbpool.execute(query, [
-        year,
-        term,
         stdJob,
         workDate,
+        year,
+        term,
       ]);
       return res.status(200).json(rows);
     } catch (err) {
@@ -126,7 +131,10 @@ export default async function handler(req, res) {
         .status(500)
         .json({ message: '근로시간표 삭제 실패', error: err });
     }
-  } else {
+  }
+
+  // 허용되지 않은 메소드 처리
+  else {
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`허용되지 않은 메서드: ${req.method}`);
   }

@@ -9,8 +9,12 @@ import StudentFormModal from '@/components/StudentFormModal';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import styles from '@/styles/Student.module.css';
 import { useEffect, useState } from 'react';
+import { getYearTerm } from '@/utils/timeUtils';
 
 export default function StudentPage() {
+  // 현재 학년도/학기 기준으로 학생 목록 조회를 위한 학년도, 학기 변수
+  const { year, term } = getYearTerm(new Date());
+
   // 모달 창 오픈(등록/수정) state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -31,8 +35,8 @@ export default function StudentPage() {
 
   // 검색용 state
   const [searchName, setSearchName] = useState('');
-  const [searchYear, setSearchYear] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchYear, setSearchYear] = useState(year);
+  const [searchTerm, setSearchTerm] = useState(term);
   const [searchWorkType, setSearchWorkType] = useState('');
   const [searchStdJob, setSearchStdJob] = useState('');
 
@@ -47,7 +51,7 @@ export default function StudentPage() {
   // 학생 목록 가져오는(fetch) 함수
   const fetchStudents = async (page = 1) => {
     try {
-      const limit = 5; // 한 페이지에 보여줄 개수
+      const limit = 6; // 한 페이지에 보여줄 개수
 
       const queryParams = new URLSearchParams({
         page,

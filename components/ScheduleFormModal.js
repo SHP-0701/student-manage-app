@@ -1,6 +1,11 @@
 /**
  * 근로시간표 등록 모달
- * 모달 공통 레이아웃(ModalLayout.js) 사용
+ * 모달 Param
+ * @param onClose
+ * @param onSubmitSuccess
+ * @param editItem - '수정' 모드일 시 상위 컴포넌트로부터 받은 해당 row의 데이터
+ * @param mode - 등록/수정 분기 param('insert' or 'modify')
+ * @param selectedDate - 상위 컴포넌트에서 선택된 날짜
  */
 
 import { useState, useRef, useEffect } from 'react';
@@ -17,6 +22,7 @@ export default function ScheduleFormModal({
   onSubmitSuccess,
   editItem,
   mode = 'insert',
+  selectedDate,
 }) {
   const isModify = mode === 'modify';
 
@@ -31,8 +37,8 @@ export default function ScheduleFormModal({
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
 
-  // 현재 날짜 기준 '학년도', '학기' 가져옴
-  const { year, term } = getYearTerm(new Date());
+  // 선택된 날짜 기준 '학년도', '학기' Set
+  const { year, term } = getYearTerm(selectedDate);
 
   // 학생 선택 모달 handler
   const handleStudentSelect = () => {
@@ -66,10 +72,11 @@ export default function ScheduleFormModal({
         } else {
           return alert(data.message);
         }
-      } else {
-        if (!workDate) return alert('근로일자를 선택해주세요.');
+      }
 
-        // 등록(POST) 요청
+      // 등록(POST) 요청
+      else {
+        if (!workDate) return alert('근로일자를 선택해주세요.');
         const res = await fetch('/api/schedule', {
           method: 'POST',
           headers: {
@@ -77,8 +84,8 @@ export default function ScheduleFormModal({
           },
           body: JSON.stringify({
             stdNum: selectedStudent.stdNum,
-            year,
-            term,
+            year: year,
+            term: term,
             workDate: getLocalDateString(workDate),
             startTime,
             endTime,

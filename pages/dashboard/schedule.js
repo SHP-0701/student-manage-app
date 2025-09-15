@@ -50,16 +50,15 @@ export default function SchedulePage() {
   // 탭 목록
   const tabs = ['실습실', '카운터', 'ECSC', '모니터링'];
 
-  // 날짜 기준 연도/학기 return 하는 util
-  const currentYearTerm = getYearTerm(new Date());
-
   // 근로시간표 fetch
   const fetchSchedule = async () => {
     try {
       const res = await fetch(
-        `/api/schedule?year=${currentYearTerm.year}&term=${
-          currentYearTerm.term
-        }&stdJob=${activeTab}&workDate=${getLocalDateString(selectedDate)}`
+        `/api/schedule?stdJob=${activeTab}&workDate=${getLocalDateString(
+          selectedDate
+        )}&year=${getYearTerm(selectedDate).year}&term=${
+          getYearTerm(selectedDate).term
+        }`
       );
       const result = await res.json();
       setScheduleData(result);
@@ -74,10 +73,14 @@ export default function SchedulePage() {
       const res = await fetch(
         `/api/changeschedule?changeDate=${getLocalDateString(
           selectedDate
-        )}&tab=${activeTab}`
+        )}&tab=${activeTab}&year=${getYearTerm(selectedDate).year}&term=${
+          getYearTerm(selectedDate).term
+        }`
       );
       const result = await res.json();
-      setChangeSchedule(result.data);
+
+      // 데이터가 존재하면 set, 없으면 빈 배열
+      setChangeSchedule(result.data || []);
     } catch (err) {
       console.error('[/dashboard/schedule.js] 근로변경사항 fetch 실패: ', err);
     }
@@ -242,18 +245,18 @@ export default function SchedulePage() {
           </div>
 
           {/* 근로시간표 테이블 */}
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
+          <div className={styles.scheduleTableWrapper}>
+            <table className={styles.scheduleTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '60px' }}>학년도</th>
-                  <th style={{ width: '50px' }}>학기</th>
-                  <th style={{ width: '60px' }}>성명</th>
-                  <th style={{ width: '80px' }}>근로구분</th>
-                  <th style={{ width: '70px' }}>담당업무</th>
-                  <th style={{ width: '90px' }}>근로시간</th>
-                  <th style={{ width: '60px' }}>근로확인</th>
-                  <th style={{ width: '120px' }}>관리</th>
+                  <th>학년도</th>
+                  <th>학기</th>
+                  <th>성명</th>
+                  <th>근로구분</th>
+                  <th>담당업무</th>
+                  <th>근로시간</th>
+                  <th>근로확인</th>
+                  <th>관리</th>
                 </tr>
               </thead>
               <tbody>
@@ -266,8 +269,8 @@ export default function SchedulePage() {
                 ) : (
                   scheduleData.map((item) => (
                     <tr key={item.id}>
-                      <td>{currentYearTerm.year}</td>
-                      <td>{currentYearTerm.term}</td>
+                      <td>{item.year}</td>
+                      <td>{item.term}</td>
                       <td>{item.stdName}</td>
                       <td>{item.workType}</td>
                       <td>{item.stdJob}</td>
@@ -324,16 +327,16 @@ export default function SchedulePage() {
           </div>
 
           {/* 근로변경사항 Table */}
-          <div className={styles.tableWrapper}>
-            <table className={styles.table}>
+          <div className={styles.changeTableWrapper}>
+            <table className={styles.changeTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '70px' }}>담당업무</th>
-                  <th style={{ width: '60px' }}>성명</th>
-                  <th style={{ width: '70px' }}>기존 근로</th>
-                  <th style={{ width: '160px' }}>변경 근로</th>
+                  <th>담당업무</th>
+                  <th>성명</th>
+                  <th>기존 근로</th>
+                  <th>변경 근로</th>
                   <th>변경 사유</th>
-                  <th style={{ width: '120px' }}>관리</th>
+                  <th>관리</th>
                 </tr>
               </thead>
               <tbody>
@@ -395,6 +398,7 @@ export default function SchedulePage() {
               onSubmitSuccess={handleSubmitSuccess}
               editItem={editSchedule}
               mode={editSchedule ? 'modify' : 'insert'}
+              selectedDate={selectedDate}
             />
           )
         }
