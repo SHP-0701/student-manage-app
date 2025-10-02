@@ -8,7 +8,7 @@ import styles from '@/styles/StudentSelectModal.module.css';
 import { useEffect, useState } from 'react';
 import { getYearTerm } from '@/utils/timeUtils';
 
-export default function StudentSelectModal({ onSelect, onClose }) {
+export default function StudentSelectModal({ onSelect, onClose, selectTab }) {
   // 학생 목록
   const [students, setStudents] = useState([]);
   const { year, term } = getYearTerm(new Date());
@@ -26,11 +26,17 @@ export default function StudentSelectModal({ onSelect, onClose }) {
       const queryParams = new URLSearchParams({
         year: year,
         term: term,
+        stdJob: selectTab,
         page: currentPage,
         limit: itemsPerPage,
       });
 
       if (searchStdName) queryParams.append('stdName', searchStdName);
+
+      console.log(
+        '[/components/StudentSelectModal.js] queryParams? ',
+        queryParams
+      );
 
       const res = await fetch(`/api/student?${queryParams.toString()}`);
       const data = await res.json();

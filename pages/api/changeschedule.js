@@ -45,8 +45,6 @@ export default async function handler(req, res) {
       // 학생 상관없이 '변경일자', '선택된탭' 기준으로 조회 실시
       const { changeDate, tab, year, term } = req.query;
 
-      console.log('[/api/changeschedule.js] req.query is ', req.query);
-
       if (!changeDate)
         return res.status(400).json({ message: '변경일자를 확인해주세요.' });
 

@@ -352,57 +352,77 @@
 }
 
 /* 근로시간표 thead th, tbody td 너비 설정 */
-.scheduleTable thead th:nth-child(1) {
-  width: 60px;
+.scheduleTable thead th:nth-child(1),
+.scheduleTable tbody td:nth-child(1) {
+  width: 50px;
 } /* 학년도 */
-.scheduleTable thead th:nth-child(2) {
+.scheduleTable thead th:nth-child(2),
+.scheduleTable tbody td:nth-child(2) {
   width: 50px;
 } /* 학기 */
-.scheduleTable thead th:nth-child(3) {
-  width: 60px;
+.scheduleTable thead th:nth-child(3),
+.scheduleTable tbody td:nth-child(3) {
+  width: 50px;
 } /* 성명 */
-.scheduleTable thead th:nth-child(4) {
+.scheduleTable thead th:nth-child(4),
+.scheduleTable tbody td:nth-child(4) {
   width: 80px;
 } /* 근로구분 */
-.scheduleTable thead th:nth-child(5) {
+.scheduleTable thead th:nth-child(5),
+.scheduleTable tbody td:nth-child(5) {
   width: 70px;
 } /* 담당업무 */
-.scheduleTable thead th:nth-child(6) {
+.scheduleTable thead th:nth-child(6),
+.scheduleTable tbody td:nth-child(6) {
   width: 90px;
 } /* 근로시간 */
-.scheduleTable thead th:nth-child(7) {
-  width: 60px;
+.scheduleTable thead th:nth-child(7),
+.scheduleTable tbody td:nth-child(7) {
+  width: 80px;
 } /* 근로확인 */
-.scheduleTable thead th:nth-child(8) {
+.scheduleTable thead th:nth-child(8),
+.scheduleTable tbody td:nth-child(8) {
   width: 120px;
 } /* 관리 */
 
-.scheduleTable tbody td:nth-child(1) {
-  width: 60px;
-}
-.scheduleTable tbody td:nth-child(2) {
-  width: 50px;
-}
-.scheduleTable tbody td:nth-child(3) {
-  width: 60px;
-}
-.scheduleTable tbody td:nth-child(4) {
-  width: 80px;
-}
-.scheduleTable tbody td:nth-child(5) {
-  width: 70px;
-}
-.scheduleTable tbody td:nth-child(6) {
-  width: 90px;
-}
-.scheduleTable tbody td:nth-child(7) {
-  width: 60px;
-}
-.scheduleTable tbody td:nth-child(8) {
-  width: 120px;
+/*** 근로시간표 테이블(scheduleTable) 스타일 끝 ***/
+
+/*** 근로시간표 내 근로확인 버튼 style ***/
+.checkBtn {
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin: 0 4px;
+  min-width: 50px; /* 최소 너비만 지정 */
 }
 
-/*** 근로시간표 테이블(scheduleTable) 스타일 끝 ***/
+/* 미확인 상태 */
+.checkBtn.unconfirmed {
+  background-color: #6c757d;
+}
+
+.checkBtn.unconfirmed:hover {
+  background-color: #5a6268;
+}
+
+/* 확인 완료 상태 */
+.checkBtn.confirmed {
+  background-color: #28a745;
+  cursor: not-allowed;
+}
+
+.checkBtn.confirmed:hover {
+  background-color: #28a745; /* hover 시에도 색상 변화 없음 */
+}
+
+/* disabled 상태 */
+.checkBtn:disabled {
+  cursor: not-allowed;
+}
 
 /*** 근로변경사항 테이블(changeTable) 스타일 시작 ***/
 .changeTableWrapper {
@@ -509,43 +529,30 @@
 }
 
 /* 근로변경사항 thead th, tbody td 너비 설정 */
-.changeTable thead th:nth-child(1) {
-  width: 80px;
-} /* 담당업무 */
-.changeTable thead th:nth-child(2) {
-  width: 70px;
-} /* 성명 */
-.changeTable thead th:nth-child(3) {
-  width: 100px;
-} /* 기존 근로 */
-.changeTable thead th:nth-child(4) {
-  width: 200px;
-} /* 변경 근로 */
-.changeTable thead th:nth-child(5) {
-  width: auto;
-} /* 변경 사유 */
-.changeTable thead th:nth-child(6) {
-  width: 120px;
-} /* 관리 */
-
+.changeTable thead th:nth-child(1),
 .changeTable tbody td:nth-child(1) {
   width: 80px;
-}
+} /* 담당업무 */
+.changeTable thead th:nth-child(2),
 .changeTable tbody td:nth-child(2) {
-  width: 70px;
-}
+  width: 60px;
+} /* 성명 */
+.changeTable thead th:nth-child(3),
 .changeTable tbody td:nth-child(3) {
   width: 100px;
-}
+} /* 기존 근로 */
+.changeTable thead th:nth-child(4),
 .changeTable tbody td:nth-child(4) {
   width: 200px;
-}
+} /* 변경 근로 */
+.changeTable thead th:nth-child(5),
 .changeTable tbody td:nth-child(5) {
   width: auto;
-}
+} /* 변경 사유 */
+.changeTable thead th:nth-child(6),
 .changeTable tbody td:nth-child(6) {
   width: 120px;
-}
+} /* 관리 */
 
 /*** 근로변경사항 테이블 스타일 끝 ***/
 

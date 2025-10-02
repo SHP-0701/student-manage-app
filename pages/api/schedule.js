@@ -1,6 +1,15 @@
-/**
- * 근로시간표 백엔드 API
- */
+/*
+===============================================================================================================
+
+가. (작성일자) 2025. 9. 16.(화)
+나. (API 명) 근로시간표 백엔드 API
+다. (API 기능) 근로시간표(/dashboard/schedule.js) 프론트와 연동을 통해 DB 접근, 가져오기, 등록/수정 등 작업을 담당
+라. (기타사항)
+  - REST API를 따름.
+  - 수정(PUT)에서 근로확인여부를 저장 ※ 등록(POST) 아님
+
+===============================================================================================================
+*/
 
 import dbpool from '@/lib/db';
 
@@ -8,7 +17,6 @@ export default async function handler(req, res) {
   // 등록(POST)
   if (req.method === 'POST') {
     const { year, term, workDate, stdNum, startTime, endTime } = req.body;
-    console.log('[/api/schedule.js] 등록(POST) req.body: ', req.body);
 
     if (!stdNum || !workDate)
       return res.status(400).json({ message: '잘못된 요청입니다.' });
@@ -29,11 +37,7 @@ export default async function handler(req, res) {
 
   // 조회(GET)
   else if (req.method === 'GET') {
-    const { year, term, stdJob, workDate } = req.query; // url param
-    console.log(
-      '[/api/schedule.js] 조회(GET) 메소드 - param 확인: ',
-      req.query
-    );
+    const { year, term, stdJob, workDate } = req.query;
 
     if (!stdJob || !workDate)
       return res.status(400).json({ message: 'URL Param을 찾을 수 없습니다.' });
@@ -50,10 +54,12 @@ export default async function handler(req, res) {
         si.stdJob, 
         si.workType, 
         DATE_FORMAT(ss.startTime, '%H:%i') as startTime, 
-        DATE_FORMAT(ss.endTime, '%H:%i') as endTime 
+        DATE_FORMAT(ss.endTime, '%H:%i') as endTime,
+        ss.isConfirmed,
+        ss.confirmedAt 
       FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum AND si.year = ss.year AND si.term = ss.term
       WHERE si.stdJob = ? AND ss.workDate = ? AND ss.year = ? AND ss.term = ?
-      ORDER BY ss.stdNum, ss.workDate, ss.startTime`;
+      ORDER BY ss.startTime`;
 
       const [rows] = await dbpool.execute(query, [
         stdJob,
@@ -70,27 +76,39 @@ export default async function handler(req, res) {
 
   // 수정(PUT)
   else if (req.method === 'PUT') {
-    const { id, startTime, endTime } = req.body;
+    const { id, startTime, endTime, isConfirmed } = req.body;
 
     if (!id)
       return res
         .status(400)
         .json({ message: '근로시간표 ID가 존재하지 않습니다' });
-    if (!startTime || !endTime)
-      return res
-        .status(400)
-        .json({ message: '시작시간 / 종료시간은 필수입니다' });
-
-    if (startTime >= endTime)
-      return res
-        .status(400)
-        .json({ message: '시작시간은 종료시간보다 빠르거나 같을 수 없습니다' });
 
     try {
-      let sql = `UPDATE student_schedule SET startTime = ?, endTime = ?, updated_at = NOW() WHERE id = ?`;
-      let params = [startTime, endTime, id];
+      // 근로시간표 확인/미확인 상태 업데이트
+      if (isConfirmed !== undefined) {
+        const sql = `UPDATE student_schedule SET isConfirmed = ?, confirmedAt = now() WHERE id = ?`;
+        const [result] = await dbpool.execute(sql, [isConfirmed ? 1 : 0, id]);
 
-      const [result] = await dbpool.query(sql, params);
+        if (result.affectedRows === 0)
+          return res
+            .status(404)
+            .json({ message: '근로확인할 대상을 찾을 수 없습니다.' });
+
+        return res.status(200).json({ message: '근로 확인이 완료되었습니다.' });
+      }
+
+      if (!startTime || !endTime)
+        return res
+          .status(400)
+          .json({ message: '시작시간 / 종료시간은 필수입니다' });
+
+      if (startTime >= endTime)
+        return res.status(400).json({
+          message: '시작시간은 종료시간보다 빠르거나 같을 수 없습니다',
+        });
+
+      let sql = `UPDATE student_schedule SET startTime = ?, endTime = ?, updated_at = NOW() WHERE id = ?`;
+      const [result] = await dbpool.query(sql, [startTime, endTime, id]);
 
       if (result.affectedRows === 0)
         return res

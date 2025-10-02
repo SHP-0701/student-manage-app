@@ -66,6 +66,32 @@
   color: #fff;
 }
 
+/* 탭(일일등록 & 일괄등록) 영역 */
+.tabContainer {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #444;
+}
+
+.tabBtn {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.tabBtn.active {
+  color: #fff;
+  border-bottom-color: #3a82f7;
+}
+
+.tabBtn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
 /* 내용 입력 영역 style */
 .formSection {
   margin-top: 1rem;
@@ -80,10 +106,15 @@
   gap: 1rem;
 }
 
-.row label {
+.row > div {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 0.25rem;
   font-size: 0.9rem;
   color: #ccc;
 }
@@ -108,4 +139,151 @@
   font-size: 0.85rem;
   display: flex;
   align-items: center;
+}
+
+/* 시작시간/종료시간 드롭다운 스타일 */
+.timeInputs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+/* 드롭다운 select 스타일 */
+.timeInputs select {
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  min-width: 80px;
+
+  /* 기본 화살표 제거 */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* 커스텀 화살표 추가 */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+}
+
+.timeInputs select:hover {
+  border-color: #666;
+}
+
+.timeInputs select:focus {
+  outline: none;
+  border-color: #3a82f7;
+  box-shadow: 0 0 0 2px rgba(58, 130, 247, 0.2);
+}
+
+/* 요일별 스케줄 컨테이너(Container) */
+.weeklyScheduleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+}
+
+/* 각 요일별 행(row) */
+.weekdayScheduleRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.weekdayScheduleRow:last-child {
+  border-bottom: none;
+}
+
+/* 요일 체크박스(checkbox) */
+.weekdayCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 50px;
+  font-weight: 500;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.weekdayCheckbox:hover {
+  color: #fff;
+}
+
+/* 체크박스(checkbox) 커스터마이징 */
+.weekdayCheckbox input[type='checkbox'] {
+  /* 기본 체크박스 숨기기 */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 16px;
+  height: 16px;
+  border: 1px solid #555;
+  border-radius: 3px;
+  background-color: #1e1e1e;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.weekdayCheckbox input[type='checkbox']:hover {
+  border-color: #777;
+  background-color: #2a2a2a;
+}
+
+.weekdayCheckbox input[type='checkbox']:checked {
+  background-color: #3a82f7;
+  border-color: #3a82f7;
+}
+
+/* 체크(v) 표시 */
+.weekdayCheckbox input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  width: 3px;
+  height: 6px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.weekdayCheckbox input[type='checkbox']:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(58, 130, 247, 0.3);
+}
+
+/* 요일별 시간 입력 영역 */
+.weekdayTimeInputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.weekdayTimeInputs > span {
+  font-weight: 500;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.weekdayTimeInputs .timeInputs {
+  margin-top: 0;
 }

@@ -26,6 +26,9 @@ export default function SchedulePage() {
   // 근로변경사항 등록/수정 모달 열기
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
+  // 근로확인 모달 열기
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
   // 근로시간표 담는 state
   const [scheduleData, setScheduleData] = useState([]);
 
@@ -91,7 +94,7 @@ export default function SchedulePage() {
     if (stdJob === activeTab) fetchSchedule();
   }
 
-  // 삭제 버튼 handler
+  // 근로시간표 삭제 버튼 handler
   const handleDelete = async (item) => {
     if (!item.id) return alert('삭제 대상 정보가 올바르지 않습니다');
 
@@ -145,6 +148,30 @@ export default function SchedulePage() {
     } catch (err) {
       console.error('[/dashboard/schedule.js] handleChangeDelete() 에러', err);
       return alert('삭제 중 에러 발생');
+    }
+  };
+
+  // 근로확인 handler
+  const handleConfirm = async (rowId) => {
+    try {
+      const res = await fetch('/api/schedule', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: rowId, // 해당 근로시간표 데이터 id
+          isConfirmed: true,
+        }),
+      });
+
+      if (res.ok) {
+        await fetchSchedule(); // 데이터 새로고침
+      } else {
+        const data = await res.json();
+        alert(data.message || '확인 처리 중 오류 발생');
+      }
+    } catch (err) {
+      console.error('확인 처리 실패: ', err);
+      alert('확인 처리 중 오류 발생');
     }
   };
 
@@ -278,7 +305,17 @@ export default function SchedulePage() {
                         {item.startTime} ~ {item.endTime}
                       </td>
                       <td>
-                        <button className={styles.checkBtn}>확인</button>
+                        <button
+                          className={`${styles.checkBtn} ${
+                            item.isConfirmed
+                              ? styles.confirmed
+                              : styles.unconfirmed
+                          }`}
+                          onClick={() => handleConfirm(item.id)}
+                          disabled={item.isConfirmed}
+                        >
+                          {item.isConfirmed ? '확인완료' : '확인'}
+                        </button>
                       </td>
                       <td>
                         <button
@@ -386,7 +423,7 @@ export default function SchedulePage() {
           </div>
         </div>
 
-        {/* 모달 영역 */}
+        {/******** 모달 영역(Modal) ********/}
         {
           // 근로시간표 등록&수정 모달
           isModalOpen && (
@@ -399,6 +436,7 @@ export default function SchedulePage() {
               editItem={editSchedule}
               mode={editSchedule ? 'modify' : 'insert'}
               selectedDate={selectedDate}
+              currentStdJob={activeTab}
             />
           )
         }
@@ -416,6 +454,7 @@ export default function SchedulePage() {
             />
           )
         }
+        {/******** 모달 영역(Modal) 종료 ********/}
       </div>
     </Layout>
   );

@@ -105,3 +105,17 @@ export function getLocalDateString(date) {
 
   return `${year}-${month}-${day}`;
 }
+
+/**
+ * hour, minute 입력받아서 'HH:mm' 형식으로 출력
+ * @param {String, String}: 'hour', 'minute'
+ * @return {String}: `HH:mm`
+ */
+export function combineTime(hour, minute) {
+  if (hour && minute !== '') {
+    return `${hour.toString().padStart(2, '0')}:${minute
+      .toString()
+      .padStart(2, '0')}`;
+  }
+  return '';
+}
