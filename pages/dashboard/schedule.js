@@ -451,6 +451,7 @@ export default function SchedulePage() {
               mode={editChangeSchedule ? 'modify' : 'insert'}
               modifyItem={editChangeSchedule}
               onSubmitSuccess={fetchChangeSchedule}
+              currentStdJob={activeTab}
             />
           )
         }

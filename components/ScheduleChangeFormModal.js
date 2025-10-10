@@ -13,6 +13,7 @@ export default function ScheduleChangeFormModal({
   onClose,
   mode = 'insert',
   modifyItem,
+  currentStdJob,
 }) {
   // 등록 or 수정 분리
   const isModify = mode === 'modify'; // mode가 'modify'면 true
@@ -204,6 +205,7 @@ export default function ScheduleChangeFormModal({
         <StudentSelectModal
           onSelect={(student) => setSelectedStudent(student)}
           onClose={() => setShowStudentModal(false)}
+          selectTab={currentStdJob}
         />
       )}
     </ModalLayout>
