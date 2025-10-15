@@ -98,19 +98,19 @@ export default function ScheduleFormModal({
   const handleSubmit = async () => {
     if (!selectedStudent) return alert('학생을 먼저 선택해주세요');
 
-    // 시간 조합
-    const startTime = combineTime(startHour, startMinute);
-    const endTime = combineTime(endHour, endMinute);
-
-    if (!startTime || !endTime)
-      return alert('시작시간과 종료시간을 선택해주세요');
-
-    if (startTime >= endTime)
-      return alert('시작 시간은 종료 시간보다 빠르거나 같을 수 없습니다.');
-
     try {
       // 수정(PUT) 요청
       if (isModify && editItem) {
+        // 시간 조합
+        const startTime = combineTime(startHour, startMinute);
+        const endTime = combineTime(endHour, endMinute);
+
+        if (!startTime || !endTime)
+          return alert('시작시간과 종료시간을 선택해주세요');
+
+        if (startTime >= endTime)
+          return alert('시작 시간은 종료 시간보다 빠르거나 같을 수 없습니다.');
+
         const res = await fetch(`/api/schedule`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -133,11 +133,115 @@ export default function ScheduleFormModal({
 
       // 일괄 등록 처리(bulk)
       else if (activeTab === 'bulk') {
+        // 유효성 검사 실시
+        if (!bulkStartDate || !bulkEndDate)
+          return alert('시작일과 종료일을 선택해주세요.');
+
+        if (bulkStartDate > bulkEndDate)
+          return alert('시작일은 종료일보다 늦을 수 없습니다.');
+
+        if (Object.keys(weeklySchedule).length === 0)
+          return alert('최소 1개 이상 요일을 선택해주세요.');
+
+        // 요일별 시간 모두 입력됐는지 확인
+        for (const dayIdx in weeklySchedule) {
+          const { startHour, startMinute, endHour, endMinute } =
+            weeklySchedule[dayIdx];
+          if (!startHour || !startMinute || !endHour || !endMinute) {
+            const dayNames = ['월', '화', '수', '목', '금'];
+            return alert(
+              `${dayNames[dayIdx]} 요일의 시간을 모두 입력해주세요.`
+            );
+          }
+
+          // 시간(String)을 입력받아 'HH:mm' 형식으로 만듦
+          const startTime = combineTime(startHour, startMinute);
+          const endTime = combineTime(endHour, endMinute);
+
+          if (startTime >= endTime) {
+            const dayNames = ['월', '화', '수', '목', '금'];
+            return alert(
+              `${dayNames[dayIdx]}요일: 시작 시간은 종료 시간보다 빨라야 합니다`
+            );
+          }
+        }
+
+        // 시작일(bulkStartDate)부터 종료일(bulkEndDate)까지 날짜 배열 생성
+        const scheduleList = [];
+        const currentDate = new Date(bulkStartDate);
+        const endDate = new Date(bulkEndDate);
+
+        while (currentDate <= endDate) {
+          const dayOfWeek = currentDate.getDay(); // 0(일) ~ 6(토)
+
+          // 월(1) ~ 금(5)만 처리
+          // 배열 Idx: 월(0), 화(1), 수(2), 목(3), 금(4)
+          if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+            const dayIdx = dayOfWeek - 1;
+
+            // 해당 요일 선택되어 있으면
+            if (weeklySchedule[dayIdx]) {
+              const { startHour, startMinute, endHour, endMinute } =
+                weeklySchedule[dayIdx];
+              const startTime = combineTime(startHour, startMinute);
+              const endTime = combineTime(endHour, endMinute);
+
+              scheduleList.push({
+                stdNum: selectedStudent.stdNum,
+                year: year,
+                term: term,
+                workDate: getLocalDateString(currentDate),
+                startTime,
+                endTime,
+              });
+            }
+          }
+
+          // 다음 날로 이동
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // 등록할 데이터 없으면 return
+        if (scheduleList.length === 0)
+          return alert('선택한 기간에 등록할 근로시간표가 없습니다.');
+
+        // 일괄 등록 API 요청
+        try {
+          const res = await fetch(`/api/schedule/bulk`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              schedules: scheduleList,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            alert(data.message);
+            onSubmitSuccess(selectedStudent.stdJob);
+            onClose();
+          } else {
+            return alert(data.message);
+          }
+        } catch (e) {
+          console.error(
+            '[ScheduleFormModal.js] handleSubmit() 내 일괄 등록 에러 ',
+            e
+          );
+          return alert('일괄 등록 중 오류 발생');
+        }
       }
 
       // 등록(POST) 요청
       else {
         if (!workDate) return alert('근로일자를 선택해주세요.');
+
+        const startTime = combineTime(startHour, startMinute);
+        const endTime = combineTime(endHour, endMinute);
+
         const res = await fetch('/api/schedule', {
           method: 'POST',
           headers: {
@@ -187,8 +291,10 @@ export default function ScheduleFormModal({
         stdName: editItem.stdName,
         stdNum: editItem.stdNum,
       });
+    } else if (!isModify && selectedDate) {
+      setWorkDate(selectedDate);
     }
-  }, [isModify, editItem]);
+  }, [isModify, editItem, selectedDate]);
 
   return (
     <ModalLayout onClose={onClose} maxWidth={400}>
