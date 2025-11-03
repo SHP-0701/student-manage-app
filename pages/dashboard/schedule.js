@@ -26,9 +26,6 @@ export default function SchedulePage() {
   // 근로변경사항 등록/수정 모달 열기
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
-  // 근로확인 모달 열기
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
   // 근로시간표 담는 state
   const [scheduleData, setScheduleData] = useState([]);
 

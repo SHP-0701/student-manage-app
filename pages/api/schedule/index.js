@@ -54,7 +54,7 @@ export default async function handler(req, res) {
         ss.confirmedAt 
       FROM student_info si JOIN student_schedule ss ON si.stdNum = ss.stdNum AND si.year = ss.year AND si.term = ss.term
       WHERE si.stdJob = ? AND ss.workDate = ? AND ss.year = ? AND ss.term = ?
-      ORDER BY ss.startTime`;
+      ORDER BY si.stdName, ss.startTime`;
 
       const [rows] = await dbpool.execute(query, [
         stdJob,

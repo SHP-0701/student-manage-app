@@ -287,7 +287,7 @@
 
 .scheduleTable tbody {
   display: block;
-  max-height: 265px;
+  max-height: 220px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -464,7 +464,7 @@
 
 .changeTable tbody {
   display: block;
-  max-height: 265px;
+  max-height: 150px;
   overflow-y: auto;
   overflow-x: hidden;
 }
