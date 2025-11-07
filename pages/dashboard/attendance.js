@@ -1,13 +1,17 @@
-/**
- * 출결 기록 화면
- * - 학생 출결 기록 조회함
- * - 연도/학기/근로구분별 필터 적용
- */
+/*
+=======================================================================================================================
+가. (작성일자) 2025. 11. 7.(금)
+나. (페이지명) attendance.js(출결기록 메뉴)
+다. (페이지기능) 출결 기록 프론트 코드(백엔드 - /api/attendance.js 와 연동하여 기록 데이터 fetch 실시)
+※ 출결 기록 삭제는 /api/attendance.js 가 아닌 /api/schedule/index.js에서 동작(근로시간표 내역 삭제 시 출결기록도 같이 삭제됨)
+=======================================================================================================================
+*/
 
 import Layout from '@/components/Layout';
 import DatePicker from 'react-datepicker';
 import styles from '@/styles/Attendance.module.css';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getLocalDateString } from '@/utils/timeUtils';
 
 export default function AttendancePage() {
   // 출결데이터 상태(state)
@@ -16,6 +20,7 @@ export default function AttendancePage() {
   // 필터 상태(state)
   const [searchYear, setSearchYear] = useState(''); // 학년도
   const [searchTerm, setSearchTerm] = useState(''); // 학기
+  const [searchWorkType, setSearchWorkType] = useState(''); // 근로구분(국가근로, 대학행정인턴, 교육지원)
   const [searchStdJob, setSearchStdJob] = useState(''); // 담당업무(실습실, 카운터, ECSC, 모니터링)
   const [searchName, setSearchName] = useState(''); // 이름
   const [startDate, setStartDate] = useState(null); // 필터 시작 날짜
@@ -33,6 +38,45 @@ export default function AttendancePage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
+  // 출결 기록 fetch
+  const fetchAttendance = async () => {
+    try {
+      // 쿼리 param 생성
+      const params = new URLSearchParams({
+        page: currentPage,
+        limit: 10, // 페이지당 10개
+      });
+
+      // 필터 조건 추가(값이 있을때만 추가)
+      if (searchYear) params.append('year', searchYear);
+      if (searchTerm) params.append('term', searchTerm);
+      if (searchWorkType) params.append('workType', searchWorkType);
+      if (searchStdJob) params.append('stdJob', searchStdJob);
+      if (searchName) params.append('stdName', searchName);
+      if (startDate) params.append('startDate', getLocalDateString(startDate));
+      if (endDate) params.append('endDate', getLocalDateString(endDate));
+
+      const res = await fetch(`/api/attendance?${params.toString()}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        setAttendanceList(data.attendance);
+        setTotalPages(data.totalPages);
+        setCurrentPage(data.currentPage);
+      } else {
+        alert(data.message || '출결 기록 조회 실패');
+      }
+    } catch (err) {
+      console.error('[/dashboard/attendance.js] 출결 기록 fetch 에러: ', err);
+      alert('출결기록 조회 중 오류 발생');
+    }
+  };
+
+  // 페이지 로드 or 변경 시 자동 출결기록 조회
+  useEffect(() => {
+    fetchAttendance();
+  }, [currentPage]); // currentPage 변경될 때마다 재조회
+
   return (
     <Layout>
       <div className={styles.container}>
@@ -48,9 +92,9 @@ export default function AttendancePage() {
               onChange={(e) => setSearchYear(e.target.value)}
             >
               <option value=''>전체 연도</option>
-              <option value='2024'>2024년</option>
               <option value='2025'>2025년</option>
               <option value='2026'>2026년</option>
+              <option value='2027'>2027년</option>
             </select>
 
             <select
@@ -60,6 +104,16 @@ export default function AttendancePage() {
               <option value=''>전체 학기</option>
               <option value='1학기'>1학기</option>
               <option value='2학기'>2학기</option>
+            </select>
+
+            <select
+              value={searchWorkType}
+              onChange={(e) => setSearchWorkType(e.target.value)}
+            >
+              <option value=''>전체 근로구분</option>
+              <option value='국가근로'>국가근로장학생</option>
+              <option value='대학행정인턴'>대학행정인턴장학생</option>
+              <option value='교육지원'>교육지원장학생</option>
             </select>
 
             <select
@@ -103,7 +157,9 @@ export default function AttendancePage() {
               />
             </div>
             <div className={styles.filterActions}>
-              <button className={styles.searchBtn}>조회</button>
+              <button className={styles.searchBtn} onClick={fetchAttendance}>
+                조회
+              </button>
               <button className={styles.exportBtn}>내보내기</button>
             </div>
           </div>
@@ -115,13 +171,13 @@ export default function AttendancePage() {
             <thead>
               <tr>
                 <th>근로날짜</th>
+                <th>근로구분</th>
                 <th>담당업무</th>
                 <th>이름</th>
                 <th>학번</th>
                 <th>시작시간</th>
                 <th>종료시간</th>
                 <th>총근로시간</th>
-                <th>관리</th>
               </tr>
             </thead>
             <tbody>
@@ -129,20 +185,13 @@ export default function AttendancePage() {
                 attendanceList.map((item) => (
                   <tr key={item.id}>
                     <td>{item.workDate}</td>
+                    <td>{item.workType}</td>
                     <td>{item.stdJob}</td>
                     <td>{item.stdName}</td>
                     <td>{item.stdNum}</td>
                     <td>{item.startTime?.slice(0, 5)}</td>
                     <td>{item.endTime?.slice(0, 5)}</td>
                     <td>{item.totalWorkTime}</td>
-                    <td>
-                      <button
-                        className={styles.deleteBtn}
-                        onClick={() => handleDelete(item)}
-                      >
-                        삭제
-                      </button>
-                    </td>
                   </tr>
                 ))
               ) : (

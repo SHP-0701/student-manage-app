@@ -127,19 +127,36 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: '근로시간표 ID가 필요합니다.' });
 
     try {
-      const [result] = await dbpool.execute(
-        `DELETE FROM student_schedule WHERE id =?`,
-        [id]
-      );
+      // 삭제 트랜잭션 시작
+      const connection = await dbpool.getConnection();
+      await connection.beginTransaction();
 
-      if (result.affectedRows === 0)
+      // 트랜잭션 예외 처리를 위한 try/catch
+      try {
+        await connection.execute(
+          `DELETE FROM student_attendance WHERE id = ?`,
+          [id]
+        );
+        await connection.execute(`DELETE FROM student_schedule WHERE id = ?`, [
+          id,
+        ]);
+
+        await connection.commit();
+        connection.release();
+
         return res
-          .status(404)
-          .json({ message: '삭제 대상을 찾을 수 없습니다. ' });
-
-      return res.status(200).json({ message: '근로시간표 삭제 성공' });
+          .status(200)
+          .json({ message: '근로시간표 및 출결기록 삭제 완료' });
+      } catch (transactionErr) {
+        await connection.rollback();
+        connection.release();
+        throw transactionErr;
+      }
     } catch (err) {
-      console.error('[/api/schedule.js] DELETE error: ', err);
+      console.error(
+        '[/api/schedule/index.js] 근로시간표 삭제(DELETE) 에러: ',
+        err
+      );
       return res
         .status(500)
         .json({ message: '근로시간표 삭제 실패', error: err });

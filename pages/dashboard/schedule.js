@@ -151,16 +151,18 @@ export default function SchedulePage() {
   // 근로확인 handler
   const handleConfirm = async (rowId) => {
     try {
-      const res = await fetch('/api/schedule', {
-        method: 'PUT',
+      // POST 요청으로 출결기록(student_attendance) 생성(+ 근로시간표(student_schedule) isConfirmed도 업데이트)
+      const res = await fetch('/api/attendance', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: rowId, // 해당 근로시간표 데이터 id
-          isConfirmed: true,
+          scheduleId: rowId, // 근로시간표 row id
         }),
       });
 
       if (res.ok) {
+        const data = await res.json();
+        alert(data.message);
         await fetchSchedule(); // 데이터 새로고침
       } else {
         const data = await res.json();
