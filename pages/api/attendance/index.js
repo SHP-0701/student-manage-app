@@ -7,6 +7,7 @@
  */
 
 import dbpool from '@/lib/db';
+import { calculateWorkTime } from '@/utils/timeUtils';
 
 export default async function handler(req, res) {
   // 조회(GET)
@@ -101,7 +102,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'scheduleId가 필요합니다.' });
 
       // 근로시간표(student_schedule) 테이블과 학생정보(student_info) 테이블 JOIN하여 데이터 가져오기
-      const sql = `SELECT s.id, s.year, s.term, s.workDate, s.stdNum, s.startTime, s.endTime, s.isConfirmed, i.stdName, i.workType, i.stdJob, TIMEDIFF(s.endTime, s.startTime) as totalWorkTime
+      const sql = `SELECT s.id, s.year, s.term, s.workDate, s.stdNum, s.startTime, s.endTime, s.isConfirmed, i.stdName, i.workType, i.stdJob
       FROM student_schedule s JOIN student_info i ON s.stdNum = i.stdNum AND s.year = i.year AND s.term = i.term WHERE s.id = ?`;
 
       const [rows] = await dbpool.execute(sql, [scheduleId]);
@@ -121,6 +122,12 @@ export default async function handler(req, res) {
           .status(400)
           .json({ message: '이미 확인된 근로 내역입니다.' });
       }
+
+      // 점심시간(12:00~13:00) 제외 실제 근로 시간 계산
+      const totalWorkTime = calculateWorkTime(
+        scheduleData.startTime,
+        scheduleData.endTime
+      );
 
       // 트랜잭션 처리로 출결기록(student_attendance) 테이블에 insert & 근로시간표(student_schedule) 테이블에 update 실시
       const connection = await dbpool.getConnection();
@@ -143,7 +150,7 @@ export default async function handler(req, res) {
           scheduleData.workDate,
           scheduleData.startTime,
           scheduleData.endTime,
-          scheduleData.totalWorkTime,
+          totalWorkTime,
         ];
 
         await connection.execute(insertSql, insertValues);

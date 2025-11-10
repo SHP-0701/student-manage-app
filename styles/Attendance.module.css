@@ -164,6 +164,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* 테이블 전체 레이아웃 고정 */
 }
 
 /* 테이블 헤더 */
@@ -182,6 +183,32 @@
   border-bottom: 2px solid #555;
   position: relative;
 }
+
+/* 각 테이블 컬럼 별 너비 고정(th) */
+.table th:nth-child(1) {
+  width: 10%;
+} /* 근로날짜 */
+.table th:nth-child(2) {
+  width: 14%;
+} /* 근로구분 */
+.table th:nth-child(3) {
+  width: 10%;
+} /* 담당업무 */
+.table th:nth-child(4) {
+  width: 8%;
+} /* 이름 */
+.table th:nth-child(5) {
+  width: 10%;
+} /* 학번 */
+.table th:nth-child(6) {
+  width: 10%;
+} /* 시작시간 */
+.table th:nth-child(7) {
+  width: 10%;
+} /* 종료시간 */
+.table th:nth-child(8) {
+  width: 12%;
+} /* 총근로시간 */
 
 /* th 구성요소 마지막을 제외한 나머지에 적용 */
 .table th:not(:last-child)::after {
@@ -217,6 +244,35 @@
   color: #e0e0e0;
   font-size: 0.9rem;
   transition: color 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* td도 동일하게 컬럼 고정 너비 설정 */
+.table td:nth-child(1) {
+  width: 10%;
+}
+.table td:nth-child(2) {
+  width: 14%;
+}
+.table td:nth-child(3) {
+  width: 10%;
+}
+.table td:nth-child(4) {
+  width: 8%;
+}
+.table td:nth-child(5) {
+  width: 10%;
+}
+.table td:nth-child(6) {
+  width: 10%;
+}
+.table td:nth-child(7) {
+  width: 10%;
+}
+.table td:nth-child(8) {
+  width: 12%;
 }
 
 /* 빈 데이터 메시지 */
@@ -225,4 +281,54 @@
   padding: 3rem 1rem;
   color: #888;
   font-size: 1rem;
+}
+
+/* 페이지네이션(Pagination) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.pageNumber {
+  min-width: 40px;
+  height: 40px;
+  padding: 0.6rem 0.8rem;
+  background: #1b1b1b;
+  color: #aaa;
+  border: 1px solid #333;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageNumber:hover {
+  background: #2a2a2a;
+  color: #fff;
+  border-color: #555;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.08);
+}
+
+.pageNumber.active {
+  background: linear-gradient(135deg, #444 0%, #555 100%);
+  color: #fff;
+  border-color: #666;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+.dots {
+  color: #666;
+  padding: 0 0.5rem;
+  font-weight: 600;
+  user-select: none;
 }

@@ -1,15 +1,15 @@
 /**
- * 시작/종료 시간으로 근로시간 계산
+ * 시작/종료 시간으로 근로시간 계산(TIME 형식 Return)
  * 점심시간(12:00~13:00) 포함되면 1시간 차감
- * @param {string} start - 'HH:mm'
- * @param {string} end - 'HH:mm'
- * @returns {string} - '0시간 0분'
+ * @param {string} start - 'HH:mm:ss' 또는 'HH:mm'
+ * @param {string} end - 'HH:mm:ss' 또는 'HH:mm'
+ * @returns {string} - 'HH:MM:SS'
  */
-export function getWorkHours(start, end) {
-  if (!start || !end) return '-';
+export function calculateWorkTime(start, end) {
+  if (!start || !end) return '00:00:00';
 
-  const [sh, sm] = start.split(':').map(Number); // 시작 시간 쪼개기
-  const [eh, em] = end.split(':').map(Number); // 종료 시간 쪼개기
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
 
   let startMinutes = sh * 60 + sm;
   let endMinutes = eh * 60 + em;
@@ -24,7 +24,10 @@ export function getWorkHours(start, end) {
   const hours = Math.floor(diffMinutes / 60);
   const minutes = diffMinutes % 60;
 
-  return `${hours} 시간 ${minutes} 분`;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+    2,
+    '0'
+  )}:00`;
 }
 
 /**

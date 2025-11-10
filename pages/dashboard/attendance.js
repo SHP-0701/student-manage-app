@@ -29,14 +29,7 @@ export default function AttendancePage() {
   // 페이지네이션 상태(state)
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
-  // Toast 메시지 상태(state)
-  const [toastMsg, setToastMsg] = useState('');
-  const [showToast, setShowToast] = useState(false);
-
-  // 삭제 모달 관련 상태(state)
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [totalCount, setTotalCount] = useState(1);
 
   // 출결 기록 fetch
   const fetchAttendance = async () => {
@@ -44,7 +37,7 @@ export default function AttendancePage() {
       // 쿼리 param 생성
       const params = new URLSearchParams({
         page: currentPage,
-        limit: 10, // 페이지당 10개
+        limit: 6, // 페이지당 6개
       });
 
       // 필터 조건 추가(값이 있을때만 추가)
@@ -63,6 +56,7 @@ export default function AttendancePage() {
         setAttendanceList(data.attendance);
         setTotalPages(data.totalPages);
         setCurrentPage(data.currentPage);
+        setTotalCount(data.totalCount);
       } else {
         alert(data.message || '출결 기록 조회 실패');
       }
@@ -76,6 +70,83 @@ export default function AttendancePage() {
   useEffect(() => {
     fetchAttendance();
   }, [currentPage]); // currentPage 변경될 때마다 재조회
+
+  // 페이지네이션 렌더링 함수
+  const renderPagination = () => {
+    const pages = [];
+
+    // 1페이지는 항상 표시
+    pages.push(
+      <button
+        key={1}
+        className={`${styles.pageNumber} ${
+          currentPage === 1 ? styles.active : ''
+        }`}
+        onClick={() => setCurrentPage(1)}
+      >
+        1
+      </button>
+    );
+
+    // 시작&끝 페이지 계산
+    let startPage = Math.max(2, currentPage - 2);
+    let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    // 현재 페이지가 앞쪽에 있을 때
+    if (currentPage <= 3) endPage = Math.min(5, totalPages - 1);
+
+    // 현재 페이지가 뒤쪽에 있을 때
+    if (currentPage >= totalPages - 2) startPage = Math.max(2, totalPages - 4);
+
+    // 첫 페이지와 시작 페이지 사이 생략(...) 표시
+    if (startPage > 2)
+      pages.push(
+        <span key='dots-1' className={styles.dots}>
+          ...
+        </span>
+      );
+
+    // 중간 페이지들
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`${styles.pageNumber} ${
+            currentPage === i ? styles.active : ''
+          }`}
+          onClick={() => setCurrentPage(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    // 끝 페이지와 마지막 페이지 사이 생략(...) 표시
+    if (endPage < totalPages - 1) {
+      pages.push(
+        <span key='dots-2' className={styles.dots}>
+          ...
+        </span>
+      );
+    }
+
+    // 마지막 페이지(totalPage가 1보다 클 때만)
+    if (totalPages > 1) {
+      pages.push(
+        <button
+          key={totalPages}
+          className={`${styles.pageNumber} ${
+            currentPage === totalPages ? styles.act : ''
+          }`}
+          onClick={() => setCurrentPage(totalPages)}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return pages;
+  };
 
   return (
     <Layout>
@@ -165,6 +236,9 @@ export default function AttendancePage() {
           </div>
         </div>
 
+        {/* 총 건수 표시 */}
+        <div className={styles.totalCount}>총 {totalCount}건</div>
+
         {/** 근로내역 테이블 영역 */}
         <div className={styles.tableSection}>
           <table className={styles.table}>
@@ -191,7 +265,7 @@ export default function AttendancePage() {
                     <td>{item.stdNum}</td>
                     <td>{item.startTime?.slice(0, 5)}</td>
                     <td>{item.endTime?.slice(0, 5)}</td>
-                    <td>{item.totalWorkTime}</td>
+                    <td>{item.totalWorkTime?.substring(0, 5)}</td>
                   </tr>
                 ))
               ) : (
@@ -206,7 +280,7 @@ export default function AttendancePage() {
         </div>
 
         {/** 페이지네이션(pagination) */}
-        <div className={styles.pagination}>{/** Pagination */}</div>
+        <div className={styles.pagination}>{renderPagination()}</div>
       </div>
     </Layout>
   );
