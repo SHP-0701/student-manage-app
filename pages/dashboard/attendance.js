@@ -66,6 +66,47 @@ export default function AttendancePage() {
     }
   };
 
+  // 엑셀 내보내기(export) 함수
+  const handleExport = async () => {
+    try {
+      // 쿼리 파라미터 생성(현재 필터 조건 사용)
+      const params = new URLSearchParams();
+
+      if (searchYear) params.append('year', searchYear);
+      if (searchTerm) params.append('term', searchTerm);
+      if (searchWorkType) params.append('workType', searchWorkType);
+      if (searchStdJob) params.append('stdJob', searchStdJob);
+      if (searchName) params.append('stdName', searchName);
+      if (startDate) params.append('startDate', getLocalDateString(startDate));
+      if (endDate) params.append('endDate', getLocalDateString(endDate));
+
+      // API 호출
+      const res = await fetch(`/api/attendance/export?${params.toString()}`);
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message || '엑셀 내보내기 실패');
+        return;
+      }
+
+      // 파일 다운로드 실시
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `출결기록_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      alert('엑셀 파일 다운로드 완료.');
+    } catch (err) {
+      console.error('[/dashboard/attendance.js] 엑셀 다운로드 에러: ', err);
+      alert('엑셀 다운로드 중 오류 발생');
+    }
+  };
+
   // 페이지 로드 or 변경 시 자동 출결기록 조회
   useEffect(() => {
     fetchAttendance();
@@ -231,7 +272,9 @@ export default function AttendancePage() {
               <button className={styles.searchBtn} onClick={fetchAttendance}>
                 조회
               </button>
-              <button className={styles.exportBtn}>내보내기</button>
+              <button className={styles.exportBtn} onClick={handleExport}>
+                내보내기
+              </button>
             </div>
           </div>
         </div>
