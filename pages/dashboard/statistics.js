@@ -4,3 +4,14 @@
   ▢ 작성일: 2025. 11. 24.(월)
   ▢ 작성자: 박수훈(shpark)
  =================================================================================================== */
+
+import Layout from "@/components/Layout";
+import styles from '@/styles/Statistics.module.css';
+
+export default function StatisticsPage() {
+  return (
+    <Layout>
+      <div className={}
+    </Layout>
+  )
+}
