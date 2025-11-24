@@ -18,3 +18,148 @@
   font-size: 1.75rem;
   font-weight: 700;
 }
+
+/* =================================================
+                  컨텐츠 래퍼(Wrapper)
+ ================================================== */
+.contentWrapper {
+  display: flex;
+  gap: 1.5rem;
+  height: calc(100vh - 200px);
+}
+
+/* =================================================
+              좌측: 학생 목록 섹션(Section)
+ ================================================== */
+.studentListSection {
+  flex: 0 0 20%;
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 탭 버튼 */
+.tabButtons {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  background: #2a2a2a;
+  color: #b0b0b0;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tabButton:hover {
+  background: #333333;
+  color: #e0e0e0;
+}
+
+.tabButton.active {
+  background: #4a90e2;
+  color: white;
+}
+
+/* 테이블 래퍼(Wrapper) */
+.tableWrapper {
+  flex: 1;
+  overflow-y: auto;
+  border-radius: 6px;
+}
+
+/* 스크롤바 스타일 */
+.tableWrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tableWrapper::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+/* 학생 목록 테이블 */
+.studentTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.studentTable thead {
+  position: sticky;
+  top: 0;
+  background: #2a2a2a;
+  z-index: 1;
+}
+
+.studentTable th {
+  padding: 0.875rem;
+  text-align: left;
+  font-weight: 600;
+  color: #b0b0b0;
+  border-bottom: 2px solid #3a3a3a;
+  font-size: 0.95rem;
+}
+
+.studentTable td {
+  padding: 0.875rem;
+  border-bottom: 1px solid #2a2a2a;
+  color: #e0e0e0;
+}
+
+.studentTable tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.studentTable tbody tr:hover {
+  background-color: #2a2a2a;
+}
+
+.studentTable tbody tr.selected {
+  background-color: #1e3a5f;
+}
+
+/* =================================================
+              우측: 상세 통계 섹션(section)
+ ================================================== */
+.detailSection {
+  flex: 1;
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.detailSection h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #f0f0f0;
+}
+
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #666666;
+  font-size: 1.125rem;
+}

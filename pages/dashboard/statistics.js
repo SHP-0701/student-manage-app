@@ -71,8 +71,43 @@ export default function StatisticsPage() {
 
             {/** 학생 목록 테이블 */}
             <div className={styles.tableWrapper}>
-              <table className={styles.studentTable}></table>
+              <table className={styles.studentTable}>
+                <thead>
+                  <tr>
+                    <th>이름</th>
+                    <th>총 근무시간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudents.map((std) => (
+                    <tr
+                      key={std.id}
+                      className={
+                        selectedStudent?.id === std.id ? styles.selected : ''
+                      }
+                      onClick={() => handleStudentClick(std)}
+                    >
+                      <td>{std.name}</td>
+                      <td>{std.totalHours}시간</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          </section>
+
+          {/** 우측: 선택한 학생 상세 통계 자료 */}
+          <section className={styles.detailSection}>
+            {selectedStudent ? (
+              <div>
+                <h2>{selectedStudent.name}</h2>
+                <p>상세 통계가 여기에 표시됨</p>
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>학생을 선택해주세요</p>
+              </div>
+            )}
           </section>
         </div>
       </div>
