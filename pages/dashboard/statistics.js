@@ -5,13 +5,13 @@
   ▢ 작성자: 박수훈(shpark)
  =================================================================================================== */
 
-import Layout from "@/components/Layout";
+import Layout from '@/components/Layout';
 import styles from '@/styles/Statistics.module.css';
 
 export default function StatisticsPage() {
   return (
     <Layout>
-      <div className={}
+      <div className={styles.container}></div>
     </Layout>
-  )
+  );
 }
