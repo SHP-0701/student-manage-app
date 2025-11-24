@@ -14,6 +14,7 @@ export default function ScheduleChangeFormModal({
   mode = 'insert',
   modifyItem,
   currentStdJob,
+  selectedDate,
 }) {
   // 등록 or 수정 분리
   const isModify = mode === 'modify'; // mode가 'modify'면 true
@@ -25,7 +26,7 @@ export default function ScheduleChangeFormModal({
   const [showStudentModal, setShowStudentModal] = useState(false);
 
   // 선택된 날짜 정보
-  const [changeDate, setChangeDate] = useState(new Date());
+  const [changeDate, setChangeDate] = useState(selectedDate);
   const datePickerRef = useRef(null);
 
   // DB Column과 매칭
