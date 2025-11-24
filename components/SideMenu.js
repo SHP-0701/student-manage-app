@@ -2,8 +2,8 @@
  * Layout에 공통적으로 들어갈 왼쪽 메뉴(SideMenu)
  */
 
-import styles from "@/styles/SideMenu.module.css";
-import { useRouter } from "next/router";
+import styles from '@/styles/SideMenu.module.css';
+import { useRouter } from 'next/router';
 import {
   FaUser,
   FaUserGraduate,
@@ -12,7 +12,7 @@ import {
   FaSignOutAlt,
   FaHome,
   FaRegCalendarAlt,
-} from "react-icons/fa";
+} from 'react-icons/fa';
 
 export default function SideMenu({ username }) {
   const router = useRouter();
@@ -20,17 +20,17 @@ export default function SideMenu({ username }) {
   // 로그아웃 핸들러
   const handleLogout = async () => {
     try {
-      const res = await fetch("/api/logout", {
-        method: "POST",
+      const res = await fetch('/api/logout', {
+        method: 'POST',
       });
 
       if (res.ok) {
-        router.push("/");
+        router.push('/');
       } else {
-        console.error("로그아웃 실패");
+        console.error('로그아웃 실패');
       }
     } catch (err) {
-      console.error("로그아웃 에러 : ", err);
+      console.error('로그아웃 에러 : ', err);
     }
   };
 
@@ -47,23 +47,23 @@ export default function SideMenu({ username }) {
 
       <nav className={styles.nav}>
         <ul>
-          <li onClick={() => router.push("/dashboard")}>
+          <li onClick={() => router.push('/dashboard')}>
             <FaHome />
             대시보드
           </li>
-          <li onClick={() => router.push("/dashboard/student")}>
+          <li onClick={() => router.push('/dashboard/student')}>
             <FaUserGraduate />
             학생 정보
           </li>
-          <li onClick={() => router.push("/dashboard/attendance")}>
+          <li onClick={() => router.push('/dashboard/attendance')}>
             <FaClipboardList />
             출결 기록
           </li>
-          <li onClick={() => router.push("/dashboard/schedule")}>
+          <li onClick={() => router.push('/dashboard/schedule')}>
             <FaRegCalendarAlt />
             근로시간표
           </li>
-          <li>
+          <li onClick={() => router.push('/dashboard/statistics')}>
             <FaChartBar />
             통계
           </li>
