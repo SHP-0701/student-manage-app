@@ -18,6 +18,7 @@ import {
   getLocalDateString,
 } from '@/utils/timeUtils';
 import ScheduleChangeFormModal from '@/components/ScheduleChangeFormModal';
+import toast from 'react-hot-toast';
 
 export default function SchedulePage() {
   // 근로시간표 등록 모달 열기
@@ -88,7 +89,9 @@ export default function SchedulePage() {
 
   // 모달에서 submit 완료하면 부모 컴포넌트로 전달
   function handleSubmitSuccess(stdJob) {
-    if (stdJob === activeTab) fetchSchedule();
+    if (stdJob === activeTab) {
+      fetchSchedule();
+    }
   }
 
   // 근로시간표 삭제 버튼 handler
@@ -162,15 +165,15 @@ export default function SchedulePage() {
 
       if (res.ok) {
         const data = await res.json();
-        alert(data.message);
+        toast.success(data.message); // alert 대신 toast 호출
         await fetchSchedule(); // 데이터 새로고침
       } else {
         const data = await res.json();
-        alert(data.message || '확인 처리 중 오류 발생');
+        toast.error(data.message || '확인 처리 중 오류 발생');
       }
     } catch (err) {
       console.error('확인 처리 실패: ', err);
-      alert('확인 처리 중 오류 발생');
+      toast.error('확인 처리 중 오류 발생');
     }
   };
 
