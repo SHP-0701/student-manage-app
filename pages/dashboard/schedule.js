@@ -97,6 +97,13 @@ export default function SchedulePage() {
     }
   }
 
+  // 근로변경사항 모달에서 submit 완료하면 부모 컴포넌트로 전달
+  function handleSubmitChangeSuccess(stdJob) {
+    if (stdJob === activeTab) {
+      fetchChangeSchedule();
+    }
+  }
+
   // 근로시간표 삭제 버튼 handler
   const handleDelete = async (item) => {
     if (!item.id) return alert('삭제 대상 정보가 올바르지 않습니다');
@@ -457,7 +464,7 @@ export default function SchedulePage() {
               }}
               mode={editChangeSchedule ? 'modify' : 'insert'}
               modifyItem={editChangeSchedule}
-              onSubmitSuccess={fetchChangeSchedule}
+              onSubmitSuccess={handleSubmitChangeSuccess}
               selectedDate={selectedDate}
               currentStdJob={activeTab}
             />
