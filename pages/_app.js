@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
       <Toaster
         position='bottom-right'
         toastOptions={{
-          duration: 3000,
+          duration: 4000,
           style: {
             background: '#2d2d2d',
             color: '#fff',
@@ -22,7 +22,6 @@ export default function App({ Component, pageProps }) {
           success: {
             style: {
               background: '#1e3a5f',
-              border: '1px solid #3b82f6',
             },
             iconTheme: {
               primary: '#60a5fa',
@@ -32,7 +31,6 @@ export default function App({ Component, pageProps }) {
           error: {
             style: {
               background: '#4a1e1e',
-              border: '1px solid #b45454',
             },
             iconTheme: {
               primary: '#f87171',
