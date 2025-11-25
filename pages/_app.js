@@ -12,17 +12,31 @@ export default function App({ Component, pageProps }) {
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#333',
+            background: '#2d2d2d',
             color: '#fff',
+            borderRadius: '8px',
+            padding: '14px 20px',
+            fontSize: '14px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
           },
           success: {
             style: {
-              background: '#10b981',
+              background: '#1e3a5f',
+              border: '1px solid #3b82f6',
+            },
+            iconTheme: {
+              primary: '#60a5fa',
+              secondary: '#1e3a5f',
             },
           },
           error: {
             style: {
-              background: '#ef4444',
+              background: '#4a1e1e',
+              border: '1px solid #b45454',
+            },
+            iconTheme: {
+              primary: '#f87171',
+              secondary: '#4a1e1e',
             },
           },
         }}
