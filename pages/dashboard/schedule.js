@@ -64,7 +64,7 @@ export default function SchedulePage() {
       const result = await res.json();
       setScheduleData(result);
     } catch (err) {
-      console.error('데이터 fetch 실패: ', err);
+      console.error('[/dashboard/schedule.js] fetchSchedule() 에러: ', err);
     }
   };
 
@@ -113,15 +113,16 @@ export default function SchedulePage() {
         method: 'DELETE',
       });
       const data = await res.json();
+
       if (res.ok) {
-        alert(data.message);
+        toast.success(data.message);
         await fetchSchedule();
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (err) {
       console.error('[/dashboard/schedule.js] handleDelete 에러: ', err);
-      alert('삭제 중 오류 발생');
+      toast.error('삭제 중 오류 발생');
     }
   };
 
@@ -139,15 +140,16 @@ export default function SchedulePage() {
       });
 
       const data = await res.json();
+
       if (res.ok) {
-        alert(data.message);
+        toast.success(data.message);
         await fetchChangeSchedule();
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (err) {
       console.error('[/dashboard/schedule.js] handleChangeDelete() 에러', err);
-      return alert('삭제 중 에러 발생');
+      toast.error('삭제 중 에러 발생');
     }
   };
 
@@ -163,16 +165,16 @@ export default function SchedulePage() {
         }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        const data = await res.json();
         toast.success(data.message); // alert 대신 toast 호출
         await fetchSchedule(); // 데이터 새로고침
       } else {
-        const data = await res.json();
         toast.error(data.message || '확인 처리 중 오류 발생');
       }
     } catch (err) {
-      console.error('확인 처리 실패: ', err);
+      console.error('[/dashboard/schedule.js] handleConfirm() 에러: ', err);
       toast.error('확인 처리 중 오류 발생');
     }
   };
