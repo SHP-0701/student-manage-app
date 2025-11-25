@@ -1,6 +1,11 @@
-/**
- * 근로시간표 등록 모달
- */
+/* ==========================================================================================================
+  ▢ 파일명: /components/ScheduleFormModal.js
+  ▢ 내용: 
+    - 근로시간표 조회(/dashboard/schedule.js)에서 '시간표 등록' 및 '근로변경사항 등록' 버튼을 누르면 호출되는 모달
+    - 등록 작업 뿐만 아니라 수정 작업에도 같은 모달을 사용함
+  ▢ 작성일: 2025. 11. 25.(화)
+  ▢ 작성자: 박수훈(shpark)
+ ========================================================================================================== */
 
 import { useState, useRef, useEffect } from 'react';
 import ModalLayout from '@/components/ModalLayout';
@@ -14,6 +19,7 @@ import {
 } from '@/utils/timeUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import toast from 'react-hot-toast';
 
 export default function ScheduleFormModal({
   onClose,
@@ -96,7 +102,9 @@ export default function ScheduleFormModal({
 
   // 등록(submit) 버튼 핸들러
   const handleSubmit = async () => {
-    if (!selectedStudent) return alert('학생을 먼저 선택해주세요');
+    if (!selectedStudent) {
+      return alert('학생을 먼저 선택해주세요');
+    }
 
     try {
       // 수정(PUT) 요청
@@ -105,11 +113,13 @@ export default function ScheduleFormModal({
         const startTime = combineTime(startHour, startMinute);
         const endTime = combineTime(endHour, endMinute);
 
-        if (!startTime || !endTime)
+        if (!startTime || !endTime) {
           return alert('시작시간과 종료시간을 선택해주세요');
+        }
 
-        if (startTime >= endTime)
+        if (startTime >= endTime) {
           return alert('시작 시간은 종료 시간보다 빠르거나 같을 수 없습니다.');
+        }
 
         const res = await fetch(`/api/schedule`, {
           method: 'PUT',
@@ -122,12 +132,13 @@ export default function ScheduleFormModal({
         });
 
         const data = await res.json();
+
         if (res.ok) {
-          alert(data.message);
+          toast.success(data.message);
           onSubmitSuccess(editItem.stdJob);
           onClose();
         } else {
-          return alert(data.message);
+          toast.error(data.message);
         }
       }
 
@@ -220,17 +231,14 @@ export default function ScheduleFormModal({
           const data = await res.json();
 
           if (res.ok) {
-            alert(data.message);
+            toast.success(data.message);
             onSubmitSuccess(selectedStudent.stdJob);
             onClose();
           } else {
-            return alert(data.message);
+            toast.error(data.message);
           }
         } catch (e) {
-          console.error(
-            '[ScheduleFormModal.js] handleSubmit() 내 일괄 등록 에러 ',
-            e
-          );
+          console.error('[ScheduleFormModal.js] handleSubmit() 에러: ', e);
           return alert('일괄 등록 중 오류 발생');
         }
       }
@@ -261,11 +269,11 @@ export default function ScheduleFormModal({
         const data = await res.json();
 
         if (res.ok) {
-          alert(data.message);
+          toast.success(data.message);
           onSubmitSuccess(selectedStudent.stdJob);
           onClose();
         } else {
-          return alert(data.message);
+          toast.error(data.message);
         }
       }
     } catch (err) {
