@@ -11,7 +11,7 @@ import Layout from '@/components/Layout';
 import DatePicker from 'react-datepicker';
 import styles from '@/styles/Attendance.module.css';
 import { useEffect, useState } from 'react';
-import { getLocalDateString } from '@/utils/timeUtils';
+import { getLocalDateString, getYearTerm } from '@/utils/timeUtils';
 
 export default function AttendancePage() {
   // 출결데이터 상태(state)
@@ -20,6 +20,7 @@ export default function AttendancePage() {
   // 필터 상태(state)
   const [searchYear, setSearchYear] = useState(''); // 학년도
   const [searchTerm, setSearchTerm] = useState(''); // 학기
+
   const [searchWorkType, setSearchWorkType] = useState(''); // 근로구분(국가근로, 대학행정인턴, 교육지원)
   const [searchStdJob, setSearchStdJob] = useState(''); // 담당업무(실습실, 카운터, ECSC, 모니터링)
   const [searchName, setSearchName] = useState(''); // 이름
@@ -109,6 +110,9 @@ export default function AttendancePage() {
 
   // 페이지 로드 or 변경 시 자동 출결기록 조회
   useEffect(() => {
+    const { year, term } = getYearTerm(new Date());
+    if (year) setSearchYear(year);
+    if (term) setSearchTerm(term);
     fetchAttendance();
   }, [currentPage]); // currentPage 변경될 때마다 재조회
 
