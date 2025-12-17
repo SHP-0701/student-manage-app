@@ -63,10 +63,6 @@ export default function SideMenu({ username }) {
             <FaRegCalendarAlt />
             근로시간표
           </li>
-          <li onClick={() => router.push('/dashboard/statistics')}>
-            <FaChartBar />
-            통계
-          </li>
         </ul>
       </nav>
     </aside>
