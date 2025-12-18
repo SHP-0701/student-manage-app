@@ -52,7 +52,6 @@ export default function StudentPage() {
   const fetchStudents = async (page = 1) => {
     try {
       const limit = 6; // 한 페이지에 보여줄 개수
-
       const queryParams = new URLSearchParams({
         page,
         limit,
@@ -99,10 +98,16 @@ export default function StudentPage() {
 
   // 삭제 동작 API
   const confirmDelete = async (id) => {
+    // 현재 삭제하려는 학생의 상태 확인(true: 삭제 처리 / false: 복구 )
+    const isCurrentlyActive = studentToDelete.isActive;
+
     const res = await fetch('/api/student', {
-      method: 'DELETE',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({
+        id,
+        isActive: false, // 무조건 false(비활성화)로 변경
+      }),
     });
 
     const data = await res.json();
@@ -110,7 +115,7 @@ export default function StudentPage() {
     if (res.ok) {
       showToastMessage(data.message);
       setDeleteModalOpen(false);
-      fetchStudents();
+      fetchStudents(currentPage);
     } else {
       alert(data.message);
     }
