@@ -98,9 +98,6 @@ export default function StudentPage() {
 
   // 삭제 동작 API
   const confirmDelete = async (id) => {
-    // 현재 삭제하려는 학생의 상태 확인(true: 삭제 처리 / false: 복구 )
-    const isCurrentlyActive = studentToDelete.isActive;
-
     const res = await fetch('/api/student', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -247,7 +244,7 @@ export default function StudentPage() {
                 ))
               ) : (
                 <tr>
-                  <td colspan='8'>등록된 학생 정보가 없습니다.</td>
+                  <td colSpan='8'>등록된 학생 정보가 없습니다.</td>
                 </tr>
               )}
             </tbody>
