@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       const searchStdJob = req.query.stdJob || '';
 
       // 조건 만들기
-      let whereClause = 'WHERE 1=1';
+      let whereClause = 'WHERE isActive = 1';
       const params = [];
 
       if (searchYear) {
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
 
       // 데이터 가져오기
       const sql = `
-      SELECT id, year, term, stdName, stdNum, stdDept, workType, stdJob, created_at 
+      SELECT id, year, term, stdName, stdNum, stdDept, workType, stdJob, isActive, created_at 
       FROM student_info  
       ${whereClause}
       ORDER BY created_at DESC LIMIT ${offset}, ${limit}
@@ -108,7 +108,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // 학생 정보 수정하기(PUT)
+  // 학생 정보 수정하기(PUT) - 전체 수정용
   else if (req.method === 'PUT') {
     try {
       const { id, year, term, stdName, stdNum, stdDept, workType, stdJob } =
@@ -137,17 +137,23 @@ export default async function handler(req, res) {
     }
   }
 
-  // 학생 정보 삭제(DELETE)
-  else if (req.method === 'DELETE') {
+  // 학생 정보 수정하기(PATCH) - 부분 수정용
+  else if (req.method === 'PATCH') {
     try {
-      const { id } = req.body;
+      const { id, isActive } = req.body;
+
       if (!id) return res.status(400).json({ message: '학생 ID가 없습니다.' });
 
-      await dbpool.execute('DELETE FROM student_info WHERE id = ?', [id]);
-      return res.status(200).json({ message: '학생 정보 삭제 완료' });
-    } catch (error) {
-      console.error('[/api/student.js] DELETE 에러 ', error);
-      return res.status(500).json({ message: '삭제 오류 발생' });
+      // isActive 값을 0(false) 또는 1(true)로 업데이트
+      const sql = `UPDATE student_info SET isActive = ? WHERE id = ?`;
+      const values = [isActive ? 1 : 0, id]; // JS의 boolean(T/F)을 MySQL의 TINIINT(1/0)로 변환
+
+      await dbpool.execute(sql, values);
+
+      return res.status(200).json({ message: '근로상태 변경 완료' });
+    } catch (e) {
+      console.error('[/api/student.js] 학생정보 PATCH 에러: ', e);
+      return res.status(500).json({ message: '상태 변경 오류 발생' });
     }
   }
 
