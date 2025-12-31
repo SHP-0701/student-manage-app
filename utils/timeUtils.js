@@ -31,21 +31,31 @@ export function calculateWorkTime(start, end) {
 }
 
 /**
- * 현재년도 및 학기(1학기 / 2학기) return 해줌
+ * 현재년도 및 학기(1학기 / 2학기) return
  * @param {Date} date - 기준 날짜
  * @returns {Object} { year: '2025', term: '1학기 } - '년도', '학기' 배열
  */
 export function getYearTerm(date) {
-  if (!(date instanceof Date))
+  if (!(date instanceof Date)) {
     throw new Error(
       '[/timeUtils.js] getYearTerm() date param은 Date 객체여야 합니다.'
     );
+  }
 
-  const year = date.getFullYear();
+  // 학기 시작 월 상수 정의(3월 학기 시작)
+  const ACADEMIC_YEAR_START_MONTH = 3;
+
+  // 1, 2월인 경우 년도 -1 실시
+  let year = date.getFullYear();
   const month = date.getMonth() + 1;
 
+  // 현재 월이 3월보다 작으면 작년도로 취급(2026. 1. => 2025학년도)
+  if (month < ACADEMIC_YEAR_START_MONTH) {
+    year -= 1;
+  }
+
   let term = '';
-  if (month >= 3 && month <= 8) {
+  if (month >= ACADEMIC_YEAR_START_MONTH && month <= 8) {
     term = '1학기';
   } else {
     term = '2학기';
