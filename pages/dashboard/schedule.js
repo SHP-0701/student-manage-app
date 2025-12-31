@@ -219,8 +219,9 @@ export default function SchedulePage() {
                 const tileYear = date.getFullYear();
 
                 if (tileMonth != currentViewMonth) return;
-                if (tileYear === currentYear && isHoliday(date))
+                if (isHoliday(date)) {
                   return 'holiday';
+                }
 
                 const day = date.getDay();
                 if (day === 0) return 'sunday';
@@ -228,14 +229,9 @@ export default function SchedulePage() {
               }
             }}
             tileContent={({ date, view }) => {
-              if (
-                view === 'month' &&
-                date.getFullYear() === new Date().getFullYear()
-              ) {
-                const currentYear = new Date().getFullYear();
-                if (date.getFullYear() !== currentYear) return null;
-
+              if (view === 'month') {
                 const holidayNames = getHolidayNames(date);
+
                 if (!holidayNames || holidayNames.length === 0) return null;
 
                 const [main, sub] = holidayNames[0].split('(');
