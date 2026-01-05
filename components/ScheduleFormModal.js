@@ -10,7 +10,6 @@
 import { useState, useRef, useEffect } from 'react';
 import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleFormModal.module.css';
-import { FaUser } from 'react-icons/fa';
 import StudentSelectModal from './StudentSelectModal';
 import {
   getYearTerm,
@@ -315,14 +314,11 @@ export default function ScheduleFormModal({
         <div className={styles.stdInfo}>
           {selectedStudent ? (
             <span>
-              <FaUser className={styles.icons} />
               <strong>{selectedStudent.stdName}</strong> (
               {selectedStudent.stdNum})
             </span>
           ) : (
-            <span className={styles.placeHolder}>
-              <FaUser className={styles.icons} /> 학생을 선택해주세요
-            </span>
+            <span className={styles.placeHolder}>학생을 선택해주세요</span>
           )}
         </div>
         {!isModify && (

@@ -14,7 +14,6 @@ import { isHoliday, getHolidayNames } from '@hyunbinseo/holidays-kr'; // 공휴�
 import styles from '@/styles/Schedule.module.css';
 import { useState, useEffect } from 'react';
 import ScheduleFormModal from '@/components/ScheduleFormModal';
-import { FaCalendarDay } from 'react-icons/fa';
 import {
   formatSelectedDate,
   getYearTerm,
@@ -275,7 +274,6 @@ export default function SchedulePage() {
 
           {/* 선택된 날짜 보여주는 근로시간표 Label */}
           <div className={styles.selectedDate}>
-            <FaCalendarDay className={styles.dateIcon} />
             <label>
               {formatSelectedDate(selectedDate)} {activeTab} 시간표입니다.
             </label>
@@ -353,7 +351,6 @@ export default function SchedulePage() {
 
           {/* 선택된 날짜 보여주는 근로변경사항 Label */}
           <div className={styles.selectedDate}>
-            <FaCalendarDay className={styles.dateIcon} />
             <label>
               {formatSelectedDate(selectedDate)} {activeTab} 근로변경사항
               입니다.

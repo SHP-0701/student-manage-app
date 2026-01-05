@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import ModalLayout from '@/components/ModalLayout';
 import styles from '@/styles/ScheduleChangeFormModal.module.css';
-import { FaUser } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import StudentSelectModal from './StudentSelectModal';
@@ -43,8 +42,6 @@ export default function ScheduleChangeFormModal({
 
     try {
       const requestData = RequestData();
-
-      console.log('[ScheduleChangeFormModal.js] requestData is ', requestData);
 
       const res = await submitScheduleChange(requestData);
       const data = await res.json();
@@ -111,14 +108,11 @@ export default function ScheduleChangeFormModal({
         <div className={styles.stdInfo}>
           {selectedStudent ? (
             <span>
-              <FaUser className={styles.icons} />
               <strong>{selectedStudent.stdName}</strong> (
               {selectedStudent.stdNum})
             </span>
           ) : (
-            <span className={styles.placeHolder}>
-              <FaUser className={styles.icons} /> 학생을 선택해주세요
-            </span>
+            <span className={styles.placeHolder}>학생을 선택해주세요</span>
           )}
         </div>
         {!isModify && (
