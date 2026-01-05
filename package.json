@@ -12,6 +12,7 @@
     "@hyunbinseo/holidays-kr": "^3.2026.0",
     "bcrypt": "^6.0.0",
     "exceljs": "^4.4.0",
+    "lucide-react": "^0.562.0",
     "mysql2": "^3.14.1",
     "next": "^16.0.8",
     "react": "^19.2.1",
