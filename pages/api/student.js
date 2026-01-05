@@ -73,9 +73,6 @@ export default async function handler(req, res) {
         params.push(`%${searchName}%`);
       }
 
-      console.log('[/api/student.js] where조건(whereClause): ', whereClause);
-      console.log('[/api/student.js] param? ', params);
-
       // 총 개수 가져오기
       const [countRows] = await dbpool.execute(
         `SELECT COUNT(*) AS totalCount FROM student_info ${whereClause}`,
