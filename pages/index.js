@@ -13,13 +13,16 @@ import styles from '@/styles/Login.module.css';
 import { useState } from 'react';
 import LoginModal from '@/components/LoginModal';
 
+// 아이콘 import
+import { User, Lock } from 'lucide-react';
+
 export default function Home() {
   const router = useRouter();
 
   const [id, setId] = useState(''); // id
-  const [password, setPassword] = useState(''); // pw
-  const [loginFailed, setLoginFailed] = useState(false); // 로그인 실패
-  const [errMessage, setErrMessage] = useState(''); // response 에러메시지 저장 state
+  const [password, setPassword] = useState('');
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [errMessage, setErrMessage] = useState('');
 
   // 로그인 submit시 실행
   const handleLogin = async (e) => {
@@ -31,7 +34,6 @@ export default function Home() {
       body: JSON.stringify({ id, password }),
     });
 
-    // login.js에서 응답받은 데이터
     const data = await res.json();
 
     if (!res.ok) {
@@ -39,8 +41,6 @@ export default function Home() {
       setLoginFailed(true);
     } else {
       sessionStorage.setItem('username', data.name);
-
-      // 로그인 성공 시 /dashboard 이동
       router.push('/dashboard');
     }
   };
@@ -70,8 +70,9 @@ export default function Home() {
 
         <form className={styles.loginForm} onSubmit={handleLogin}>
           <h2>시스템 로그인</h2>
-
+          {/** 아이디 입력란 */}
           <div className={styles.inputGroup}>
+            <User className={styles.icon} size={20} color='#9ca3af' />
             <input
               type='text'
               placeholder='아이디'
@@ -80,7 +81,9 @@ export default function Home() {
             />
           </div>
 
+          {/** 비밀번호 입력란 */}
           <div className={styles.inputGroup}>
+            <Lock className={styles.icon} size={20} color='#9ca3af' />
             <input
               type='password'
               placeholder='비밀번호'
