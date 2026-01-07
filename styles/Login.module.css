@@ -1,12 +1,12 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    height: 100vh;
-    color: #fff;
-    gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  height: 100vh;
+  color: #fff;
+  gap: 2rem;
 }
 
 .title {
@@ -28,8 +28,8 @@
 }
 
 .loginForm h2 {
-    margin: 0;
-    text-align: center;
+  margin: 0;
+  text-align: center;
 }
 
 .inputGroup {
@@ -38,12 +38,18 @@
   background-color: #2a2a2a;
   padding: 0.75rem 1rem;
   border-radius: 8px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.inputGroup:focus-within {
+  border-color: #007bff;
 }
 
 .icon {
-  font-size: 1.5rem;
-  padding: 2px;
-  margin-right: 6px;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .success {
@@ -61,17 +67,18 @@
   color: #fff;
   width: 100%;
   font-size: 1rem;
+  flex: 1;
 }
 
 .loginForm button {
-    padding: 0.75rem;
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  padding: 0.75rem;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .loginForm button:hover {
