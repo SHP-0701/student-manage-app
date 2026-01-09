@@ -3,8 +3,8 @@
     ○ 작성일자: 2026. 01. 07.(수)
     ○ 페이지명: /dashboard/student.js
     ○ 내용: 근로 학생 정보 관리 페이지
-      - 학생 정보 등록, 수정, 삭제 가능(물리적 삭제가 아닌 논리 삭제 실시)
-      - 근로시간표 등록 전 학생 정보 등록 반드시 필요
+      - 학생 정보 등록, 수정, 삭제(논리 삭제) 등 CRUD 기능 구현
+      - 근로시간표 등록 전 학생 정보 등록 반드시 필요(목록에서 선택하여 시간표 등록)
     ○ 작성자: 박수훈(shpark)
   =================================================================================================================
 */
@@ -16,47 +16,49 @@ import styles from '@/styles/Student.module.css';
 import { useEffect, useState } from 'react';
 import { getYearTerm } from '@/utils/timeUtils';
 
+// 아이콘(lucide-react) import
+import {
+  Search,
+  UserPlus,
+  Filter,
+  Pencil,
+  Trash2,
+  GraduationCap,
+} from 'lucide-react';
+
 export default function StudentPage() {
-  // 현재 학년도/학기 기준으로 학생 목록 조회를 위한 학년도, 학기 변수
   const { year, term } = getYearTerm(new Date());
 
-  // 모달 창 오픈(등록/수정) state
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // 삭제 모달 창 오픈
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // 모달 등록/수정/삭제 분기
   const [mode, setMode] = useState('');
-
-  // 학생 목록 state
   const [students, setStudents] = useState([]);
-
-  // 선택된 학생 정보
   const [currentStudent, setCurrentStudent] = useState(null);
-
-  // 삭제할 학생 정보
   const [studentToDelete, setStudentToDelete] = useState(null);
 
-  // 검색용 state
+  // 검색 상태(state)
   const [searchName, setSearchName] = useState('');
   const [searchYear, setSearchYear] = useState(year);
   const [searchTerm, setSearchTerm] = useState(term);
   const [searchWorkType, setSearchWorkType] = useState('');
   const [searchStdJob, setSearchStdJob] = useState('');
 
+  // 현재 연도 기준 -2 ~ +2 리스트 생성
+  const yearOptions = Array.from({ length: 5 }, (_, i) => year - 2 + i);
+
   // toast 관련 state
   const [toastMessage, setToastMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
 
-  // 페이징에 사용할 상태(현재 페이지 & 전체 페이지 수)
+  // 페이징 상태(현재 페이지 & 전체 페이지 수)
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // 학생 목록 가져오는(fetch) 함수
+  // 학생 목록 fetch
   const fetchStudents = async (page = 1) => {
     try {
-      const limit = 6; // 한 페이지에 보여줄 개수
+      const limit = 10; // 한 페이지에 보여줄 개수
       const queryParams = new URLSearchParams({
         page,
         limit,
@@ -130,67 +132,11 @@ export default function StudentPage() {
   return (
     <Layout>
       <div className={styles.container}>
-        <h2>근로학생 정보 관리</h2>
-
-        {/* 필터 & 등록 버튼 영역 */}
-        <div className={styles.filterSection}>
-          <div className={styles.filters}>
-            <select
-              value={searchYear}
-              onChange={(e) => setSearchYear(e.target.value)}
-            >
-              <option value=''>전체 연도</option>
-              <option value='2025'>2025년</option>
-              <option value='2024'>2024년</option>
-            </select>
-
-            <select
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            >
-              <option value=''>전체 학기</option>
-              <option value='1학기'>1학기</option>
-              <option value='2학기'>2학기</option>
-            </select>
-
-            <select
-              value={searchWorkType}
-              onChange={(e) => setSearchWorkType(e.target.value)}
-            >
-              <option value=''>전체</option>
-              <option value='국가근로'>국가근로장학생</option>
-              <option value='대학행정인턴'>대학행정인턴장학생</option>
-              <option value='교육지원'>교육지원장학생</option>
-            </select>
-
-            <select
-              value={searchStdJob}
-              onChange={(e) => setSearchStdJob(e.target.value)}
-            >
-              <option value=''>전체</option>
-              <option value='카운터'>카운터</option>
-              <option value='실습실'>실습실</option>
-              <option value='ECSC'>ECSC</option>
-              <option value='모니터링'>모니터링</option>
-            </select>
-
-            <input
-              type='text'
-              placeholder='학생 이름'
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-              className={styles.searchInput}
-            />
-
-            <button
-              className={styles.searchBtn}
-              onClick={() => {
-                setCurrentPage(1);
-                fetchStudents(1);
-              }}
-            >
-              조회
-            </button>
+        {/** 01. 페이지 헤더 */}
+        <div className={styles.headerSection}>
+          <div className={styles.titleGroup}>
+            <GraduationCap size={28} className={styles.titleIcon} />
+            <h2>근로학생 정보 관리</h2>
           </div>
           <button
             className={styles.registerBtn}
@@ -200,50 +146,134 @@ export default function StudentPage() {
               setIsModalOpen(true);
             }}
           >
+            <UserPlus size={18} />
             학생 등록
           </button>
         </div>
 
-        {/* 학생 테이블 */}
+        {/* 02. 검색 및 필터 영역 */}
+        <div className={styles.filterSection}>
+          <div className={styles.filterGroup}>
+            <div className={styles.selectWrapper}>
+              <Filter size={16} className={styles.filterIcon} />
+              <select
+                value={searchYear}
+                onChange={(e) => setSearchYear(e.target.value)}
+              >
+                <option value=''>전체 연도</option>
+                {/** 배열 순회하며 option 생성 */}
+                {yearOptions.map((year) => (
+                  <option key={year} value={year}>
+                    {year}년
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className={styles.selectWrapper}>
+              <select
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              >
+                <option value=''>전체 학기</option>
+                <option value='1학기'>1학기</option>
+                <option value='2학기'>2학기</option>
+              </select>
+            </div>
+
+            <div className={styles.selectWrapper}>
+              <select
+                value={searchWorkType}
+                onChange={(e) => setSearchWorkType(e.target.value)}
+              >
+                <option value=''>근로구분(전체)</option>
+                <option value='국가근로'>국가근로장학생</option>
+                <option value='대학행정인턴'>대학행정인턴장학생</option>
+                <option value='교육지원'>교육지원장학생</option>
+              </select>
+            </div>
+
+            <div className={styles.selectWrapper}>
+              <select
+                value={searchStdJob}
+                onChange={(e) => setSearchStdJob(e.target.value)}
+              >
+                <option value=''>담당업무(전체)</option>
+                <option value='카운터'>카운터</option>
+                <option value='실습실'>실습실</option>
+                <option value='ECSC'>ECSC</option>
+                <option value='모니터링'>모니터링</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.searchGroup}>
+            <input
+              type='text'
+              placeholder='이름 검색...'
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              className={styles.searchInput}
+              onKeyDown={(e) => e.key === 'Enter' && fetchStudents(1)}
+            />
+            <button
+              className={styles.searchBtn}
+              onClick={() => {
+                setCurrentPage(1);
+                fetchStudents(1);
+              }}
+            >
+              <Search size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/** 03. 데이터(학생) 테이블 */}
         <div className={styles.tableSection}>
-          <table>
+          <table className={styles.studentTable}>
             <thead>
               <tr>
-                <th>학년도</th>
-                <th>학기</th>
+                <th>학년도/학기</th>
                 <th>근로구분</th>
                 <th>담당업무</th>
                 <th>이름</th>
                 <th>학번</th>
                 <th>학과</th>
-                <th>관리</th>
+                <th style={{ textAlign: 'center' }}>관리</th>
               </tr>
             </thead>
             <tbody>
-              {/* map()으로 학생 리스트 렌더링 */}
               {students && students.length > 0 ? (
                 students.map((std) => (
                   <tr key={std.id}>
-                    <td>{std.year}</td>
-                    <td>{std.term}</td>
+                    <td>
+                      <span className={styles.termBadge}>
+                        {std.year}-{std.term}
+                      </span>
+                    </td>
                     <td>{std.workType}</td>
                     <td>{std.stdJob}</td>
-                    <td>{std.stdName}</td>
-                    <td>{std.stdNum}</td>
+                    <td className={styles.nameCell}>{std.stdName}</td>
+                    <td className={styles.monoCell}>{std.stdNum}</td>
                     <td>{std.stdDept}</td>
-                    <td>
-                      <button
-                        className={styles.editBtn}
-                        onClick={() => handleEdit(std)}
-                      >
-                        수정
-                      </button>
-                      <button
-                        className={styles.deleteBtn}
-                        onClick={() => handleDelete(std)}
-                      >
-                        삭제
-                      </button>
+                    <td style={{ textAlign: 'center' }}>
+                      <div className={styles.actionButtons}>
+                        <button
+                          className={styles.editBtn}
+                          onClick={() => handleEdit(std)}
+                          title='정보 수정'
+                        >
+                          <Pencil size={16} />
+                        </button>
+
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() => handleDelete(std)}
+                          title='학생 삭제'
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
