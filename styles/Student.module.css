@@ -1,220 +1,269 @@
+/*
+  =================================================================================================================
+    ○ 작성일자: 2026. 01. 09.(금)
+    ○ 페이지명: /styles/Student.module.css
+    ○ 내용: 근로 학생 정보 관리 페이지(/dashboard/student.js)에서 사용하는 css module
+    ○ 작성자: 박수훈(shpark)
+  =================================================================================================================
+*/
+
+/* 01. 전체 레이아웃 컨테이너 */
 .container {
   padding: 2rem;
-  color: #f0f0f0;
+  color: #e0e0e0;
+  background-color: #121212;
+  min-height: 100vh;
 }
 
-.container h2 {
-  margin-bottom: 1.5rem;
-}
-
-.filterSection {
+/* 02. 헤더 영역 */
+.headerSection {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.filters {
+.titleGroup {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.filters select {
-  padding: 0.5rem;
-  background-color: #1e1e1e;
+.titleIcon {
   color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
 }
 
-.searchBtn {
-  padding: 0.5rem 1rem;
-  background-color: #2a2a2a;
-  color: #eee;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.searchBtn:hover {
-  background-color: #444;
-}
-
-.searchInput {
-  padding: 0.5rem;
-  background-color: #1e1e1e;
+.headerSection h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
+  margin: 0;
 }
 
 .registerBtn {
-  padding: 0.5rem 1rem;
-  background-color: #2196f3;
-  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #fff;
+  color: #000;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s;
 }
 
 .registerBtn:hover {
-  background-color: #1976d2;
+  background-color: #d4d4d4;
 }
 
-/* 학생정보 테이블 스타일 */
-.tableSection table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  background-color: #1b1b1b;
-}
-
-.tableSection th,
-.tableSection td {
-  padding: 0.75rem 0.5rem;
+/* 03. 검색 및 필터 영역(카드 스타일) */
+.filterSection {
+  background-color: #1e1e1e;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
   border: 1px solid #333;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.tableSection th {
-  background-color: #2a2a2a;
-  color: #ddd;
+.filterGroup {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.tableSection tbody tr:nth-child(even) {
-  background-color: #181818;
+/* Select & Input 스타일 */
+.selectWrapper select,
+.searchInput {
+  padding: 0.6rem 1rem;
+  background-color: #121212;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.tableSection tbody tr:hover {
-  background-color: #222;
+.selectWrapper select:focus,
+.searchInput:focus {
+  border-color: #fff;
 }
 
-.tableSection td {
-  color: #eee;
+.searchGroup {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.editBtn,
-.deleteBtn {
-  margin: 0 0.25rem;
-  padding: 0.3rem 0.7rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
+.searchInput {
+  width: 200px;
 }
 
-.editBtn {
-  background-color: #444;
+.searchBtn {
+  padding: 0.6rem;
+  background-color: #333;
   color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.editBtn:hover {
+.searchBtn:hover {
   background-color: #555;
 }
 
-.deleteBtn {
-  background-color: #a52a2a;
+/* 04. 데이터 테이블 영역 */
+.tableContainer {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  border: 1px solid #333;
+  overflow: hidden;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.studentTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.studentTable th,
+.studentTable td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+.studentTable th {
+  background-color: #252525;
+  color: #a0a0a0;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.studentTable tbody tr {
+  background-color: #1e1e1e;
+  transition: background 0.2s;
+}
+
+.studentTable tbody tr:hover {
+  background-color: #2a2a2a;
+}
+
+.studentTable td {
+  font-size: 0.95rem;
+  color: #d0d0d0;
+}
+
+/* 뱃지(Badge) 스타일 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgeTerm {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.badgeType {
+  background-color: #212121;
+  color: #4fc3f7;
+  border: 1px solid #444;
+}
+
+.nameCell {
+  font-weight: 700;
   color: #fff;
 }
 
-.deleteBtn:hover {
-  background-color: #c0392b;
+.monoCell {
+  font-family: monospace;
+  color: #888;
 }
 
-/* 각 컬럼별 너비 지정 */
-.tableSection th:nth-child(1),
-.tableSection td:nth-child(1) {
-  width: 80px;
-} /* 학년도 */
-.tableSection th:nth-child(2),
-.tableSection td:nth-child(2) {
-  width: 70px;
-} /* 학기 */
-.tableSection th:nth-child(3),
-.tableSection td:nth-child(3) {
-  width: 120px;
-} /* 근로구분 */
-.tableSection th:nth-child(4),
-.tableSection td:nth-child(4) {
-  width: 90px;
-} /* 담당업무 */
-.tableSection th:nth-child(5),
-.tableSection td:nth-child(5) {
-  width: 100px;
-} /* 이름 */
-.tableSection th:nth-child(6),
-.tableSection td:nth-child(6) {
-  width: 120px;
-} /* 학번 */
-.tableSection th:nth-child(7),
-.tableSection td:nth-child(7) {
-  width: 200px;
-} /* 학과 */
-.tableSection th:nth-child(8),
-.tableSection td:nth-child(8) {
-  width: 140px;
-} /* 관리 */
-
-/* 테이블 스타일 끝 */
-
-.pagination {
-  margin-top: 1.5rem;
+/* 액션 버튼 */
+.actionButtons {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
 }
 
-.pagination button {
-  background: #333;
-  color: #eee;
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  background-color: transparent;
 }
 
-.pagination button:hover {
-  background: #555;
+.editBtn {
+  color: #aaa;
 }
 
-.pagination .activePage {
-  background: #00bcd4;
-  color: #000;
-  font-weight: bold;
-}
-
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+.editBtn:hover {
   background-color: #333;
   color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  animation: fadeInOut 3s forwards;
 }
 
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+.deleteBtn {
+  color: #ef5350;
+}
+
+.deleteBtn:hover {
+  background-color: rgba(239, 83, 80, 0.1);
+}
+
+/* 페이지네이션 */
+.pagination {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.pageBtn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #1e1e1e;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pageBtn:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+.activePage {
+  background-color: #fff;
+  border-color: #fff;
+  color: #000;
+  font-weight: 700;
 }
