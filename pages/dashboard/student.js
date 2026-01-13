@@ -26,6 +26,9 @@ import {
   GraduationCap,
 } from 'lucide-react';
 
+// 토스트(toast) import
+import toast, { Toaster } from 'react-hot-toast';
+
 export default function StudentPage() {
   const { year, term } = getYearTerm(new Date());
 
@@ -46,10 +49,6 @@ export default function StudentPage() {
 
   // 현재 연도 기준 -2 ~ +2 리스트 생성
   const yearOptions = Array.from({ length: 5 }, (_, i) => year - 2 + i);
-
-  // toast 관련 state
-  const [toastMessage, setToastMessage] = useState('');
-  const [showToast, setShowToast] = useState(false);
 
   // 페이징 상태(현재 페이지 & 전체 페이지 수)
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,36 +91,30 @@ export default function StudentPage() {
     setDeleteModalOpen(true);
   };
 
-  // toast 호출 함수
-  const showToastMessage = (msg) => {
-    setToastMessage(msg);
-    setShowToast(true);
-
-    setTimeout(() => {
-      setShowToast(false);
-      setToastMessage('');
-    }, 3000);
-  };
-
   // 삭제 동작 API
   const confirmDelete = async (id) => {
-    const res = await fetch('/api/student', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id,
-        isActive: false, // 무조건 false(비활성화)로 변경
-      }),
-    });
+    try {
+      const res = await fetch('/api/student', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          isActive: false, // 무조건 false(비활성화)로 변경
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      showToastMessage(data.message);
-      setDeleteModalOpen(false);
-      fetchStudents(currentPage);
-    } else {
-      alert(data.message);
+      if (res.ok) {
+        toast.success(data.message || '삭제되었습니다.');
+        setDeleteModalOpen(false);
+        fetchStudents(currentPage);
+      } else {
+        toast.error(data.message || '삭제에 실패하였습니다...');
+      }
+    } catch (e) {
+      console.error('삭제 오류: ', e);
+      toast.error('오류가 발생하였습니다.');
     }
   };
 
@@ -323,7 +316,6 @@ export default function StudentPage() {
             initialData={currentStudent}
             onClose={() => setIsModalOpen(false)}
             refreshList={fetchStudents}
-            showToastMsg={showToastMessage}
           />
         )}
 
@@ -336,8 +328,29 @@ export default function StudentPage() {
           />
         )}
 
-        {/* Toast */}
-        {showToast && <div className={styles.toast}>{toastMessage}</div>}
+        {/** Toaster 배치 */}
+        <Toaster
+          position='bottom-right'
+          toastOptions={{
+            style: {
+              background: '#333',
+              color: '#fff',
+              border: '1px solid #444',
+            },
+            success: {
+              iconTheme: {
+                primary: '#fff',
+                secondary: '#333',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#ef5350',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
       </div>
     </Layout>
   );
