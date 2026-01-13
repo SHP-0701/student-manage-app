@@ -229,61 +229,76 @@ export default function StudentPage() {
         </div>
 
         {/** 03. 데이터(학생) 테이블 */}
-        <div className={styles.tableSection}>
-          <table className={styles.studentTable}>
-            <thead>
-              <tr>
-                <th>학년도/학기</th>
-                <th>근로구분</th>
-                <th>담당업무</th>
-                <th>이름</th>
-                <th>학번</th>
-                <th>학과</th>
-                <th style={{ textAlign: 'center' }}>관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students && students.length > 0 ? (
-                students.map((std) => (
-                  <tr key={std.id}>
-                    <td>
-                      <span className={styles.termBadge}>
-                        {std.year}-{std.term}
-                      </span>
-                    </td>
-                    <td>{std.workType}</td>
-                    <td>{std.stdJob}</td>
-                    <td className={styles.nameCell}>{std.stdName}</td>
-                    <td className={styles.monoCell}>{std.stdNum}</td>
-                    <td>{std.stdDept}</td>
-                    <td style={{ textAlign: 'center' }}>
-                      <div className={styles.actionButtons}>
-                        <button
-                          className={styles.editBtn}
-                          onClick={() => handleEdit(std)}
-                          title='정보 수정'
-                        >
-                          <Pencil size={16} />
-                        </button>
+        <div className={styles.tableContainer}>
+          <div className={styles.tableWrapper}>
+            <table className={styles.studentTable}>
+              <thead>
+                <tr>
+                  <th style={{ width: '10%' }}>학년도/학기</th>
+                  <th style={{ width: '10%' }}>근로구분</th>
+                  <th style={{ width: '10%' }}>담당업무</th>
+                  <th style={{ width: '15%' }}>이름</th>
+                  <th style={{ width: '15%' }}>학번</th>
+                  <th style={{ width: '25%' }}>학과</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students && students.length > 0 ? (
+                  students.map((std) => (
+                    <tr key={std.id}>
+                      <td>
+                        <span className={`${styles.badge} ${styles.badgeTerm}`}>
+                          {std.year}-{std.term}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`${styles.badge} ${styles.badgeType}`}>
+                          {std.workType}
+                        </span>
+                      </td>
+                      <td style={{ color: '#cbd5e1' }}>{std.stdJob}</td>
+                      <td className={styles.nameCell}>{std.stdName}</td>
+                      <td className={styles.monoCell}>{std.stdNum}</td>
+                      <td style={{ color: '#cbd5e1' }}>{std.stdDept}</td>
+                      <td style={{ textAlign: 'center' }}>
+                        <div className={styles.actionButtons}>
+                          <button
+                            className={`${styles.iconBtn} ${styles.editBtn}`}
+                            onClick={() => handleEdit(std)}
+                            title='정보 수정'
+                          >
+                            <Pencil size={16} />
+                          </button>
 
-                        <button
-                          className={styles.deleteBtn}
-                          onClick={() => handleDelete(std)}
-                          title='학생 삭제'
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
+                          <button
+                            className={`${styles.iconBtn} ${styles.deleteBtn}`}
+                            onClick={() => handleDelete(std)}
+                            title='학생 삭제'
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan='7'
+                      style={{
+                        textAlign: 'center',
+                        padding: '3rem',
+                        color: '#64748b',
+                      }}
+                    >
+                      등록된 학생 정보가 없습니다.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan='8'>등록된 학생 정보가 없습니다.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* 페이지네이션 */}
@@ -291,7 +306,9 @@ export default function StudentPage() {
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i + 1}
-              className={currentPage === i + 1 ? styles.activePage : ''}
+              className={`${styles.pageBtn} ${
+                currentPage === i + 1 ? styles.activePage : ''
+              }`}
               onClick={() => setCurrentPage(i + 1)}
             >
               {i + 1}
