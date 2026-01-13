@@ -9,10 +9,9 @@
 
 /* 01. 전체 레이아웃 컨테이너 */
 .container {
-  padding: 2rem;
-  color: #e0e0e0;
   background-color: #121212;
-  min-height: 100vh;
+  color: #e0e0e0;
+  padding: 2rem;
 }
 
 /* 02. 헤더 영역 */
