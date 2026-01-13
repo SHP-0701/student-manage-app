@@ -74,8 +74,20 @@
 
 .filterGroup {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.filterIcon {
+  color: #888;
+  margin-right: 0.5rem;
 }
 
 /* Select & Input 스타일 */
