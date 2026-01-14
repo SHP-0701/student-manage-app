@@ -15,9 +15,10 @@ import DatePicker from 'react-datepicker';
 import styles from '@/styles/Attendance.module.css';
 import { useEffect, useState } from 'react';
 import { getLocalDateString, getYearTerm } from '@/utils/timeUtils';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function AttendancePage() {
-  // 출결데이터 상태(state)
+  // 출결데이터 상태
   const [attendanceList, setAttendanceList] = useState([]);
 
   // 필터 상태(state)
@@ -38,10 +39,9 @@ export default function AttendancePage() {
   // 출결 기록 fetch
   const fetchAttendance = async () => {
     try {
-      // 쿼리 param 생성
       const params = new URLSearchParams({
         page: currentPage,
-        limit: 6, // 페이지당 6개
+        limit: 10, // 페이지당 10개
       });
 
       // 필터 조건 추가(값이 있을때만 추가)
@@ -73,6 +73,9 @@ export default function AttendancePage() {
   // 엑셀 내보내기(export) 함수
   const handleExport = async () => {
     try {
+      // 엑셀 내보내기 로딩 표시
+      const toastId = toast.loading('엑셀 파일 생성중...');
+
       // 쿼리 파라미터 생성(현재 필터 조건 사용)
       const params = new URLSearchParams();
 
@@ -89,7 +92,8 @@ export default function AttendancePage() {
 
       if (!res.ok) {
         const err = await res.json();
-        alert(err.message || '엑셀 내보내기 실패');
+        toast.dismiss(toastId); // 로딩 제거
+        toast.error(err.message || '엑셀 내보내기 실패');
         return;
       }
 
@@ -104,20 +108,20 @@ export default function AttendancePage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      alert('엑셀 파일 다운로드 완료.');
+      toast.dismiss(toastId); // 로딩 제거
+      toast.success('엑셀 다운로드 완료');
     } catch (err) {
       console.error('[/dashboard/attendance.js] 엑셀 다운로드 에러: ', err);
-      alert('엑셀 다운로드 중 오류 발생');
+      toast.error('엑셀 다운로드 중 오류 발생');
     }
   };
 
-  // 페이지 로드 or 변경 시 자동 출결기록 조회
   useEffect(() => {
     const { year, term } = getYearTerm(new Date());
     if (year) setSearchYear(year);
     if (term) setSearchTerm(term);
     fetchAttendance();
-  }, [currentPage]); // currentPage 변경될 때마다 재조회
+  }, [currentPage]);
 
   // 페이지네이션 렌더링 함수
   const renderPagination = () => {
@@ -198,12 +202,31 @@ export default function AttendancePage() {
 
   return (
     <Layout>
+      {/** Toast container */}
+      <Toaster
+        position='top-center'
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+            border: '1px solid #555',
+          },
+        }}
+      />
       <div className={styles.container}>
-        <h2 className={styles.title}>출결 기록</h2>
+        <div className={styles.headerRow}>
+          <h2 className={styles.title}>출결 기록</h2>
+          <div className={styles.totalCount}>
+            Total <span className={styles.countNum}>{totalCount}</span>
+          </div>
+        </div>
 
-        {/** 필터(검색조건) 영역 */}
+        {/** 필터(검색조건) 카드 영역 */}
         <div className={styles.filterCard}>
-          <h3 className={styles.filterTitle}>검색조건</h3>
+          <div className={styles.filterHeader}>
+            <h3 className={styles.filterTitle}>검색조건</h3>
+          </div>
+
           {/** Filter UI */}
           <div className={styles.filterRow}>
             <select
@@ -252,29 +275,32 @@ export default function AttendancePage() {
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
             />
-            <div className={styles.datePickerWrapper}>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                placeholderText='시작일'
-                dateFormat='yyyy-MM-dd'
-              />
+            <div className={styles.datePickerGroup}>
+              <div className={styles.datePickerWrapper}>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText='시작일'
+                  dateFormat='yyyy-MM-dd'
+                />
+              </div>
+              <div className={styles.datePickerWrapper}>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText='종료일'
+                  dateFormat='yyyy-MM-dd'
+                  minDate={startDate}
+                />
+              </div>
             </div>
-            <div className={styles.datePickerWrapper}>
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                placeholderText='종료일'
-                dateFormat='yyyy-MM-dd'
-                minDate={startDate}
-              />
-            </div>
+
             <div className={styles.filterActions}>
               <button className={styles.searchBtn} onClick={fetchAttendance}>
                 조회
@@ -285,9 +311,6 @@ export default function AttendancePage() {
             </div>
           </div>
         </div>
-
-        {/* 총 건수 표시 */}
-        <div className={styles.totalCount}>총 {totalCount}건</div>
 
         {/** 근로내역 테이블 영역 */}
         <div className={styles.tableSection}>
@@ -309,13 +332,17 @@ export default function AttendancePage() {
                 attendanceList.map((item) => (
                   <tr key={item.id}>
                     <td>{item.workDate}</td>
-                    <td>{item.workType}</td>
+                    <td>
+                      <span className={styles.badge}>{item.workType}</span>
+                    </td>
                     <td>{item.stdJob}</td>
-                    <td>{item.stdName}</td>
+                    <td className={styles.nameCell}>{item.stdName}</td>
                     <td>{item.stdNum}</td>
                     <td>{item.startTime?.slice(0, 5)}</td>
                     <td>{item.endTime?.slice(0, 5)}</td>
-                    <td>{item.totalWorkTime?.substring(0, 5)}</td>
+                    <td className={styles.timeCell}>
+                      {item.totalWorkTime?.substring(0, 5)}
+                    </td>
                   </tr>
                 ))
               ) : (
