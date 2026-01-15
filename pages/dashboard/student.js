@@ -57,7 +57,7 @@ export default function StudentPage() {
   // 학생 목록 fetch
   const fetchStudents = async (page = 1) => {
     try {
-      const limit = 8; // 한 페이지에 보여줄 개수
+      const limit = 7; // 한 페이지에 보여줄 개수
       const queryParams = new URLSearchParams({
         page,
         limit,
