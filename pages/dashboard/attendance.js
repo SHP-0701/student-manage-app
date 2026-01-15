@@ -41,7 +41,7 @@ export default function AttendancePage() {
     try {
       const params = new URLSearchParams({
         page: currentPage,
-        limit: 10, // 페이지당 10개
+        limit: 7, // 페이지당 8개
       });
 
       // 필터 조건 추가(값이 있을때만 추가)
@@ -275,30 +275,28 @@ export default function AttendancePage() {
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
             />
-            <div className={styles.datePickerGroup}>
-              <div className={styles.datePickerWrapper}>
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText='시작일'
-                  dateFormat='yyyy-MM-dd'
-                />
-              </div>
-              <div className={styles.datePickerWrapper}>
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText='종료일'
-                  dateFormat='yyyy-MM-dd'
-                  minDate={startDate}
-                />
-              </div>
+            <div className={styles.datePickerWrapper}>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText='시작일'
+                dateFormat='yyyy-MM-dd'
+              />
+            </div>
+            <div className={styles.datePickerWrapper}>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText='종료일'
+                dateFormat='yyyy-MM-dd'
+                minDate={startDate}
+              />
             </div>
 
             <div className={styles.filterActions}>
@@ -331,13 +329,16 @@ export default function AttendancePage() {
               {attendanceList && attendanceList.length > 0 ? (
                 attendanceList.map((item) => (
                   <tr key={item.id}>
-                    <td>{item.workDate}</td>
+                    <td>{item.workDate}</td> {/** 근로날짜 */}
                     <td>
-                      <span className={styles.badge}>{item.workType}</span>
+                      <span className={styles.badgeType}>{item.workType}</span>{' '}
+                      {/** 근로구분 */}
                     </td>
-                    <td>{item.stdJob}</td>
+                    <td>
+                      <span className={styles.badgeJob}>{item.stdJob}</span>
+                    </td>
                     <td className={styles.nameCell}>{item.stdName}</td>
-                    <td>{item.stdNum}</td>
+                    <td className={styles.timeCell}>{item.stdNum}</td>
                     <td>{item.startTime?.slice(0, 5)}</td>
                     <td>{item.endTime?.slice(0, 5)}</td>
                     <td className={styles.timeCell}>
