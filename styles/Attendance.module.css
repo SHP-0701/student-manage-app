@@ -7,127 +7,185 @@
   =======================================================================================================================
 */
 
+/* 01. 기본 컨테이너와 타이틀 */
 .container {
   padding: 2rem;
+  background-color: #121212;
+  min-height: 100vh;
   color: #f0f0f0;
 }
 
-.container h2 {
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-bottom: 1.5rem;
-  font-size: 1.75rem;
-  font-weight: 700;
 }
 
-/* 필터 카드 */
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.totalCount {
+  font-size: 0.95rem;
+  color: #888;
+}
+
+.countNum {
+  color: #fff;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* 02. 필터 카드 */
 .filterCard {
-  background: #1b1b1b;
+  background: #1e1e1e;
   border-radius: 12px;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem;
   margin-bottom: 2rem;
   border: 1px solid #333;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  width: fit-content;
-  max-width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.filterHeader {
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.8rem;
 }
 
 .filterTitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #ddd;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #333;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .filterRow {
   display: flex;
-  gap: 1rem;
+  gap: 0.8rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
-/* 필터 select 스타일 */
-.filterRow select {
-  padding: 0.5rem;
-  background: #1e1e1e;
-  border: 1px solid #444;
-  border-radius: 4px;
-  color: #eee;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
-}
-
-.filterRow select:hover {
-  border-color: #555;
-  background: #1e1e1e;
-}
-
-.filterRow select:focus {
-  outline: none;
-  border-color: #00bcd4;
-  background: #1e1e1e;
-}
-
-/* 필터 Input 스타일 */
+/* 03. 입력 폼 공통 스타일(select, input) */
+.filterRow select,
 .filterRow input[type='text'] {
-  padding: 0.5rem; /* 0.6rem 1rem → 0.5rem으로 변경 */
-  background: #1e1e1e; /* #2a2a2a → #1e1e1e로 변경 */
+  padding: 0.6rem 0.8rem;
+  background: #252525;
   border: 1px solid #444;
-  border-radius: 4px; /* 8px → 4px로 변경 */
+  border-radius: 8px;
   color: #eee;
+  font-size: 0.9rem;
   transition: all 0.2s ease;
-  min-width: 150px;
+  height: 42px;
+  box-sizing: border-box;
 }
 
-.filterRow input[type='text']:hover {
-  border-color: #555;
-  background: #1e1e1e;
+.filterRow select:hover,
+.filterRow input:hover {
+  border-color: #666;
 }
 
-.filterRow input[type='text']:focus {
+.filterRow select:focus,
+.filterRow input:focus {
   outline: none;
-  border-color: #00bcd4;
-  background: #1e1e1e;
+  border-color: #fff;
+  background: #2a2a2a;
 }
 
-.filterRow input[type='text']::placeholder {
-  color: #888;
+.filterRow select {
+  min-width: 110px;
+  cursor: pointer;
 }
 
-/* DatePicker wrapper 고정 */
-.datePickerWrapper {
-  position: relative;
+.filterRow input[type='text'] {
   min-width: 140px;
 }
 
-/* 버튼을 감싸는 div */
+.filterRow input::placeholder {
+  color: #777;
+}
+
+/* datePicker 스타일 */
+.datePickerWrapper {
+  position: relative;
+  width: 120px;
+  height: 42px;
+  background: #252525;
+  border: 1px solid #444;
+  border-radius: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.datePickerWrapper:hover {
+  border-color: #666;
+}
+
+/* 라이브러리 Wrapper 조정 */
+.datePickerWrapper :global(.react-datepicker-wrapper) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 라이브러리 container 조정 */
+.datePickerWrapper :global(.react-datepicker__input-container) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.datePickerWrapper :global(.react-datepicker__input-container input) {
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #eee;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.datePickerWrapper :global(.react-datepicker__input-container input:focus) {
+  outline: none;
+}
+
+/* 04. 버튼 스타일 */
 .filterActions {
   display: flex;
-  gap: 0.75rem;
-  margin-left: 1rem;
+  gap: 0.8rem;
+  margin-left: auto;
 }
 
 /* 조회 버튼 */
 .searchBtn {
-  padding: 0.6rem 1.5rem;
-  background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
-  color: #fff;
+  padding: 0 1.5rem;
+  height: 42px;
+  background: #ffffff;
+  color: #000000;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.95rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 188, 212, 0.3);
-  margin-left: auto;
-  height: 42px; /* 고정 높이 */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .searchBtn:hover {
-  background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+  background: #f0f0f0;
 }
 
 .searchBtn:active {
@@ -136,115 +194,88 @@
 
 /* 내보내기 버튼 */
 .exportBtn {
-  padding: 0.6rem 1.5rem;
-  background: #444;
-  color: #eee;
+  padding: 0 1.2rem;
+  height: 42px;
+  background: transparent;
+  color: #ccc;
   border: 1px solid #555;
   border-radius: 8px;
-  cursor: pointer;
   font-weight: 600;
-  font-size: 0.95rem;
+  cursor: pointer;
   transition: all 0.2s ease;
-  height: 42px; /* 고정 높이 */
 }
 
 .exportBtn:hover {
-  background: #555;
-  border-color: #666;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-color: #fff;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.exportBtn:active {
-  transform: translateY(0);
-}
-
-/* 테이블 섹션 */
+/* 05. 테이블 섹션 */
 .tableSection {
-  background: #1b1b1b;
+  background: #1e1e1e;
   border-radius: 12px;
   border: 1px solid #333;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   margin-bottom: 2rem;
 }
 
-/* 테이블 */
 .table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* 테이블 전체 레이아웃 고정 */
+  table-layout: fixed;
 }
 
-/* 테이블 헤더 */
 .table thead tr {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+  background: #252525;
+  border-bottom: 1px solid #333;
 }
 
 .table th {
-  padding: 1.2rem 1rem;
+  padding: 1.1rem;
   text-align: center;
-  color: #ddd;
+  color: #ccc;
   font-weight: 600;
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 2px solid #555;
-  position: relative;
+  font-size: 0.9rem;
 }
 
-/* 각 테이블 컬럼 별 너비 고정(th) */
+/* 테이블 컬럼 너비 설정 */
 .table th:nth-child(1) {
   width: 10%;
 } /* 근로날짜 */
 .table th:nth-child(2) {
-  width: 14%;
+  width: 12%;
 } /* 근로구분 */
 .table th:nth-child(3) {
   width: 10%;
 } /* 담당업무 */
 .table th:nth-child(4) {
-  width: 8%;
+  width: 10%;
 } /* 이름 */
 .table th:nth-child(5) {
-  width: 10%;
+  width: 14%;
 } /* 학번 */
 .table th:nth-child(6) {
-  width: 10%;
+  width: 12%;
 } /* 시작시간 */
 .table th:nth-child(7) {
-  width: 10%;
+  width: 12%;
 } /* 종료시간 */
 .table th:nth-child(8) {
   width: 12%;
 } /* 총근로시간 */
 
-/* th 구성요소 마지막을 제외한 나머지에 적용 */
-.table th:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 2px;
-  height: 70%;
-  background: #444;
+.table tbody tr {
+  transition: background 0.2s;
+  border-bottom: 1px solid #2a2a2a;
 }
 
-/* 테이블 바디 */
-.table tbody tr {
-  background: #1b1b1b;
-  transition: all 0.2s ease;
+.table tbody tr:last-child {
+  border-bottom: none;
 }
 
 .table tbody tr:hover {
-  background: linear-gradient(90deg, #252525 0%, #1e1e1e 100%);
-  transform: scale(1.002);
-  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.1);
-}
-
-.table tbody tr:not(:last-child) td {
-  border-bottom: 1px solid #2a2a2a;
+  background: #2a2a2a;
 }
 
 .table td {
@@ -252,92 +283,87 @@
   text-align: center;
   color: #e0e0e0;
   font-size: 0.9rem;
-  transition: color 0.2s ease;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.nameCell {
+  font-weight: 700;
+  color: #fff;
+}
+.timeCell {
+  font-family: monospace;
+  color: #888;
+}
+
+/* 배지 스타일 (근로구분 등) */
+.badgeType,
+.badgeJob {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-/* td도 동일하게 컬럼 고정 너비 설정 */
-.table td:nth-child(1) {
-  width: 10%;
+.badgeType {
+  background-color: #212121;
+  color: #4fc3f7;
+  border: 1px solid #444;
 }
-.table td:nth-child(2) {
-  width: 14%;
-}
-.table td:nth-child(3) {
-  width: 10%;
-}
-.table td:nth-child(4) {
-  width: 8%;
-}
-.table td:nth-child(5) {
-  width: 10%;
-}
-.table td:nth-child(6) {
-  width: 10%;
-}
-.table td:nth-child(7) {
-  width: 10%;
-}
-.table td:nth-child(8) {
-  width: 12%;
+
+.badgeJob {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
 }
 
 /* 빈 데이터 메시지 */
 .emptyMessage {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: #888;
-  font-size: 1rem;
+  padding: 4rem 1rem;
+  color: #666;
 }
 
-/* 페이지네이션(Pagination) */
+/* 06. 페이지네이션 */
 .pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-  padding: 1rem 0;
+  gap: 0.4rem;
+  padding-bottom: 2rem;
 }
 
 .pageNumber {
-  min-width: 40px;
-  height: 40px;
-  padding: 0.6rem 0.8rem;
-  background: #1b1b1b;
-  color: #aaa;
-  border: 1px solid #333;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
+  min-width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  color: #666;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
 }
 
 .pageNumber:hover {
-  background: #2a2a2a;
   color: #fff;
-  border-color: #555;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.08);
+  background: #252525;
 }
 
 .pageNumber.active {
-  background: linear-gradient(135deg, #444 0%, #555 100%);
-  color: #fff;
-  border-color: #666;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
-  font-weight: 600;
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+  border-color: #fff;
 }
 
 .dots {
-  color: #666;
-  padding: 0 0.5rem;
-  font-weight: 600;
-  user-select: none;
+  color: #444;
+  padding-top: 8px;
 }
