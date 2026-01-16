@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 // 토스트(toast) import
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default function StudentPage() {
   const { year, term } = getYearTerm(new Date());
@@ -327,30 +327,6 @@ export default function StudentPage() {
             onDelete={() => confirmDelete(studentToDelete.id)}
           />
         )}
-
-        {/** Toaster 배치 */}
-        <Toaster
-          position='bottom-right'
-          toastOptions={{
-            style: {
-              background: '#333',
-              color: '#fff',
-              border: '1px solid #444',
-            },
-            success: {
-              iconTheme: {
-                primary: '#fff',
-                secondary: '#333',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#ef5350',
-                secondary: '#fff',
-              },
-            },
-          }}
-        />
       </div>
     </Layout>
   );
