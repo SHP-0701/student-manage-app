@@ -1,11 +1,14 @@
-/* ==========================================================================================================
-  ▢ 파일명: /components/ScheduleFormModal.js
-  ▢ 내용: 
-    - 근로시간표 조회(/dashboard/schedule.js)에서 '시간표 등록' 및 '근로변경사항 등록' 버튼을 누르면 호출되는 모달
-    - 등록 작업 뿐만 아니라 수정 작업에도 같은 모달을 사용함
-  ▢ 작성일: 2025. 11. 25.(화)
-  ▢ 작성자: 박수훈(shpark)
- ========================================================================================================== */
+/*
+  ==========================================================================================================
+    ○ 작성일자: 2025. 11. 25.(화)
+    ○ 수정일자: 2026. 01. 16.(금)
+    ○ 페이지명: /components/ScheduleFormModal.js
+    ○ 내용: 
+      - 근로시간표 페이지에서 '시간표 등록' 및 '근로변경사항 등록' 버튼을 누르면 호출되는 모달페이지
+      - 등록 작업 뿐만 아니라 수정 작업에도 같은 모달을 사용(mode param을 통해 등록/수정 기능 수행)
+    ○ 작성자: 박수훈(shpark)
+  ==========================================================================================================
+*/
 
 import { useState, useRef, useEffect } from 'react';
 import ModalLayout from '@/components/ModalLayout';
@@ -18,7 +21,6 @@ import {
 } from '@/utils/timeUtils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import toast from 'react-hot-toast';
 
 export default function ScheduleFormModal({
   onClose,
@@ -101,24 +103,19 @@ export default function ScheduleFormModal({
 
   // 등록(submit) 버튼 핸들러
   const handleSubmit = async () => {
-    if (!selectedStudent) {
-      return alert('학생을 먼저 선택해주세요');
-    }
+    if (!selectedStudent) return alert('학생을 먼저 선택해주세요');
 
     try {
-      // 수정(PUT) 요청
+      // 수정(PUT)
       if (isModify && editItem) {
-        // 시간 조합
         const startTime = combineTime(startHour, startMinute);
         const endTime = combineTime(endHour, endMinute);
 
-        if (!startTime || !endTime) {
+        if (!startTime || !endTime)
           return alert('시작시간과 종료시간을 선택해주세요');
-        }
 
-        if (startTime >= endTime) {
+        if (startTime >= endTime)
           return alert('시작 시간은 종료 시간보다 빠르거나 같을 수 없습니다.');
-        }
 
         const res = await fetch(`/api/schedule`, {
           method: 'PUT',
@@ -133,11 +130,10 @@ export default function ScheduleFormModal({
         const data = await res.json();
 
         if (res.ok) {
-          toast.success(data.message);
           onSubmitSuccess(editItem.stdJob);
           onClose();
         } else {
-          toast.error(data.message);
+          alert(data.message || '수정 실패');
         }
       }
 
@@ -230,11 +226,10 @@ export default function ScheduleFormModal({
           const data = await res.json();
 
           if (res.ok) {
-            toast.success(data.message);
             onSubmitSuccess(selectedStudent.stdJob);
             onClose();
           } else {
-            toast.error(data.message);
+            alert(data.message || '일괄 등록 실패');
           }
         } catch (e) {
           console.error('[ScheduleFormModal.js] handleSubmit() 에러: ', e);
@@ -268,11 +263,10 @@ export default function ScheduleFormModal({
         const data = await res.json();
 
         if (res.ok) {
-          toast.success(data.message);
           onSubmitSuccess(selectedStudent.stdJob);
           onClose();
         } else {
-          toast.error(data.message);
+          alert(data.message || '등록 실패');
         }
       }
     } catch (err) {
