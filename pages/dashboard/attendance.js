@@ -15,7 +15,8 @@ import DatePicker from 'react-datepicker';
 import styles from '@/styles/Attendance.module.css';
 import { useEffect, useState } from 'react';
 import { getLocalDateString, getYearTerm } from '@/utils/timeUtils';
-import { Toaster, toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { ClipboardList, Filter, Search, FileSpreadsheet } from 'lucide-react';
 
 export default function AttendancePage() {
   // 출결데이터 상태
@@ -202,20 +203,12 @@ export default function AttendancePage() {
 
   return (
     <Layout>
-      {/** Toast container */}
-      <Toaster
-        position='top-center'
-        toastOptions={{
-          style: {
-            background: '#333',
-            color: '#fff',
-            border: '1px solid #555',
-          },
-        }}
-      />
       <div className={styles.container}>
         <div className={styles.headerRow}>
-          <h2 className={styles.title}>출결 기록</h2>
+          <h2 className={styles.title}>
+            <ClipboardList className={styles.titleIcon} />
+            출결 기록
+          </h2>
           <div className={styles.totalCount}>
             Total <span className={styles.countNum}>{totalCount}</span>
           </div>
@@ -224,7 +217,9 @@ export default function AttendancePage() {
         {/** 필터(검색조건) 카드 영역 */}
         <div className={styles.filterCard}>
           <div className={styles.filterHeader}>
-            <h3 className={styles.filterTitle}>검색조건</h3>
+            <h3 className={styles.filterTitle}>
+              <Filter className={styles.filterIcon} size={20} /> 검색조건
+            </h3>
           </div>
 
           {/** Filter UI */}
@@ -301,9 +296,11 @@ export default function AttendancePage() {
 
             <div className={styles.filterActions}>
               <button className={styles.searchBtn} onClick={fetchAttendance}>
+                <Search size={18} />
                 조회
               </button>
               <button className={styles.exportBtn} onClick={handleExport}>
+                <FileSpreadsheet size={18} />
                 내보내기
               </button>
             </div>
