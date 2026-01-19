@@ -7,7 +7,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import StudentSelectModal from './StudentSelectModal';
 import { getLocalDateString } from '@/utils/timeUtils';
-import toast from 'react-hot-toast';
 
 export default function ScheduleChangeFormModal({
   onClose,
@@ -47,14 +46,14 @@ export default function ScheduleChangeFormModal({
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(data.message);
         onSubmitSuccess(selectedStudent.stdJob);
         onClose();
       } else {
-        toast.error(data.message);
+        alert(data.message || '저장 실패');
       }
     } catch (err) {
       console.error('[ScheduleChangeFormModal.js] handleSubmit() 에러: ', err);
+      alert('처리 중 오류 발생');
     }
   };
 
