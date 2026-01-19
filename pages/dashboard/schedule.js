@@ -1,11 +1,14 @@
-/* ===================================================================================================
-  ▢ 파일명: /pages/dashboard/schedule.js
-  ▢ 내용: 
-    - 학생들의 근로시간표를 보여주는 페이지(근로변경사항 포함)
-    - 좌측의 캘린더에서 날짜를 선택하면 해당날짜(일자/요일)에 근로하는 학생들의 목록을 우측에 보여줌
-  ▢ 작성일: 2025. 11. 25.(화)
-  ▢ 작성자: 박수훈(shpark)
- =================================================================================================== */
+/*
+  ===================================================================================================
+    ○ 작성일자: 2025. 11. 25.(화)
+    ○ 수정일자: 2026. 01. 16.(금)
+    ○ 페이지명: /pages/dashboard/schedule.js
+    ○ 내용: 
+      - 학생들의 근로시간표를 보여주는 페이지(근로변경사항 포함)
+      - 좌측의 캘린더에서 날짜를 선택하면 해당날짜(일자/요일)에 근로하는 학생들의 목록을 우측에 보여줌
+    ○ 작성자: 박수훈(shpark)
+  ===================================================================================================
+ */
 
 import Layout from '@/components/Layout';
 import 'react-calendar/dist/Calendar.css';
@@ -58,10 +61,10 @@ export default function SchedulePage() {
     try {
       const res = await fetch(
         `/api/schedule?stdJob=${activeTab}&workDate=${getLocalDateString(
-          selectedDate
+          selectedDate,
         )}&year=${getYearTerm(selectedDate).year}&term=${
           getYearTerm(selectedDate).term
-        }`
+        }`,
       );
       const result = await res.json();
       setScheduleData(result);
@@ -75,10 +78,10 @@ export default function SchedulePage() {
     try {
       const res = await fetch(
         `/api/changeschedule?changeDate=${getLocalDateString(
-          selectedDate
+          selectedDate,
         )}&tab=${activeTab}&year=${getYearTerm(selectedDate).year}&term=${
           getYearTerm(selectedDate).term
-        }`
+        }`,
       );
       const result = await res.json();
 
@@ -91,13 +94,19 @@ export default function SchedulePage() {
 
   // 모달에서 submit 완료하면 부모 컴포넌트로 전달
   function handleSubmitSuccess(stdJob) {
+    // 성공 toast 알림 출력
+    toast.success('근로시간표가 저장되었습니다.');
+
     if (stdJob === activeTab) {
       fetchSchedule();
     }
   }
 
-  // 근로변경사항 모달에서 submit 완료하면 부모 컴포넌트로 전달
+  // 근로변경사항 등록/수정 완료 callback
   function handleSubmitChangeSuccess(stdJob) {
+    // 성공 toast 알림 출력
+    toast.success('근로변경사항이 저장되었습니다.');
+
     if (stdJob === activeTab) {
       fetchChangeSchedule();
     }
@@ -112,7 +121,7 @@ export default function SchedulePage() {
         item.stdName
       }\n근로시간: ${item.startTime} ~ ${
         item.endTime
-      }\n항목을 삭제하시겠습니까?`
+      }\n항목을 삭제하시겠습니까?`,
     );
 
     if (!ok) return;
@@ -124,10 +133,10 @@ export default function SchedulePage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(data.message);
+        toast.success(data.message || '삭제되었습니다.');
         await fetchSchedule();
       } else {
-        toast.error(data.message);
+        toast.error(data.message || '삭제 실패');
       }
     } catch (err) {
       console.error('[/dashboard/schedule.js] handleDelete 에러: ', err);
@@ -138,7 +147,7 @@ export default function SchedulePage() {
   // 근로변경사항 삭제 버튼 handler
   const handleChangeDelete = async (item) => {
     const ok = confirm(
-      `[삭제 확인]\n${item.changeDate} 일자\n${item.stdName} 학생 근로변경사항을 삭제하시겠습니까?`
+      `[삭제 확인]\n${item.changeDate} 일자\n${item.stdName} 학생 근로변경사항을 삭제하시겠습니까?`,
     );
 
     if (!ok) return;
@@ -151,10 +160,10 @@ export default function SchedulePage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(data.message);
+        toast.success(data.message || '삭제되었습니다.');
         await fetchChangeSchedule();
       } else {
-        toast.error(data.message);
+        toast.error(data.message || '삭제 실패');
       }
     } catch (err) {
       console.error('[/dashboard/schedule.js] handleChangeDelete() 에러', err);
@@ -177,7 +186,7 @@ export default function SchedulePage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(data.message); // alert 대신 toast 호출
+        toast.success(data.message || '근로확인 완료');
         await fetchSchedule(); // 데이터 새로고침
       } else {
         toast.error(data.message || '확인 처리 중 오류 발생');
