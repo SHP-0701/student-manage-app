@@ -77,7 +77,7 @@ export default function SchedulePage() {
   const fetchChangeSchedule = async () => {
     try {
       const res = await fetch(
-        `/api/changeschedule?changeDate=${getLocalDateString(
+        `/api/schedule/changeschedule?changeDate=${getLocalDateString(
           selectedDate,
         )}&tab=${activeTab}&year=${getYearTerm(selectedDate).year}&term=${
           getYearTerm(selectedDate).term
