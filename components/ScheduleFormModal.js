@@ -130,7 +130,7 @@ export default function ScheduleFormModal({
         const data = await res.json();
 
         if (res.ok) {
-          onSubmitSuccess(editItem.stdJob);
+          onSubmitSuccess(editItem.stdJob, 'modify');
           onClose();
         } else {
           alert(data.message || '수정 실패');
@@ -156,7 +156,7 @@ export default function ScheduleFormModal({
           if (!startHour || !startMinute || !endHour || !endMinute) {
             const dayNames = ['월', '화', '수', '목', '금'];
             return alert(
-              `${dayNames[dayIdx]} 요일의 시간을 모두 입력해주세요.`
+              `${dayNames[dayIdx]} 요일의 시간을 모두 입력해주세요.`,
             );
           }
 
@@ -167,7 +167,7 @@ export default function ScheduleFormModal({
           if (startTime >= endTime) {
             const dayNames = ['월', '화', '수', '목', '금'];
             return alert(
-              `${dayNames[dayIdx]}요일: 시작 시간은 종료 시간보다 빨라야 합니다`
+              `${dayNames[dayIdx]}요일: 시작 시간은 종료 시간보다 빨라야 합니다`,
             );
           }
         }
@@ -226,7 +226,11 @@ export default function ScheduleFormModal({
           const data = await res.json();
 
           if (res.ok) {
-            onSubmitSuccess(selectedStudent.stdJob);
+            onSubmitSuccess(
+              selectedStudent.stdJob,
+              'insert',
+              scheduleList.length,
+            );
             onClose();
           } else {
             alert(data.message || '일괄 등록 실패');
@@ -560,7 +564,7 @@ export default function ScheduleFormModal({
                                 handleTimeChange(
                                   idx,
                                   'startHour',
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             >
@@ -577,7 +581,7 @@ export default function ScheduleFormModal({
                                 handleTimeChange(
                                   idx,
                                   'startMinute',
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             >
@@ -610,7 +614,7 @@ export default function ScheduleFormModal({
                                 handleTimeChange(
                                   idx,
                                   'endMinute',
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
                             >
