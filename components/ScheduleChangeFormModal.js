@@ -1,4 +1,12 @@
-/* 근로변경사항 등록/수정 모달(ScheduleChangeFormModal) */
+/*
+  ===================================================================================================
+    ○ 작성일자: 2025. 09. 15.(월)
+    ○ 수정일자: 2026. 01. 21.(수)
+    ○ 페이지명: /pages/api/changeschedule.js
+    ○ 내용: 근로변경사항 모달(/components/ScheduleChangeFormModal.js)과 연동하는 백엔드 API
+    ○ 작성자: 박수훈(shpark)
+  ===================================================================================================
+*/
 
 import { useEffect, useRef, useState } from 'react';
 import ModalLayout from '@/components/ModalLayout';
@@ -72,7 +80,7 @@ export default function ScheduleChangeFormModal({
 
   // 백엔드 fetch 요청
   const submitScheduleChange = (data) => {
-    return fetch(`/api/changeschedule`, {
+    return fetch(`/api/schedule/changeschedule`, {
       method: isModify ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
