@@ -93,9 +93,10 @@ export default function SchedulePage() {
   };
 
   // 모달에서 submit 완료하면 부모 컴포넌트로 전달
-  function handleSubmitSuccess(stdJob) {
+  function handleSubmitSuccess(stdJob, mode) {
+    const action = mode === 'modify' ? '수정' : '등록';
     // 성공 toast 알림 출력
-    toast.success('근로시간표가 저장되었습니다.');
+    toast.success(`근로시간표가 ${action}되었습니다.`);
 
     if (stdJob === activeTab) {
       fetchSchedule();
@@ -103,9 +104,10 @@ export default function SchedulePage() {
   }
 
   // 근로변경사항 등록/수정 완료 callback
-  function handleSubmitChangeSuccess(stdJob) {
+  function handleSubmitChangeSuccess(stdJob, mode) {
+    const action = (mode = 'modify' ? '수정' : '등록');
     // 성공 toast 알림 출력
-    toast.success('근로변경사항이 저장되었습니다.');
+    toast.success(`근로변경사항이 ${action}되었습니다.`);
 
     if (stdJob === activeTab) {
       fetchChangeSchedule();
