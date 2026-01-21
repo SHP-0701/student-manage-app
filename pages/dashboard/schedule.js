@@ -116,7 +116,7 @@ export default function SchedulePage() {
 
   // 근로변경사항 등록/수정 완료 callback
   function handleSubmitChangeSuccess(stdJob, mode) {
-    const action = (mode = 'modify' ? '수정' : '등록');
+    const action = mode === 'modify' ? '수정' : '등록';
     // 성공 toast 알림 출력
     toast.success(`근로변경사항이 ${action}되었습니다.`);
 
