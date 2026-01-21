@@ -1,7 +1,12 @@
-/**
- * 근로변경사항 백엔드 API
- * /api/schedule.js 랑 같이 써볼까 했는데 괜히 더 헷갈릴거 같아 별도의 api로 분리함.
- */
+/*
+  ===================================================================================================
+    ○ 작성일자: 2025. 09. 15.(월)
+    ○ 수정일자: 2026. 01. 21.(수)
+    ○ 페이지명: /pages/api/changeschedule.js
+    ○ 내용: 근로변경사항 모달(/components/ScheduleChangeFormModal.js)과 연동하는 백엔드 API
+    ○ 작성자: 박수훈(shpark)
+  ===================================================================================================
+*/
 
 import dbpool from '@/lib/db';
 
@@ -96,7 +101,7 @@ export default async function handler(req, res) {
       '[/api/changeschedule.js] id: ',
       id,
       ' changeDate: ',
-      changeDate
+      changeDate,
     );
 
     if (!id || !changeDate)
