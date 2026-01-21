@@ -93,10 +93,21 @@ export default function SchedulePage() {
   };
 
   // 모달에서 submit 완료하면 부모 컴포넌트로 전달
-  function handleSubmitSuccess(stdJob, mode) {
-    const action = mode === 'modify' ? '수정' : '등록';
+  function handleSubmitSuccess(stdJob, mode, count = null) {
+    let message = '';
+    if (mode === 'modify') {
+      message = '근로시간표가 수정되었습니다.';
+    } else {
+      if (count && count > 1) {
+        // 건수가 넘어오고 1건 이상
+        message = `총 ${count}건의 근로시간표가 등록되었습니다.`;
+      } else {
+        message = '근로시간표가 등록되었습니다.';
+      }
+    }
+
     // 성공 toast 알림 출력
-    toast.success(`근로시간표가 ${action}되었습니다.`);
+    toast.success(message);
 
     if (stdJob === activeTab) {
       fetchSchedule();
