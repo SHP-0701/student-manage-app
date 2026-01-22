@@ -175,7 +175,7 @@ export default function SchedulePage() {
     if (!ok) return;
 
     try {
-      const res = await fetch(`/api/changeschedule?id=${item.id}`, {
+      const res = await fetch(`/api/schedule/changeschedule?id=${item.id}`, {
         method: 'DELETE',
       });
 
