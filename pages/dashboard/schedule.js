@@ -316,7 +316,7 @@ export default function SchedulePage() {
                   <tr>
                     <th style={{ width: '12%' }}>학년도/학기</th>
                     <th style={{ width: '12%' }}>이름</th>
-                    <th style={{ width: '12%' }}>근로구분</th>
+                    <th style={{ width: '14%' }}>근로구분</th>
                     <th style={{ width: '12%' }}>담당업무</th>
                     <th style={{ width: '22%' }}>근로시간</th>
                     <th style={{ width: '15%' }}>근로확인</th>
@@ -423,9 +423,9 @@ export default function SchedulePage() {
                 <thead>
                   <tr>
                     <th style={{ width: '12%' }}>담당업무</th>
-                    <th style={{ width: '12%' }}>이름</th>
-                    <th style={{ width: '18%' }}>기존 근로</th>
-                    <th style={{ width: '18%' }}>변경 근로</th>
+                    <th style={{ width: '10%' }}>이름</th>
+                    <th style={{ width: '12%' }}>기존 근로</th>
+                    <th style={{ width: '12%' }}>변경 근로</th>
                     <th>변경 사유</th>
                     <th style={{ width: '12%' }}>관리</th>
                   </tr>

@@ -8,592 +8,415 @@
 */
 
 .container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin-left: 2rem;
-  align-items: flex-start;
+  padding: 2rem;
+  background-color: #121212;
+  min-height: 100vh;
+  color: #e0e0e0;
 }
 
-/* 페이지 제목 */
+/* 01. 페이지 헤더 영역 */
 .pageTitle {
-  width: 100%;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ddd;
-  margin-bottom: 1rem;
-}
-
-.left {
-  width: 40%;
-  min-height: 450px;
-}
-
-/* react-calendar css */
-.myCalendar {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  background: #1e1e1e;
-  border-radius: 8px;
-  border: 1px solid #333;
-  color: #ddd;
-  font-family: 'Pretendard', sans-serif;
-}
-
-.myCalendar :global(.react-calendar__navigation) {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.myCalendar :global(.react-calendar__navigation button) {
-  background: none;
-  border: none;
-  color: #ddd;
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.myCalendar :global(.react-calendar__navigation button:hover) {
-  background: transparent;
+  font-size: 1.8rem;
+  font-weight: 700;
   color: #fff;
-  cursor: pointer;
-}
-
-.myCalendar :global(.react-calendar__navigation button:hover) {
-  background: #2a2a2a !important;
-  border-radius: 4px;
-  transition: background 0.2s ease;
-}
-
-.myCalendar :global(.react-calendar__month-view__weekdays) {
-  text-align: center;
-  color: #888;
-  font-size: 1.05rem;
-}
-
-.myCalendar :global(.react-calendar__month-view__weekdays__weekday abbr) {
-  text-decoration: none;
-  cursor: default;
-}
-
-.myCalendar
-  :global(.react-calendar__month-view__weekdays__weekday:nth-child(1)) {
-  color: #ff6666;
-}
-
-.myCalendar :global(.sunday) {
-  color: #ff6666 !important;
-}
-
-.myCalendar
-  :global(.react-calendar__month-view__weekdays__weekday:nth-child(7)) {
-  color: #66aaff;
-}
-
-.myCalendar :global(.saturday) {
-  color: #66aaff !important;
-}
-
-.myCalendar :global(.holiday) {
-  color: #ff5555 !important;
-  font-weight: bold;
-}
-
-.myCalendar :global(.holidayLabel) {
-  font-size: 0.75rem;
-  margin-top: 2px;
-  line-height: 1.2;
-  color: #ff8888;
-  text-align: center;
-}
-
-.myCalendar :global(.react-calendar__tile) {
-  padding: 1.25rem 0;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  background: none;
-  border-radius: 6px;
-  text-align: center;
-  transition: background 0.2s;
-  color: #ddd;
-}
-
-.myCalendar :global(.react-calendar__tile:hover) {
-  background: #333;
-}
-
-.myCalendar :global(.react-calendar__tile--now) {
-  background: #444;
-  color: #fff;
-  font-weight: bold;
-}
-
-/* 선택된 날짜 */
-.myCalendar :global(.react-calendar__tile--active) {
-  background: #424242;
-  color: #fff;
-}
-
-.myCalendar :global(.react-calendar__tile--active:hover) {
-  background: #333;
-}
-
-/* 선택된 오늘 날짜일 때도 동일 톤 */
-.myCalendar :global(.react-calendar__tile--now.react-calendar__tile--active) {
-  background: #424242;
-  color: #fff;
-}
-
-/* 이번달 날짜 아니면 흐리게 */
-.myCalendar
-  :global(
-    .react-calendar__tile.react-calendar__month-view__days__day--neighboringMonth
-  ) {
-  color: #555;
-}
-/* react-calendar css 끝 */
-
-/* 오른쪽 영역(테이블) */
-.right {
-  width: 55%;
-  display: flex;
-  flex-direction: column;
-}
-
-.tabs {
+  margin: 0 0 2rem 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 1rem;
 }
 
-.tab {
+/* 02. 영역 분할 레이아웃 */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 600px 1fr; /* 왼쪽 550px 고정, 오른쪽 나머지 유동적으로 */
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* 03. 좌측 영역(캘린더 컨테이너) */
+.leftSection {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  border: 1px solid #333;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  height: fit-content;
+}
+
+/* 04. 캘린더(react-calendar) 상세 스타일 */
+.myCalendar {
+  width: 100% !important;
+  background-color: transparent !important;
+  border: none !important;
+  font-family: inherit !important;
+  line-height: 1.125em;
+}
+
+/* 캘린더 상단 네비게이션(년/월 이동 버튼) 스타일 */
+.myCalendar :global(.react-calendar__navigation) {
+  display: flex;
+  margin-bottom: 1rem;
+  height: 44px;
+}
+
+.myCalendar :global(.react-calendar__navigation button) {
+  color: #fff;
+  min-width: 44px;
   background: none;
-  border: 1px solid #555;
-  border-radius: 4px;
-  color: #aaa;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  transition: all 0.2s;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 4px;
+  border-radius: 8px;
 }
 
-.tab:hover {
-  background: #333;
+.myCalendar :global(.react-calendar__navigation button:enabled:hover),
+.myCalendar :global(.react-calendar__navigation button:enabled:focus) {
+  background-color: #333;
 }
 
-.active {
-  background: #424242;
-  color: #fff;
-  border-color: #424242;
-  font-weight: bold;
-}
-
-.btnScheduleReg {
-  margin-left: auto;
-  background: #2c2c2c;
-  color: #ddd;
-  border: 1px solid #555;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btnScheduleReg:hover {
-  background: #3a3a3a;
-  color: #fff;
-}
-
-/* 선택된 날짜 보여주는 영역 디자인 */
-.selectedDate {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: #2a2a2a;
-  border-left: 4px solid #3a82f7;
-  padding: 0.75rem 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #ccc;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-}
-
-.selectedDate label {
-  font-weight: 500;
-}
-
-.dateIcon {
-  color: #3a82f7;
-  font-size: 1rem;
-}
-
-/* 근로변경사항 버튼 영역(btnWrapper) */
-.btnWrapper {
-  display: flex;
-  justify-content: flex-end;
+/* 요일 표시 스타일 */
+.myCalendar :global(.react-calendar__month-view__weekdays) {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #888;
+  text-decoration: none !important;
   margin-bottom: 0.5rem;
 }
 
-.changeRegisterBtn {
-  background-color: #4cafef;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
+.myCalendar :global(.react-calendar__month-view__weekdays__weekday) {
+  padding: 0.5em;
 }
 
-.changeRegisterBtn:hover {
-  background-color: #3a9dd9;
+/* abbr 태그 밑줄 제거 */
+.myCalendar :global(abbr) {
+  text-decoration: none !important;
+  cursor: default;
 }
 
-/*** 근로시간표 테이블(scheduleTable) 스타일 시작 ***/
-.scheduleTableWrapper {
+/* 날짜 타일(일자) 스타일 */
+.myCalendar :global(.react-calendar__tile) {
+  max-width: 100%;
+  padding: 4px 2px;
+  background: none;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 0.95rem;
+  color: #e0e0e0;
   border-radius: 8px;
-  border: 1px solid #333;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2px;
+  height: 70px;
+  word-break: keep-all;
   overflow: hidden;
+}
+
+.myCalendar :global(.react-calendar__tile:enabled:hover),
+.myCalendar :global(.react-calendar__tile:enabled:focus) {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+/* 현재 선택된 날짜 */
+.myCalendar :global(.react-calendar__tile--active) {
+  background: #00bcd4 !important;
+  color: #000 !important;
+  font-weight: 700;
+}
+
+/* 오늘 날짜 */
+.myCalendar :global(.react-calendar__tile--now) {
+  background: #333;
+  border: 1px solid #666;
+  color: #00bcd4;
+}
+
+/* 오늘이면서 선택된 경우 */
+.myCalendar :global(.react-calendar__tile--now.react-calendar__tile--active) {
+  background: #00bcd4 !important;
+  color: #000 !important;
+  border: 1px solid #00bcd4;
+}
+
+/* 주말 색상(토요일: 파랑, 일요일: 빨강) */
+.myCalendar :global(.sunday) {
+  color: #ef5350;
+}
+
+.myCalendar :global(.saturday) {
+  color: #4fc3f7 !important;
+}
+
+/* 이번 달이 아닌 날짜 흐리게 처리 */
+.myCalendar :global(.react-calendar__month-view__days__day--neighboringMonth) {
+  color: #444 !important;
+}
+
+/* 공휴일 날짜 스타일 */
+.myCalendar :global(.holiday) {
+  color: #ef5350 !important;
+}
+
+/* 공휴일 텍스트 스타일 */
+.holidayLabel {
+  font-size: 0.7rem;
+  color: #ef5350;
+  margin-top: 0.25rem;
+  line-height: 1.1;
+  font-weight: normal;
+}
+
+/* 05. 우측 영역(근로시간표 & 근로변경사항) 스타일 */
+.rightSection {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  border: 1px solid #333;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  min-height: 600px;
   display: flex;
   flex-direction: column;
 }
 
-.scheduleTable {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  table-layout: fixed;
+/* 탭 버튼 스타일 */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
 }
 
-.scheduleTable thead {
-  display: block;
-  width: 100%;
-}
-
-.scheduleTable thead tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-
-.scheduleTable thead th {
-  background: #2b2b2b;
-  color: #f0f0f0;
+.tabBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #888;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.75rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid #444;
-}
-
-.scheduleTable tbody {
-  display: block;
-  max-height: 220px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.scheduleTable tbody tr {
-  display: table;
-  width: calc(100% + 6px);
-  table-layout: fixed;
-}
-
-/* 근로시간표 tbody 스크롤바 */
-.scheduleTable tbody::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.scheduleTable tbody::-webkit-scrollbar-track {
-  background: #0d0d0d;
-  border-radius: 8px;
-  border: 1px solid #222;
-}
-
-.scheduleTable tbody::-webkit-scrollbar-thumb {
-  background: #666;
-  border-radius: 8px;
-  border: 1px solid #888;
-  transition: all 0.3s ease;
-}
-
-.scheduleTable tbody::-webkit-scrollbar-thumb:hover {
-  background: #777;
-  border-color: #aaa;
-}
-
-.scheduleTable tbody::-webkit-scrollbar-thumb:active {
-  background: #888;
-}
-
-.scheduleTable tbody::-webkit-scrollbar-corner {
-  background: #0d0d0d;
-  border: 1px solid #222;
-}
-
-.scheduleTable td {
-  background: #1e1e1e;
-  color: #ccc;
-  font-size: 0.85rem;
-  padding: 0.75rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid #2a2a2a;
-  display: table-cell;
-}
-
-.scheduleTable tr:nth-child(even) td {
-  background: #252525;
-}
-
-.scheduleTable tr:hover td {
-  background: #333;
-  color: #fff;
-  transition: background 0.2s ease;
-}
-
-/* 근로시간표 thead th, tbody td 너비 설정 */
-.scheduleTable thead th:nth-child(1),
-.scheduleTable tbody td:nth-child(1) {
-  width: 50px;
-} /* 학년도 */
-.scheduleTable thead th:nth-child(2),
-.scheduleTable tbody td:nth-child(2) {
-  width: 50px;
-} /* 학기 */
-.scheduleTable thead th:nth-child(3),
-.scheduleTable tbody td:nth-child(3) {
-  width: 50px;
-} /* 성명 */
-.scheduleTable thead th:nth-child(4),
-.scheduleTable tbody td:nth-child(4) {
-  width: 80px;
-} /* 근로구분 */
-.scheduleTable thead th:nth-child(5),
-.scheduleTable tbody td:nth-child(5) {
-  width: 70px;
-} /* 담당업무 */
-.scheduleTable thead th:nth-child(6),
-.scheduleTable tbody td:nth-child(6) {
-  width: 90px;
-} /* 근로시간 */
-.scheduleTable thead th:nth-child(7),
-.scheduleTable tbody td:nth-child(7) {
-  width: 80px;
-} /* 근로확인 */
-.scheduleTable thead th:nth-child(8),
-.scheduleTable tbody td:nth-child(8) {
-  width: 120px;
-} /* 관리 */
-
-/*** 근로시간표 테이블(scheduleTable) 스타일 끝 ***/
-
-/*** 근로시간표 내 근로확인 버튼 style ***/
-.checkBtn {
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.75rem;
   cursor: pointer;
-  transition: background 0.2s;
-  margin: 0 4px;
-  min-width: 50px; /* 최소 너비만 지정 */
+  border-radius: 8px;
+  transition: all 0.2s;
 }
 
-/* 미확인 상태 */
-.checkBtn.unconfirmed {
-  background-color: #6c757d;
+.tabBtn:hover {
+  color: #fff;
+  background-color: #2a2a2a;
 }
 
-.checkBtn.unconfirmed:hover {
-  background-color: #5a6268;
+.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #555;
 }
 
-/* 확인 완료 상태 */
-.checkBtn.confirmed {
-  background-color: #28a745;
-  cursor: not-allowed;
+/* 시간표 등록 버튼 스타일 */
+.btnScheduleReg {
+  margin-left: auto;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
 }
 
-.checkBtn.confirmed:hover {
-  background-color: #28a745; /* hover 시에도 색상 변화 없음 */
+.btnScheduleReg:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
 }
 
-/* disabled 상태 */
-.checkBtn:disabled {
-  cursor: not-allowed;
+/* 선택된 날짜 라벨 스타일 */
+.selectedDateLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00bcd4;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/*** 근로변경사항 테이블(changeTable) 스타일 시작 ***/
+/* 근로시간표 & 근로변경사항 테이블 스타일 */
+.tableWrapper,
 .changeTableWrapper {
+  overflow-x: auto;
+  margin-bottom: 2rem;
   border-radius: 8px;
   border: 1px solid #333;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
-.changeTable {
+/* 테이블 기본 스타일 */
+.table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   table-layout: fixed;
 }
 
-.changeTable thead {
-  display: block;
-  width: 100%;
-}
-
-.changeTable thead tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-
-.changeTable thead th {
-  background: #2b2b2b;
-  color: #f0f0f0;
-  font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.75rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid #444;
-}
-
-.changeTable tbody {
-  display: block;
-  max-height: 150px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.changeTable tbody tr {
-  display: table;
-  width: calc(100% + 6px);
-  table-layout: fixed;
-}
-
-/* 근로변경사항 tbody 스크롤바 */
-.changeTable tbody::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.changeTable tbody::-webkit-scrollbar-track {
-  background: #0d0d0d;
-  border-radius: 8px;
-  border: 1px solid #222;
-}
-
-.changeTable tbody::-webkit-scrollbar-thumb {
-  background: #666;
-  border-radius: 8px;
-  border: 1px solid #888;
-  transition: all 0.3s ease;
-}
-
-.changeTable tbody::-webkit-scrollbar-thumb:hover {
-  background: #777;
-  border-color: #aaa;
-}
-
-.changeTable tbody::-webkit-scrollbar-thumb:active {
-  background: #888;
-}
-
-.changeTable tbody::-webkit-scrollbar-corner {
-  background: #0d0d0d;
-  border: 1px solid #222;
-}
-
-.changeTable td {
-  background: #1e1e1e;
+/* 테이블 헤더(Header) */
+.table th {
+  background-color: #252525;
   color: #ccc;
+  padding: 1rem;
   font-size: 0.85rem;
-  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
   text-align: center;
+}
+
+/* 테이블 바디(td) */
+.table td {
+  padding: 0.9rem;
+  color: #e0e0e0;
+  font-size: 0.9rem;
   border-bottom: 1px solid #2a2a2a;
-  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
 }
 
-.changeTable tr:nth-child(even) td {
-  background: #252525;
+.table tbody tr:hover {
+  background-color: #2a2a2a;
 }
 
-.changeTable tr:hover td {
-  background: #333;
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nameCell {
+  font-weight: 700;
   color: #fff;
-  transition: background 0.2s ease;
 }
 
-/* 근로변경사항 thead th, tbody td 너비 설정 */
-.changeTable thead th:nth-child(1),
-.changeTable tbody td:nth-child(1) {
-  width: 80px;
-} /* 담당업무 */
-.changeTable thead th:nth-child(2),
-.changeTable tbody td:nth-child(2) {
-  width: 60px;
-} /* 성명 */
-.changeTable thead th:nth-child(3),
-.changeTable tbody td:nth-child(3) {
-  width: 100px;
-} /* 기존 근로 */
-.changeTable thead th:nth-child(4),
-.changeTable tbody td:nth-child(4) {
-  width: 200px;
-} /* 변경 근로 */
-.changeTable thead th:nth-child(5),
-.changeTable tbody td:nth-child(5) {
-  width: auto;
-} /* 변경 사유 */
-.changeTable thead th:nth-child(6),
-.changeTable tbody td:nth-child(6) {
-  width: 120px;
-} /* 관리 */
-
-/*** 근로변경사항 테이블 스타일 끝 ***/
-
-/* 수정, 삭제 버튼 디자인 */
-.modBtn {
-  border: none;
+.badgeType {
+  display: inline-block;
+  padding: 2px 8px;
   border-radius: 4px;
-  color: #fff;
-  padding: 0.35rem 0.75rem;
   font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #212121;
+  color: #4fc3f7;
+  border: 1px solid #444;
+}
+
+/* 테이블 내부 버튼들 */
+.checkBtn {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  width: 100px;
+  height: 34px;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
+.unconfirmed {
+  background-color: #333;
+  color: #ccc;
+  border: 1px solid #555;
+  transition: all 0.2s;
+}
+
+.unconfirmed:hover {
+  background-color: #444;
+  color: #fff;
+  border-color: #fff;
+}
+
+.confirmed {
+  background-color: rgba(0, 188, 212, 0.15);
+  color: #00bcd4;
+  cursor: pointer;
+}
+
+/* 관리 버튼 스타일 */
+.actionBtnGroup {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.iconBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
   transition: background 0.2s;
-  margin: 0 4px;
-  background-color: #3a82f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modBtn {
+  color: #a0a0a0;
 }
 
 .modBtn:hover {
-  background-color: #2c6ed5;
+  background-color: #333;
+  color: #fff;
 }
 
 .delBtn {
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin: 0 4px;
-  background-color: #a52a2a;
+  color: #ef5350;
 }
 
 .delBtn:hover {
-  background-color: #8b1e1e;
+  background-color: rgba(239, 83, 80, 0.1);
+}
+
+/*
+  --------------------------------------------------------
+  [04] 근로변경사항 영역 스타일
+    - 테이블 스타일은 공통 .table 클래스 사용
+    - 근로변경사항 전용 헤더와 버튼 정의
+  --------------------------------------------------------
+*/
+/* 근로변경사항 섹션 헤더(Header) */
+.changeSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #333;
+}
+
+/* 근로변경사항 등록 버튼 */
+.changeRegisterBtn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #555;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.changeRegisterBtn:hover {
+  border-color: #ccc;
+  color: #fff;
+  background-color: #2a2a2a;
 }
