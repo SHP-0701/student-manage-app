@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Users, CalendarCheck, Bell } from 'lucide-react';
 import Layout from '@/components/Layout';
 import styles from '@/styles/Dashboard.module.css';
 
