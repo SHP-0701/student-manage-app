@@ -7,6 +7,12 @@
   ===================================================================================================
 */
 
+/*
+  ===================================================================================================
+    [01] 최상위 레이아웃 및 페이지 헤더
+    (.container, .pageTitle, .contentGrid)
+  ===================================================================================================
+*/
 .container {
   padding: 2rem;
   background-color: #121212;
@@ -18,7 +24,6 @@
   flex-direction: column;
 }
 
-/* 01. 페이지 헤더 영역 */
 .pageTitle {
   font-size: 1.8rem;
   font-weight: 700;
@@ -30,7 +35,6 @@
   flex-shrink: 0;
 }
 
-/* 02. 영역 분할 레이아웃 */
 .contentGrid {
   display: grid;
   grid-template-columns: 600px 1fr;
@@ -41,7 +45,12 @@
   padding-bottom: 2rem;
 }
 
-/* 03. 좌측 영역(캘린더 컨테이너) */
+/*
+  ===================================================================================================
+    [02] 좌측 영역(캘린더)
+    (.leftSection, .myCalendar 관련 스타일, .holidayLabel)
+  ===================================================================================================
+*/
 .leftSection {
   background-color: #1e1e1e;
   border-radius: 12px;
@@ -51,7 +60,6 @@
   height: fit-content;
 }
 
-/* 04. 캘린더(react-calendar) 상세 스타일 */
 .myCalendar {
   width: 100% !important;
   background-color: transparent !important;
@@ -60,7 +68,6 @@
   line-height: 1.125em;
 }
 
-/* 캘린더 상단 네비게이션(년/월 이동 버튼) 스타일 */
 .myCalendar :global(.react-calendar__navigation) {
   display: flex;
   margin-bottom: 1rem;
@@ -82,7 +89,6 @@
   background-color: #333;
 }
 
-/* 요일 표시 스타일 */
 .myCalendar :global(.react-calendar__month-view__weekdays) {
   text-align: center;
   text-transform: uppercase;
@@ -97,13 +103,11 @@
   padding: 0.5em;
 }
 
-/* abbr 태그 밑줄 제거 */
 .myCalendar :global(abbr) {
   text-decoration: none !important;
   cursor: default;
 }
 
-/* 날짜 타일(일자) 스타일 */
 .myCalendar :global(.react-calendar__tile) {
   max-width: 100%;
   padding: 4px 2px;
@@ -130,28 +134,24 @@
   color: #fff;
 }
 
-/* 현재 선택된 날짜 */
 .myCalendar :global(.react-calendar__tile--active) {
   background: #00bcd4 !important;
   color: #000 !important;
   font-weight: 700;
 }
 
-/* 오늘 날짜 */
 .myCalendar :global(.react-calendar__tile--now) {
   background: #333;
   border: 1px solid #666;
   color: #00bcd4;
 }
 
-/* 오늘이면서 선택된 경우 */
 .myCalendar :global(.react-calendar__tile--now.react-calendar__tile--active) {
   background: #00bcd4 !important;
   color: #000 !important;
   border: 1px solid #00bcd4;
 }
 
-/* 주말 색상(토요일: 파랑, 일요일: 빨강) */
 .myCalendar :global(.sunday) {
   color: #ef5350;
 }
@@ -160,17 +160,14 @@
   color: #4fc3f7 !important;
 }
 
-/* 이번 달이 아닌 날짜 흐리게 처리 */
 .myCalendar :global(.react-calendar__month-view__days__day--neighboringMonth) {
   color: #444 !important;
 }
 
-/* 공휴일 날짜 스타일 */
 .myCalendar :global(.holiday) {
   color: #ef5350 !important;
 }
 
-/* 공휴일 텍스트 스타일 */
 .holidayLabel {
   font-size: 0.7rem;
   color: #ef5350;
@@ -179,7 +176,13 @@
   font-weight: normal;
 }
 
-/* 05. 우측 영역(근로시간표 & 근로변경사항) 스타일 */
+/*
+  ===================================================================================================
+    [03] 우측 영역(컨테이너, 근로시간표, 근로변경사항)
+  ===================================================================================================
+*/
+
+/* 우측 영역(근로시간표 & 근로변경사항) 컨테이너 */
 .rightSection {
   background-color: #1e1e1e;
   border-radius: 12px;
@@ -193,10 +196,78 @@
   overflow: hidden;
 }
 
-/*  근로시간표 전용 스타일(scheduleWrapper, scheduleTable)  */
+/* 우측 상단 탭 및 시간표 등록 버튼 스타일 */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
+}
+
+.tabBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #888;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.tabBtn:hover {
+  color: #fff;
+  background-color: #2a2a2a;
+}
+
+.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #555;
+}
+
+.btnScheduleReg {
+  margin-left: auto;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btnScheduleReg:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+/*
+  ===================================================================================================
+    [04] 우측 영역(근로시간표)
+    (.selectedDateLabel -> .scheduleWrapper -> .scheduleTable)
+  ===================================================================================================
+*/
+.selectedDateLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00bcd4;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .scheduleWrapper {
-  flex: 2;
-  min-height: 200px;
+  flex: none;
+  max-height: 240px;
 
   overflow-x: hidden;
   overflow-y: auto;
@@ -240,116 +311,7 @@
   background-color: #2a2a2a;
 }
 
-/* 탭 버튼 스타일 */
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #333;
-  padding-bottom: 1rem;
-}
-
-.tabBtn {
-  background: transparent;
-  border: 1px solid transparent;
-  color: #888;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.tabBtn:hover {
-  color: #fff;
-  background-color: #2a2a2a;
-}
-
-.active {
-  background-color: #333;
-  color: #fff;
-  border-color: #555;
-}
-
-/* 시간표 등록 버튼 스타일 */
-.btnScheduleReg {
-  margin-left: auto;
-  background-color: #fff;
-  color: #000;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
-}
-
-.btnScheduleReg:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
-}
-
-/* 선택된 날짜 라벨 스타일 */
-.selectedDateLabel {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #00bcd4;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.scheduleChangeWrapper {
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  border-radius: 8px;
-  border: 1px solid #333;
-  position: relative;
-}
-
-.scheduleChangeTable {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.scheduleChangeTable th {
-  background-color: #252525;
-  color: #ccc;
-  padding: 1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-bottom: 1px solid #333;
-  text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.scheduleChangeTable td {
-  padding: 0.9rem;
-  color: #e0e0e0;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #2a2a2a;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.scheduleChangeTable tbody tr:hover {
-  background-color: #2a2a2a;
-}
-
-.scheduleChangeTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
+/* 테이블 내부 공통 요소(근로시간표 / 변경사항 공통) */
 .nameCell {
   font-weight: 700;
   color: #fff;
@@ -367,7 +329,6 @@
   white-space: nowrap;
 }
 
-/* 테이블 내부 버튼들 */
 .checkBtn {
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
@@ -441,13 +402,11 @@
 }
 
 /*
-  --------------------------------------------------------
-  [04] 근로변경사항 영역 스타일
-    - 테이블 스타일은 공통 .table 클래스 사용
-    - 근로변경사항 전용 헤더와 버튼 정의
-  --------------------------------------------------------
+  ===================================================================================================
+    [05] 우측 영역(근로변경사항)
+    (.changeSectionHeader -> .scheduleChangeWrapper -> .scheduleChangeTable)
+  ===================================================================================================
 */
-/* 근로변경사항 섹션 헤더(Header) */
 .changeSectionHeader {
   display: flex;
   justify-content: space-between;
@@ -458,7 +417,6 @@
   border-top: 1px dashed #333;
 }
 
-/* 근로변경사항 등록 버튼 */
 .changeRegisterBtn {
   background: transparent;
   color: #888;
@@ -477,4 +435,86 @@
   border-color: #ccc;
   color: #fff;
   background-color: #2a2a2a;
+}
+
+.scheduleChangeWrapper {
+  flex: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 200px;
+
+  border-radius: 8px;
+  border: 1px solid #333;
+  position: relative;
+}
+
+.scheduleChangeTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.scheduleChangeTable th {
+  background-color: #252525;
+  color: #ccc;
+  padding: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.scheduleChangeTable td {
+  padding: 0.9rem;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #2a2a2a;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.scheduleChangeTable tbody tr:hover {
+  background-color: #2a2a2a;
+}
+
+.scheduleChangeTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/*
+  ===================================================================================================
+    [06] 스크롤바 커스텀
+  ===================================================================================================
+*/
+/* 01. 스크롤바 전체 너비 및 높이 */
+.scheduleWrapper::-webkit-scrollbar,
+.scheduleChangeWrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* 02. 스크롤바 트랙(배경) */
+.scheduleWrapper::-webkit-scrollbar-track,
+.scheduleChangeWrapper::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 0 8px 8px 0;
+}
+
+/* 03. 스크롤바 핸들(막대) */
+.scheduleWrapper::-webkit-scrollbar-thumb,
+.scheduleChangeWrapper::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 5px;
+  border: 2px solid #1e1e1e;
+  background-clip: content-box;
+}
+
+/* 04. 핸들 호버(hover) 효과 */
+.scheduleWrapper::-webkit-scrollbar-thumb:hover,
+.scheduleChangeWrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #666;
+  border: 2px solid #1e1e1e;
 }
