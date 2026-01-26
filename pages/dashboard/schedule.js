@@ -420,8 +420,8 @@ export default function SchedulePage() {
             </div>
 
             {/** 근로변경사항 테이블 래퍼 */}
-            <div className={styles.tableWrapper}>
-              <table className={styles.table}>
+            <div className={styles.scheduleChangeWrapper}>
+              <table className={styles.scheduleChangeTable}>
                 <thead>
                   <tr>
                     <th style={{ width: '12%' }}>담당업무</th>
