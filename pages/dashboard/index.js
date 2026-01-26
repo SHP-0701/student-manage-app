@@ -38,7 +38,7 @@ export default function DashboardPage() {
     <Layout>
       <div className={styles.dashboardHome}>
         {/** 상단 환영 메시지 */}
-        <div className={styles.welcomBox}>
+        <div className={styles.welcomeBox}>
           <h2>안녕하세요 {admName}님!</h2>
           <p>오늘도 좋은 하루 되세요!</p>
         </div>
