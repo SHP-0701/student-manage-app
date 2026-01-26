@@ -310,8 +310,9 @@ export default function SchedulePage() {
               </span>
             </div>
 
-            <div className={styles.tableWrapper}>
-              <table className={styles.table}>
+            {/** 근로시간표 테이블 래퍼 */}
+            <div className={styles.scheduleWrapper}>
+              <table className={styles.scheduleTable}>
                 <thead>
                   <tr>
                     <th style={{ width: '12%' }}>학년도/학기</th>
@@ -418,6 +419,7 @@ export default function SchedulePage() {
               </button>
             </div>
 
+            {/** 근로변경사항 테이블 래퍼 */}
             <div className={styles.tableWrapper}>
               <table className={styles.table}>
                 <thead>
