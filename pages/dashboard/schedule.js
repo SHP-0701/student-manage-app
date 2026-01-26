@@ -301,7 +301,6 @@ export default function SchedulePage() {
               </button>
             </div>
 
-            {/** 02. 근로시간표 테이블 섹션 */}
             <div className={styles.selectedDateLabel}>
               <Clock size={20} />
               <span>
@@ -310,7 +309,6 @@ export default function SchedulePage() {
               </span>
             </div>
 
-            {/** 근로시간표 테이블 래퍼 */}
             <div className={styles.scheduleWrapper}>
               <table className={styles.scheduleTable}>
                 <thead>
