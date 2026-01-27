@@ -80,7 +80,7 @@ export default function DashboardPage() {
             </div>
             <div className={styles.textArea}>
               <h3>금일 근로인원</h3>
-              <p className={styles.statusValue}>
+              <p className={`${styles.statusValue} ${styles.highlightText}`}>
                 5<span>명</span>
               </p>
             </div>
