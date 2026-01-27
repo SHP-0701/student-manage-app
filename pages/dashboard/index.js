@@ -13,11 +13,17 @@ import { Users, CalendarCheck, Bell } from 'lucide-react';
 import Layout from '@/components/Layout';
 import styles from '@/styles/Dashboard.module.css';
 
+// 탭(tab)
+const STD_JOB = ['실습실', '카운터', 'ECSC', '모니터링'];
+
 export default function DashboardPage() {
   const router = useRouter();
 
   // Hydration Error 방지를 위한 state 관리
   const [admName, setAdmName] = useState('');
+
+  // 탭 상태 관리
+  const [activeTab, setActiveTab] = useState('');
 
   useEffect(() => {
     // 01. 세션 체크
@@ -103,6 +109,52 @@ export default function DashboardPage() {
                 2<span>건</span>
               </p>
             </div>
+          </div>
+        </div>
+
+        {/** [4] 금일 근로자 현황 섹션 */}
+        <div className={styles.workerSection}>
+          <h3 className={styles.sectionTitle}>금일 근로자 현황</h3>
+
+          {/** 탭 버튼 영역 */}
+          <div className={styles.tabContainer}>
+            {STD_JOB.map((stdJob) => (
+              <button
+                key={stdJob}
+                className={`${styles.tabItem} ${activeTab === stdJob ? styles.active : ''}`}
+                onClick={() => setActiveTab(stdJob)}
+              >
+                {stdJob}
+              </button>
+            ))}
+          </div>
+
+          {/** 테이블 영역 */}
+          <div className={styles.tableWrapper}>
+            <table className={styles.workerTable}>
+              <thead>
+                <tr>
+                  <th>근로구분</th> {/** 국가근로, 행정인턴, 교육지원 */}
+                  <th>담당업무</th> {/** 실습실, 카운터, ECSC, 모니터링 */}
+                  <th>이름</th>
+                  <th>근무시간</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    colSpan={4}
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#666',
+                    }}
+                  >
+                    근로예정 학생이 없습니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
