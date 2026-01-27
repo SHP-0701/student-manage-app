@@ -48,26 +48,61 @@ export default function DashboardPage() {
         <div className={styles.statusContainer}>
           {/** [1] 총 인원 */}
           <div className={styles.statusCard}>
-            <h3>총 인원</h3>
-            <p className={styles.statusValue}>
-              32<span>명</span>
-            </p>
+            {/** 아이콘 영역 */}
+            <div
+              className={styles.iconBox}
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+              }}
+            >
+              <Users size={28} />
+            </div>
+            {/** 텍스트 영역 */}
+            <div className={styles.textArea}>
+              <h3>총 인원</h3>
+              <p className={styles.statusValue}>
+                32<span>명</span>
+              </p>
+            </div>
           </div>
 
           {/** [2] 금일 근로 인원 */}
           <div className={styles.statusCard}>
-            <h3>금일 근로인원</h3>
-            <p className={styles.statusValue}>
-              5<span>명</span>
-            </p>
+            <div
+              className={styles.iconBox}
+              style={{
+                backgroundColor: 'rgba(0, 188, 212, 0.15)',
+                color: '#00bcd4',
+              }}
+            >
+              <CalendarCheck size={28} />
+            </div>
+            <div className={styles.textArea}>
+              <h3>금일 근로인원</h3>
+              <p className={styles.statusValue}>
+                5<span>명</span>
+              </p>
+            </div>
           </div>
 
           {/** [3] 확인 대기 */}
           <div className={styles.statusCard}>
-            <h3>확인 대기</h3>
-            <p className={`${styles.statusValue} ${styles.alertText}`}>
-              2<span>건</span>
-            </p>
+            <div
+              className={styles.iconBox}
+              style={{
+                backgroundColor: 'rgba(255, 107, 107, 0.15)',
+                color: '#ff6b6b',
+              }}
+            >
+              <Bell size={28} />
+            </div>
+            <div className={styles.textArea}>
+              <h3>확인 대기</h3>
+              <p className={`${styles.statusValue} ${styles.alertText}`}>
+                2<span>건</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
