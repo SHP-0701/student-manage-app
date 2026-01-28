@@ -90,6 +90,20 @@ export default function DashboardPage() {
   // 이름이 로드되지 않았다면(리다이렉트 중) 빈 화면 보여주기
   if (!admName) return null;
 
+  // 근로 유형에 따라 뱃지 스타일 반환
+  const getBadgeClass = (workType) => {
+    switch (workType) {
+      case '국가근로':
+        return styles.badgeBlue;
+      case '교육지원':
+        return styles.badgeGreen;
+      case '행정인턴':
+        return styles.badgePurple;
+      default:
+        return styles.badgeGray;
+    }
+  };
+
   return (
     <Layout>
       <div className={styles.dashboardHome}>
@@ -184,7 +198,6 @@ export default function DashboardPage() {
               <thead>
                 <tr>
                   <th>근로구분</th> {/** 국가근로, 행정인턴, 교육지원 */}
-                  <th>담당업무</th> {/** 실습실, 카운터, ECSC, 모니터링 */}
                   <th>이름</th>
                   <th>근무시간</th>
                 </tr>
@@ -194,8 +207,14 @@ export default function DashboardPage() {
                   // 데이터 있을 때 출력하기
                   filteredList.map((item) => (
                     <tr key={item.id}>
-                      <td>{item.workType}</td>
-                      <td>{item.stdJob}</td>
+                      {/** 근로구분 별 뱃지(Badge) 스타일 적용 */}
+                      <td>
+                        <span
+                          className={`${styles.badge} ${getBadgeClass(item.workType)}`}
+                        >
+                          {item.workType}
+                        </span>
+                      </td>
                       <td>{item.stdName}</td>
                       <td>{item.workTime}</td>
                     </tr>
