@@ -16,14 +16,60 @@ import styles from '@/styles/Dashboard.module.css';
 // 탭(tab)
 const STD_JOB = ['실습실', '카운터', 'ECSC', '모니터링'];
 
+// 근로자 현황 더미(dummy) 데이터
+const DUMMY_DATA = [
+  {
+    id: 1,
+    workType: '국가근로',
+    stdJob: '실습실',
+    stdName: '김철수',
+    workTime: '09:00 ~ 12:00',
+  },
+  {
+    id: 2,
+    workType: '교육지원',
+    stdJob: '실습실',
+    stdName: '이영희',
+    workTime: '13:00 ~ 17:00',
+  },
+  {
+    id: 3,
+    workType: '행정인턴',
+    stdJob: '카운터',
+    stdName: '박민수',
+    workTime: '09:00 ~ 14:00',
+  },
+  {
+    id: 4,
+    workType: '행정인턴',
+    stdJob: 'ECSC',
+    stdName: '정지원',
+    workTime: '10:00 ~ 16:00',
+  },
+  {
+    id: 5,
+    workType: '교육지원',
+    stdJob: '실습실',
+    stdName: '최근로',
+    workTime: '14:00 ~ 18:00',
+  },
+  {
+    id: 6,
+    workType: '국가근로',
+    stdJob: '실습실',
+    stdName: '홍길동',
+    workTime: '15:00 ~ 18:00',
+  },
+];
+
 export default function DashboardPage() {
   const router = useRouter();
 
   // Hydration Error 방지를 위한 state 관리
   const [admName, setAdmName] = useState('');
 
-  // 탭 상태 관리
-  const [activeTab, setActiveTab] = useState('');
+  // 탭 상태 관리(초기값: '실습실')
+  const [activeTab, setActiveTab] = useState(STD_JOB[0]);
 
   useEffect(() => {
     // 01. 세션 체크
@@ -37,6 +83,9 @@ export default function DashboardPage() {
       setAdmName(name);
     }
   }, [router]);
+
+  // 선택된 탭에 맞는 데이터 필터링
+  const filteredList = DUMMY_DATA.filter((item) => item.stdJob === activeTab);
 
   // 이름이 로드되지 않았다면(리다이렉트 중) 빈 화면 보여주기
   if (!admName) return null;
@@ -141,18 +190,31 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td
-                    colSpan={4}
-                    style={{
-                      textAlign: 'center',
-                      padding: '2rem',
-                      color: '#666',
-                    }}
-                  >
-                    근로예정 학생이 없습니다.
-                  </td>
-                </tr>
+                {filteredList.length > 0 ? (
+                  // 데이터 있을 때 출력하기
+                  filteredList.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.workType}</td>
+                      <td>{item.stdJob}</td>
+                      <td>{item.stdName}</td>
+                      <td>{item.workTime}</td>
+                    </tr>
+                  ))
+                ) : (
+                  // 데이터 없을 때 출력
+                  <tr>
+                    <td
+                      colSpan={4}
+                      style={{
+                        textAlign: 'center',
+                        padding: '3rem',
+                        color: '#666',
+                      }}
+                    >
+                      근로예정 학생이 없습니다.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
