@@ -148,21 +148,60 @@
 }
 
 .workerTable th {
-  padding: 12px 0;
+  padding: 15px 0;
   border-bottom: 2px solid #444;
-  color: #aaa;
+  color: #888;
   font-weight: bold;
   text-align: center;
   font-size: 1rem;
 }
 
 .workerTable td {
-  padding: 15px 0;
+  padding: 18px 0;
   border-bottom: 1px solid #3a3a3a;
   text-align: center;
   color: #eee;
 }
 
+.workerTable tbody tr {
+  transition: background-color 0.2s;
+}
+
+.workerTable tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 .workerTable tr:last-child td {
   border-bottom: none;
+}
+
+/* 뱃지(badge) 스타일 추가 */
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* 뱃지 색상별 스타일 */
+.badgeBlue {
+  background-color: rgba(0, 188, 212, 0.15);
+  color: #00bcd4;
+}
+
+.badgeGreen {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+}
+
+.badgePurple {
+  background-color: rgba(156, 39, 176, 0.15);
+  color: #ab47bc;
+}
+
+.badgeGray {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #aaa;
 }
