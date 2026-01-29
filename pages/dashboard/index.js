@@ -104,20 +104,6 @@ export default function DashboardPage() {
   // 선택된 탭에 맞는 데이터 필터링
   const filteredList = workerList.filter((item) => item.stdJob === activeTab);
 
-  // 근로 유형에 따라 뱃지 스타일 반환
-  const getBadgeClass = (workType) => {
-    switch (workType) {
-      case '국가근로':
-        return styles.badgeBlue;
-      case '교육지원':
-        return styles.badgeGreen;
-      case '행정인턴':
-        return styles.badgePurple;
-      default:
-        return styles.badgeGray;
-    }
-  };
-
   // 출근 버튼 클릭 핸들러
   const handleCheckIn = (id) => {
     setWorkerList((prev) =>
@@ -255,13 +241,8 @@ export default function DashboardPage() {
                     // 데이터 있을 때 출력하기
                     filteredList.map((item) => (
                       <tr key={item.id}>
-                        {/** 근로구분 별 뱃지(Badge) 스타일 적용 */}
                         <td>
-                          <span
-                            className={`${styles.badge} ${getBadgeClass(item.workType)}`}
-                          >
-                            {item.workType}
-                          </span>
+                          <span className={styles.badge}>{item.workType}</span>
                         </td>
                         <td>{item.stdName}</td>
                         <td>{item.workTime}</td>
