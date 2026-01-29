@@ -9,7 +9,15 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Users, CalendarCheck, Bell } from 'lucide-react';
+import {
+  Users,
+  CalendarCheck,
+  Bell,
+  UserPlus,
+  CalendarPlus,
+  FileEdit,
+  Calendar,
+} from 'lucide-react';
 import Layout from '@/components/Layout';
 import styles from '@/styles/Dashboard.module.css';
 
@@ -96,9 +104,6 @@ export default function DashboardPage() {
   // 선택된 탭에 맞는 데이터 필터링
   const filteredList = workerList.filter((item) => item.stdJob === activeTab);
 
-  // 이름이 로드되지 않았다면(리다이렉트 중) 빈 화면 보여주기
-  if (!admName) return null;
-
   // 근로 유형에 따라 뱃지 스타일 반환
   const getBadgeClass = (workType) => {
     switch (workType) {
@@ -130,6 +135,18 @@ export default function DashboardPage() {
       ),
     );
   };
+
+  // 퀵 메뉴 핸들러
+  const handleQuickAction = (action) => {
+    if (action === 'schedule') {
+      router.push(`/dashboard/schedule`);
+    } else {
+      alert(`${action} 모달 출력`);
+    }
+  };
+
+  // 이름이 로드되지 않았다면(리다이렉트 중) 빈 화면 보여주기
+  if (!admName) return null;
 
   return (
     <Layout>
@@ -202,90 +219,131 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/** [4] 금일 근로자 현황 섹션 */}
-        <div className={styles.workerSection}>
-          <h3 className={styles.sectionTitle}>금일 근로자 현황</h3>
+        {/** 하단 콘텐츠 영역 */}
+        <div className={styles.contentRow}>
+          {/** [4] 금일 근로자 현황 섹션 */}
+          <div className={styles.workerSection}>
+            <h3 className={styles.sectionTitle}>금일 근로자 현황</h3>
 
-          {/** 탭 버튼 영역 */}
-          <div className={styles.tabContainer}>
-            {STD_JOB.map((stdJob) => (
-              <button
-                key={stdJob}
-                className={`${styles.tabItem} ${activeTab === stdJob ? styles.active : ''}`}
-                onClick={() => setActiveTab(stdJob)}
-              >
-                {stdJob}
-              </button>
-            ))}
-          </div>
+            {/** 탭 버튼 영역 */}
+            <div className={styles.tabContainer}>
+              {STD_JOB.map((stdJob) => (
+                <button
+                  key={stdJob}
+                  className={`${styles.tabItem} ${activeTab === stdJob ? styles.active : ''}`}
+                  onClick={() => setActiveTab(stdJob)}
+                >
+                  {stdJob}
+                </button>
+              ))}
+            </div>
 
-          {/** 테이블 영역 */}
-          <div className={styles.tableWrapper}>
-            <table className={styles.workerTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: '20%' }}>근로구분</th>{' '}
-                  {/** 국가근로, 행정인턴, 교육지원 */}
-                  <th style={{ width: '20%' }}>이름</th>
-                  <th style={{ width: '35%' }}>근무시간</th>
-                  <th style={{ width: '25%' }}>관리</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredList.length > 0 ? (
-                  // 데이터 있을 때 출력하기
-                  filteredList.map((item) => (
-                    <tr key={item.id}>
-                      {/** 근로구분 별 뱃지(Badge) 스타일 적용 */}
-                      <td>
-                        <span
-                          className={`${styles.badge} ${getBadgeClass(item.workType)}`}
-                        >
-                          {item.workType}
-                        </span>
-                      </td>
-                      <td>{item.stdName}</td>
-                      <td>{item.workTime}</td>
-                      <td>
-                        <div className={styles.btnGroup}>
-                          {/** 출근 버튼 */}
-                          <button
-                            className={`${styles.checkBtn} ${item.status === '근로중' ? styles.working : ''}`}
-                            onClick={() => handleCheckIn(item.id)}
-                            disabled={item.status != '근로대기'}
+            {/** 테이블 영역 */}
+            <div className={styles.tableWrapper}>
+              <table className={styles.workerTable}>
+                <thead>
+                  <tr>
+                    <th style={{ width: '20%' }}>근로구분</th>{' '}
+                    {/** 국가근로, 행정인턴, 교육지원 */}
+                    <th style={{ width: '20%' }}>이름</th>
+                    <th style={{ width: '35%' }}>근무시간</th>
+                    <th style={{ width: '25%' }}>관리</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredList.length > 0 ? (
+                    // 데이터 있을 때 출력하기
+                    filteredList.map((item) => (
+                      <tr key={item.id}>
+                        {/** 근로구분 별 뱃지(Badge) 스타일 적용 */}
+                        <td>
+                          <span
+                            className={`${styles.badge} ${getBadgeClass(item.workType)}`}
                           >
-                            출근
-                          </button>
-                          {/** 퇴근 버튼 */}
-                          <button
-                            className={`${styles.checkBtn} ${item.status === '근로종료' ? styles.done : ''}`}
-                            onClick={() => handleCheckOut(item.id)}
-                            disabled={item.status !== '근로중'}
-                          >
-                            퇴근
-                          </button>
-                        </div>
+                            {item.workType}
+                          </span>
+                        </td>
+                        <td>{item.stdName}</td>
+                        <td>{item.workTime}</td>
+                        <td>
+                          <div className={styles.btnGroup}>
+                            {/** 출근 버튼 */}
+                            <button
+                              className={`${styles.checkBtn} ${item.status === '근로중' ? styles.working : ''}`}
+                              onClick={() => handleCheckIn(item.id)}
+                              disabled={item.status != '근로대기'}
+                            >
+                              출근
+                            </button>
+                            {/** 퇴근 버튼 */}
+                            <button
+                              className={`${styles.checkBtn} ${item.status === '근로종료' ? styles.done : ''}`}
+                              onClick={() => handleCheckOut(item.id)}
+                              disabled={item.status !== '근로중'}
+                            >
+                              퇴근
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    // 데이터 없을 때 출력
+                    <tr>
+                      <td
+                        colSpan={4}
+                        style={{
+                          textAlign: 'center',
+                          padding: '3rem',
+                          color: '#666',
+                        }}
+                      >
+                        근로예정 학생이 없습니다.
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  // 데이터 없을 때 출력
-                  <tr>
-                    <td
-                      colSpan={4}
-                      style={{
-                        textAlign: 'center',
-                        padding: '3rem',
-                        color: '#666',
-                      }}
-                    >
-                      근로예정 학생이 없습니다.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
+
+          {/** 우측 사이드바 영역(퀵 메뉴 + 메모장) */}
+          <aside className={styles.sideBar}>
+            {/** [01] 퀵 메뉴 */}
+            <div className={styles.quickMenuBox}>
+              <h3 className={styles.sidebarTitle}>퀵 메뉴</h3>
+              <div className={styles.menuGrid}>
+                <button
+                  className={styles.menuBtn}
+                  onClick={() => handleQuickAction(`학생등록`)}
+                >
+                  <UserPlus size={24} />
+                  <span>학생 등록</span>
+                </button>
+                <button
+                  className={styles.menuBtn}
+                  onClick={() => handleQuickAction(`시간표등록`)}
+                >
+                  <CalendarPlus size={24} />
+                  <span>시간표 등록</span>
+                </button>
+                <button
+                  className={styles.menuBtn}
+                  onClick={() => handleQuickAction(`근로변경`)}
+                >
+                  <FileEdit size={24} />
+                  <span>근로 변경</span>
+                </button>
+                <button
+                  className={styles.menuBtn}
+                  onClick={() => handleQuickAction(`schedule`)}
+                >
+                  <Calendar size={24} />
+                  <span>전체 시간표</span>
+                </button>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </Layout>
