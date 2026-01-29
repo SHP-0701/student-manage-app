@@ -24,6 +24,7 @@ const DUMMY_DATA = [
     stdJob: '실습실',
     stdName: '김철수',
     workTime: '09:00 ~ 12:00',
+    status: '근로대기',
   },
   {
     id: 2,
@@ -31,6 +32,7 @@ const DUMMY_DATA = [
     stdJob: '실습실',
     stdName: '이영희',
     workTime: '13:00 ~ 17:00',
+    status: '근로대기',
   },
   {
     id: 3,
@@ -38,6 +40,7 @@ const DUMMY_DATA = [
     stdJob: '카운터',
     stdName: '박민수',
     workTime: '09:00 ~ 14:00',
+    status: '근로대기',
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ const DUMMY_DATA = [
     stdJob: 'ECSC',
     stdName: '정지원',
     workTime: '10:00 ~ 16:00',
+    status: '근로대기',
   },
   {
     id: 5,
@@ -52,6 +56,7 @@ const DUMMY_DATA = [
     stdJob: '실습실',
     stdName: '최근로',
     workTime: '14:00 ~ 18:00',
+    status: '근로대기',
   },
   {
     id: 6,
@@ -59,6 +64,7 @@ const DUMMY_DATA = [
     stdJob: '실습실',
     stdName: '홍길동',
     workTime: '15:00 ~ 18:00',
+    status: '근로대기',
   },
 ];
 
@@ -70,6 +76,9 @@ export default function DashboardPage() {
 
   // 탭 상태 관리(초기값: '실습실')
   const [activeTab, setActiveTab] = useState(STD_JOB[0]);
+
+  // 근로자 현황 상태 관리
+  const [workerList, setWorkerList] = useState(DUMMY_DATA);
 
   useEffect(() => {
     // 01. 세션 체크
@@ -85,7 +94,7 @@ export default function DashboardPage() {
   }, [router]);
 
   // 선택된 탭에 맞는 데이터 필터링
-  const filteredList = DUMMY_DATA.filter((item) => item.stdJob === activeTab);
+  const filteredList = workerList.filter((item) => item.stdJob === activeTab);
 
   // 이름이 로드되지 않았다면(리다이렉트 중) 빈 화면 보여주기
   if (!admName) return null;
@@ -102,6 +111,24 @@ export default function DashboardPage() {
       default:
         return styles.badgeGray;
     }
+  };
+
+  // 출근 버튼 클릭 핸들러
+  const handleCheckIn = (id) => {
+    setWorkerList((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, status: '근로중' } : item,
+      ),
+    );
+  };
+
+  // 퇴근 버튼 클릭 핸들러
+  const handleCheckOut = (id) => {
+    setWorkerList((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, status: '근로종료' } : item,
+      ),
+    );
   };
 
   return (
@@ -197,9 +224,11 @@ export default function DashboardPage() {
             <table className={styles.workerTable}>
               <thead>
                 <tr>
-                  <th>근로구분</th> {/** 국가근로, 행정인턴, 교육지원 */}
-                  <th>이름</th>
-                  <th>근무시간</th>
+                  <th style={{ width: '20%' }}>근로구분</th>{' '}
+                  {/** 국가근로, 행정인턴, 교육지원 */}
+                  <th style={{ width: '20%' }}>이름</th>
+                  <th style={{ width: '35%' }}>근무시간</th>
+                  <th style={{ width: '25%' }}>관리</th>
                 </tr>
               </thead>
               <tbody>
@@ -217,6 +246,26 @@ export default function DashboardPage() {
                       </td>
                       <td>{item.stdName}</td>
                       <td>{item.workTime}</td>
+                      <td>
+                        <div className={styles.btnGroup}>
+                          {/** 출근 버튼 */}
+                          <button
+                            className={`${styles.checkBtn} ${item.status === '근로중' ? styles.working : ''}`}
+                            onClick={() => handleCheckIn(item.id)}
+                            disabled={item.status != '근로대기'}
+                          >
+                            출근
+                          </button>
+                          {/** 퇴근 버튼 */}
+                          <button
+                            className={`${styles.checkBtn} ${item.status === '근로종료' ? styles.done : ''}`}
+                            onClick={() => handleCheckOut(item.id)}
+                            disabled={item.status !== '근로중'}
+                          >
+                            퇴근
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   ))
                 ) : (
