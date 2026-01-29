@@ -92,7 +92,7 @@
 /* 근로자 현황 섹션 */
 .workerSection {
   margin-top: 40px;
-  max-width: 1150px;
+  max-width: 760px;
 }
 
 .sectionTitle {
@@ -161,6 +161,7 @@
   border-bottom: 1px solid #3a3a3a;
   text-align: center;
   color: #eee;
+  vertical-align: middle;
 }
 
 .workerTable tbody tr {
@@ -204,4 +205,52 @@
 .badgeGray {
   background-color: rgba(255, 255, 255, 0.1);
   color: #aaa;
+}
+
+/* 출/퇴근 관리 버튼 스타일 */
+.btnGroup {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 출/퇴근 기본 버튼 */
+.checkBtn {
+  padding: 8px 16px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #333;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+/* 버튼 호버 효과(비활성화 상태 X) */
+.checkBtn:hover:not(:disabled) {
+  background-color: #444;
+  color: #fff;
+  border-color: #777;
+}
+
+/* 비활성화 상태 */
+.checkBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 근무중 상태(출근 버튼 누르면 활성화) */
+.working {
+  background-color: #00bcd4 !important;
+  border-color: #00bcd4 !important;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 근로완료(퇴근 버튼 누르면 활성화) */
+.done {
+  background-color: #ff6b6b !important;
+  border-color: #ff6b6b !important;
+  color: #fff;
+  font-weight: bold;
 }
