@@ -14,11 +14,14 @@
     "exceljs": "^4.4.0",
     "lucide-react": "^0.562.0",
     "mysql2": "^3.14.1",
-    "next": "^16.0.8",
+    "next": "^16.1.6",
     "react": "^19.2.1",
     "react-calendar": "^6.0.0",
     "react-datepicker": "^8.4.0",
     "react-dom": "^19.2.1",
     "react-hot-toast": "^2.6.0"
+  },
+  "devDependencies": {
+    "baseline-browser-mapping": "^2.9.19"
   }
 }
