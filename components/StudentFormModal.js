@@ -60,7 +60,6 @@ export default function StudentFormModal({
       const data = await res.json();
 
       if (res.ok) {
-        showToastMsg(data.message);
         onClose();
         refreshList();
       } else {
