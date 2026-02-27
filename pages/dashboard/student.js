@@ -13,8 +13,9 @@ import Layout from '@/components/Layout';
 import StudentFormModal from '@/components/StudentFormModal';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import styles from '@/styles/Student.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getYearTerm } from '@/utils/timeUtils';
+import * as XLSX from 'xlsx';
 
 // 아이콘(lucide-react) import
 import {
@@ -24,6 +25,7 @@ import {
   Pencil,
   Trash2,
   GraduationCap,
+  FileUp,
 } from 'lucide-react';
 
 // 토스트(toast) import
@@ -53,6 +55,47 @@ export default function StudentPage() {
   // 페이징 상태(현재 페이지 & 전체 페이지 수)
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // 엑셀 일괄 등록을 위한 Ref 및 핸들러
+  const fileInputRef = useRef(null);
+
+  const handleExcelButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      try {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        // 엑셀 sheet 데이터를 JSON 배열로 변환
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        console.log('엑셀 파싱 결과: ', jsonData);
+        toast.success(
+          `성공적으로 ${jsonData.length} 건의 데이터를 읽었습니다.`,
+        );
+      } catch (error) {
+        console.error('엑셀 파싱 오류: ', error);
+        toast.error('엑셀 파일을 읽는 중 오류가 발생하였습니다.');
+      } finally {
+        e.target.value = '';
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
 
   // 학생 목록 fetch
   const fetchStudents = async (page = 1) => {
@@ -131,17 +174,38 @@ export default function StudentPage() {
             <GraduationCap size={28} className={styles.titleIcon} />
             <h2>근로학생 정보 관리</h2>
           </div>
-          <button
-            className={styles.registerBtn}
-            onClick={() => {
-              setMode('insert');
-              setCurrentStudent(null);
-              setIsModalOpen(true);
-            }}
-          >
-            <UserPlus size={18} />
-            학생 등록
-          </button>
+
+          {/** 버튼 그룹(학생등록 / 일괄등록) */}
+          <div className={styles.buttonGroup}>
+            {/** 숨겨진 엑셀 업로드 input */}
+            <input
+              type='file'
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              accept='.xlsx, .xls, .csv'
+              style={{ display: 'none' }}
+            />
+            <button
+              className={styles.registerBtn}
+              onClick={() => {
+                setMode('insert');
+                setCurrentStudent(null);
+                setIsModalOpen(true);
+              }}
+            >
+              <UserPlus size={18} />
+              학생 등록
+            </button>
+
+            {/** 일괄 등록 버튼 */}
+            <button
+              className={`${styles.registerBtn} ${styles.bulkBtn}`}
+              onClick={handleExcelButtonClick}
+            >
+              <FileUp size={18} />
+              일괄 등록
+            </button>
+          </div>
         </div>
 
         {/* 02. 검색 및 필터 영역 */}
