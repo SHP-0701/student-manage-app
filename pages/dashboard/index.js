@@ -229,7 +229,7 @@ export default function DashboardPage() {
               <table className={styles.workerTable}>
                 <thead>
                   <tr>
-                    <th style={{ width: '20%' }}>근로구분</th>{' '}
+                    <th style={{ width: '20%' }}>근로구분</th>
                     {/** 국가근로, 행정인턴, 교육지원 */}
                     <th style={{ width: '20%' }}>이름</th>
                     <th style={{ width: '35%' }}>근무시간</th>
