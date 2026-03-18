@@ -120,6 +120,45 @@ export default function StudentPage() {
     reader.readAsArrayBuffer(file);
   };
 
+  // 목록 다운로드를 위한 다운로드 핸들러
+  const handleDownloadExcel = () => {
+    if (!students || students.length === 0) {
+      toast.error('다운로드할 데이터가 없습니다.');
+      return;
+    }
+
+    // [1] DB 데이터 엑셀용 한글 헤더 매핑
+    const excelData = students.map((std, idx) => ({
+      순번: idx + 1,
+      학년도: std.year,
+      학기: std.term,
+      이름: std.stdName,
+      학번: std.stdNum,
+      학과: std.stdDept,
+      근로구분: std.workType,
+      담당업무: std.stdJob || '',
+    }));
+
+    // [2] 엑셀 워크시트 생성
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    // 열 너비 조절
+    worksheet['!cols'] = [
+      { wpx: 50 }, // 순번
+      { wpx: 80 }, // 학년도
+      { wpx: 80 }, // 학기
+      { wpx: 100 }, // 이름
+      { wpx: 120 }, // 학번
+      { wpx: 150 }, // 학과
+      { wpx: 100 }, // 근로구분
+      { wpx: 200 }, // 담당업무
+    ];
+
+    // [3] 워크북 생성 및 파일 다운로드 실행
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, '학생목록');
+    XLSX.writeFile(workbook, '근로학생_목록.xlsx');
+  };
+
   // 학생 목록 fetch
   const fetchStudents = async (page = 1) => {
     try {
@@ -230,7 +269,10 @@ export default function StudentPage() {
             </button>
 
             {/** 학생목록 다운로드 버튼 */}
-            <button className={`${styles.registerBtn} ${styles.bulkDown}`}>
+            <button
+              onClick={handleDownloadExcel}
+              className={`${styles.registerBtn} ${styles.bulkDown}`}
+            >
               <Download size={18} />
               목록 다운로드
             </button>
