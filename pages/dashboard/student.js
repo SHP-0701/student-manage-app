@@ -26,6 +26,7 @@ import {
   Trash2,
   GraduationCap,
   FileUp,
+  Download,
 } from 'lucide-react';
 
 // 토스트(toast) import
@@ -226,6 +227,12 @@ export default function StudentPage() {
             >
               <FileUp size={18} />
               일괄 등록
+            </button>
+
+            {/** 학생목록 다운로드 버튼 */}
+            <button className={`${styles.registerBtn} ${styles.bulkDown}`}>
+              <Download size={18} />
+              목록 다운로드
             </button>
           </div>
         </div>
