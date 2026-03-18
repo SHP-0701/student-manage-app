@@ -74,6 +74,17 @@
   background-color: #444;
 }
 
+/* 목록 다운로드 버튼 스타일 */
+.bulkDown {
+  background-color: #2e8b57;
+  border: 1px solid #27774a;
+  color: #fff;
+}
+
+.bulkDown:hover {
+  background-color: #3f9c68;
+}
+
 /* 03. 검색 및 필터 영역(카드 스타일) */
 .filterSection {
   background-color: #1e1e1e;
