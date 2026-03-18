@@ -82,10 +82,32 @@ export default function StudentPage() {
         // 엑셀 sheet 데이터를 JSON 배열로 변환
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        console.log('엑셀 파싱 결과: ', jsonData);
-        toast.success(
-          `성공적으로 ${jsonData.length} 건의 데이터를 읽었습니다.`,
-        );
+        // console.log('엑셀 파싱 결과: ', jsonData);
+        // 백엔드로 데이터 전송
+        toast.loading('데이터 등록 중...', { id: 'bulkUpload' });
+
+        const response = await fetch('/api/student/bulk', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(jsonData),
+        });
+
+        const result = await response.json();
+
+        // 200 ok
+        if (response.ok) {
+          // toast로 몇 건 등록됐는지 알림
+          toast.success(result.message, { id: 'bulkUpload' });
+
+          // 데이터 추가됐으니 학생 목록 1페이지 새로고침
+          fetchStudents(1);
+        } else {
+          toast.error(result.message || '일괄 등록에 실패했습니다.', {
+            id: 'bulkUpload',
+          });
+        }
       } catch (error) {
         console.error('엑셀 파싱 오류: ', error);
         toast.error('엑셀 파일을 읽는 중 오류가 발생하였습니다.');
