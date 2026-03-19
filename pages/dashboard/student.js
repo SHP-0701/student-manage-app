@@ -121,42 +121,61 @@ export default function StudentPage() {
   };
 
   // 목록 다운로드를 위한 다운로드 핸들러
-  const handleDownloadExcel = () => {
-    if (!students || students.length === 0) {
-      toast.error('다운로드할 데이터가 없습니다.');
-      return;
+  const handleDownloadExcel = async () => {
+    try {
+      toast.loading('엑셀 생성 중...', { id: 'excelDownload' });
+
+      // 현재 선택된 학년도/학기 상태값 쿼리스트링으로 전달
+      const response = await fetch(
+        `/api/student/export?year=${searchYear || ''}&term=${searchTerm || ''}`,
+      );
+
+      if (!response.ok) throw new Error('비정상 네트워크 응답 감지');
+
+      const result = await response.json();
+      const students = result.students;
+
+      if (!students || students.length === 0) {
+        toast.error('조건에 맞는 다운로드할 자료가 없습니다.', {
+          id: 'excelDownload',
+        });
+        return;
+      }
+
+      // DB 데이터 엑셀용 한글 헤더 매핑
+      const excelData = students.map((std, idx) => ({
+        순번: idx + 1,
+        학년도: std.year,
+        학기: std.term,
+        이름: std.stdName,
+        학번: std.stdNum,
+        학과: std.stdDept,
+        근로구분: std.workType,
+        담당업무: std.stdJob || '',
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      worksheet['!cols'] = [
+        { wpx: 30 },
+        { wpx: 60 },
+        { wpx: 60 },
+        { wpx: 100 },
+        { wpx: 100 },
+        { wpx: 150 },
+        { wpx: 100 },
+        { wpx: 120 },
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, '학생목록');
+
+      // 파일 다운로드
+      XLSX.writeFile(workbook, '근로학생_목록.xlsx');
+      toast.success('엑셀 다운로드 완료!', { id: 'excelDownload' });
+    } catch (e) {
+      console.error('엑셀 다운로드 에러: ', e);
+      toast.error('다운로드 중 오류 발생', { id: 'excelDownload' });
     }
-
-    // [1] DB 데이터 엑셀용 한글 헤더 매핑
-    const excelData = students.map((std, idx) => ({
-      순번: idx + 1,
-      학년도: std.year,
-      학기: std.term,
-      이름: std.stdName,
-      학번: std.stdNum,
-      학과: std.stdDept,
-      근로구분: std.workType,
-      담당업무: std.stdJob || '',
-    }));
-
-    // [2] 엑셀 워크시트 생성
-    const worksheet = XLSX.utils.json_to_sheet(excelData);
-    // 열 너비 조절
-    worksheet['!cols'] = [
-      { wpx: 50 }, // 순번
-      { wpx: 80 }, // 학년도
-      { wpx: 80 }, // 학기
-      { wpx: 100 }, // 이름
-      { wpx: 120 }, // 학번
-      { wpx: 150 }, // 학과
-      { wpx: 100 }, // 근로구분
-      { wpx: 200 }, // 담당업무
-    ];
-
-    // [3] 워크북 생성 및 파일 다운로드 실행
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, '학생목록');
-    XLSX.writeFile(workbook, '근로학생_목록.xlsx');
   };
 
   // 학생 목록 fetch
