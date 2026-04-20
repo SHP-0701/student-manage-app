@@ -23,8 +23,12 @@ export default function AttendancePage() {
   const [attendanceList, setAttendanceList] = useState([]);
 
   // 필터 상태(state)
-  const [searchYear, setSearchYear] = useState(''); // 학년도
-  const [searchTerm, setSearchTerm] = useState(''); // 학기
+  const [searchYear, setSearchYear] = useState(
+    () => getYearTerm(new Date()).year,
+  ); // 학년도
+  const [searchTerm, setSearchTerm] = useState(
+    () => getYearTerm(new Date()).term,
+  ); // 학기
 
   const [searchWorkType, setSearchWorkType] = useState(''); // 근로구분(국가근로, 대학행정인턴, 교육지원)
   const [searchStdJob, setSearchStdJob] = useState(''); // 담당업무(실습실, 카운터, ECSC, 모니터링)
@@ -138,7 +142,7 @@ export default function AttendancePage() {
         onClick={() => setCurrentPage(1)}
       >
         1
-      </button>
+      </button>,
     );
 
     // 시작&끝 페이지 계산
@@ -156,7 +160,7 @@ export default function AttendancePage() {
       pages.push(
         <span key='dots-1' className={styles.dots}>
           ...
-        </span>
+        </span>,
       );
 
     // 중간 페이지들
@@ -170,7 +174,7 @@ export default function AttendancePage() {
           onClick={() => setCurrentPage(i)}
         >
           {i}
-        </button>
+        </button>,
       );
     }
 
@@ -179,7 +183,7 @@ export default function AttendancePage() {
       pages.push(
         <span key='dots-2' className={styles.dots}>
           ...
-        </span>
+        </span>,
       );
     }
 
@@ -194,7 +198,7 @@ export default function AttendancePage() {
           onClick={() => setCurrentPage(totalPages)}
         >
           {totalPages}
-        </button>
+        </button>,
       );
     }
 
